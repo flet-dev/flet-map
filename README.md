@@ -10,72 +10,143 @@ Add `flet-map` as dependency (`pyproject.toml` or `requirements.txt`) to your Fl
 
 ```py
 
+import random
 import flet as ft
-
-import flet_ads as ads
+import flet_map as map
 
 
 def main(page: ft.Page):
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    marker_layer_ref = ft.Ref[map.MarkerLayer]()
+    circle_layer_ref = ft.Ref[map.CircleLayer]()
 
-    id_interstitial = (
-        "ca-app-pub-3940256099942544/1033173712"
-        if page.platform == ft.PagePlatform.ANDROID
-        else "ca-app-pub-3940256099942544/4411468910"
-    )
-
-    id_banner = (
-        "ca-app-pub-3940256099942544/6300978111"
-        if page.platform == ft.PagePlatform.ANDROID
-        else "ca-app-pub-3940256099942544/2934735716"
-    )
-
-    def handle_interstitial_close(e):
-        nonlocal iad
-        print("InterstitialAd closed")
-        page.overlay.remove(e.control)
-        page.overlay.append(iad := get_new_interstitial_ad())
+    def handle_tap(e: map.MapTapEvent):
+        print(e)
+        if e.name == "tap":
+            marker_layer_ref.current.markers.append(
+                map.Marker(
+                    content=ft.Icon(
+                        ft.Icons.LOCATION_ON, color=ft.cupertino_colors.DESTRUCTIVE_RED
+                    ),
+                    coordinates=e.coordinates,
+                )
+            )
+        elif e.name == "secondary_tap":
+            circle_layer_ref.current.circles.append(
+                map.CircleMarker(
+                    radius=random.randint(5, 10),
+                    coordinates=e.coordinates,
+                    color=ft.Colors.random_color(),
+                    border_color=ft.Colors.random_color(),
+                    border_stroke_width=4,
+                )
+            )
         page.update()
 
-    def get_new_interstitial_ad():
-        return ads.InterstitialAd(
-            unit_id=id_interstitial,
-            on_load=lambda e: print("InterstitialAd loaded"),
-            on_error=lambda e: print("InterstitialAd error", e.data),
-            on_open=lambda e: print("InterstitialAd opened"),
-            on_close=handle_interstitial_close,
-            on_impression=lambda e: print("InterstitialAd impression"),
-            on_click=lambda e: print("InterstitialAd clicked"),
-        )
+    def handle_event(e: map.MapEvent):
+        print(e)
 
-    def display_new_banner_ad():
-        page.add(
-            ft.Container(
-                content=ads.BannerAd(
-                    unit_id=id_banner,
-                    on_click=lambda e: print("BannerAd clicked"),
-                    on_load=lambda e: print("BannerAd loaded"),
-                    on_error=lambda e: print("BannerAd error", e.data),
-                    on_open=lambda e: print("BannerAd opened"),
-                    on_close=lambda e: print("BannerAd closed"),
-                    on_impression=lambda e: print("BannerAd impression"),
-                    on_will_dismiss=lambda e: print("BannerAd will dismiss"),
-                ),
-                width=320,
-                height=50,
-                bgcolor=ft.colors.TRANSPARENT,
-            )
-        )
-
-    page.overlay.append(iad := get_new_interstitial_ad())
-    page.appbar = ft.AppBar(
-        adaptive=True,
-        title=ft.Text("Mobile Ads Playground"),
-        bgcolor=ft.colors.LIGHT_BLUE_300,
-    )
     page.add(
-        ft.OutlinedButton("Show InterstitialAd", on_click=lambda e: iad.show()),
-        ft.OutlinedButton("Show BannerAd", on_click=lambda e: display_new_banner_ad()),
+        ft.Text("Click anywhere to add a Marker, right-click to add a CircleMarker."),
+        map.Map(
+            expand=True,
+            initial_center=map.MapLatitudeLongitude(15, 10),
+            initial_zoom=4.2,
+            interaction_configuration=map.MapInteractionConfiguration(
+                flags=map.MapInteractiveFlag.ALL
+            ),
+            on_init=lambda e: print(f"Initialized Map"),
+            on_tap=handle_tap,
+            on_secondary_tap=handle_tap,
+            on_long_press=handle_tap,
+            on_event=lambda e: print(e),
+            layers=[
+                map.TileLayer(
+                    url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    on_image_error=lambda e: print("TileLayer Error"),
+                ),
+                map.RichAttribution(
+                    attributions=[
+                        map.TextSourceAttribution(
+                            text="OpenStreetMap Contributors",
+                            on_click=lambda e: e.page.launch_url(
+                                "https://openstreetmap.org/copyright"
+                            ),
+                        ),
+                        map.TextSourceAttribution(
+                            text="Flet",
+                            on_click=lambda e: e.page.launch_url("https://flet.dev"),
+                        ),
+                    ]
+                ),
+                map.SimpleAttribution(
+                    text="Flet",
+                    alignment=ft.alignment.top_right,
+                    on_click=lambda e: print("Clicked SimpleAttribution"),
+                ),
+                map.MarkerLayer(
+                    ref=marker_layer_ref,
+                    markers=[
+                        map.Marker(
+                            content=ft.Icon(ft.Icons.LOCATION_ON),
+                            coordinates=map.MapLatitudeLongitude(30, 15),
+                        ),
+                        map.Marker(
+                            content=ft.Icon(ft.Icons.LOCATION_ON),
+                            coordinates=map.MapLatitudeLongitude(10, 10),
+                        ),
+                        map.Marker(
+                            content=ft.Icon(ft.Icons.LOCATION_ON),
+                            coordinates=map.MapLatitudeLongitude(25, 45),
+                        ),
+                    ],
+                ),
+                map.CircleLayer(
+                    ref=circle_layer_ref,
+                    circles=[
+                        map.CircleMarker(
+                            radius=10,
+                            coordinates=map.MapLatitudeLongitude(16, 24),
+                            color=ft.Colors.RED,
+                            border_color=ft.Colors.BLUE,
+                            border_stroke_width=4,
+                        ),
+                    ],
+                ),
+                map.PolygonLayer(
+                    polygons=[
+                        map.PolygonMarker(
+                            label="Popular Touristic Area",
+                            label_text_style=ft.TextStyle(
+                                color=ft.Colors.BLACK,
+                                size=15,
+                                weight=ft.FontWeight.BOLD,
+                            ),
+                            color=ft.Colors.with_opacity(0.3, ft.Colors.BLUE),
+                            coordinates=[
+                                map.MapLatitudeLongitude(10, 10),
+                                map.MapLatitudeLongitude(30, 15),
+                                map.MapLatitudeLongitude(25, 45),
+                            ],
+                        ),
+                    ],
+                ),
+                map.PolylineLayer(
+                    polylines=[
+                        map.PolylineMarker(
+                            border_stroke_width=3,
+                            border_color=ft.Colors.RED,
+                            gradient_colors=[ft.Colors.BLACK, ft.Colors.BLACK],
+                            color=ft.Colors.with_opacity(0.6, ft.Colors.GREEN),
+                            coordinates=[
+                                map.MapLatitudeLongitude(10, 10),
+                                map.MapLatitudeLongitude(30, 15),
+                                map.MapLatitudeLongitude(25, 45),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),
     )
 
 
