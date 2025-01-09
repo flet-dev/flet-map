@@ -1,7 +1,7 @@
 [project]
 name = "flet-map"
 version = "0.1.0"
-description = "Map controls for Flet"
+description = "Map control for Flet"
 readme = "README.md"
 authors = [
     { name = "Flet contributors", email = "hello@flet.dev" }
