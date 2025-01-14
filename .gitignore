@@ -1,4 +1,5 @@
-
-examples/map_example/.DS_Store
-.DS_Store
-examples/map_example/uv.lock
+*.egg-info/
+build/
+develop-eggs/
+dist/
+.DS_store
