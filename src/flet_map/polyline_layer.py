@@ -9,7 +9,14 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import ColorEnums, ColorValue, StrokeCap, StrokeJoin
 
-__all__ = ["PolylineMarker", "PolylineLayer"]
+__all__ = [
+    "DashedStrokePattern",
+    "DottedStrokePattern",
+    "PatternFit",
+    "PolylineLayer",
+    "PolylineMarker",
+    "SolidStrokePattern",
+]
 
 
 class PatternFit(Enum):
