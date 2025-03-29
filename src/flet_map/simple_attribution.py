@@ -1,9 +1,12 @@
 from typing import Any, Optional
 
-from flet.core.alignment import Alignment
 from flet_map.map_layer import MapLayer
+
+from flet.core.alignment import Alignment
 from flet.core.ref import Ref
 from flet.core.types import ColorEnums, ColorValue, OptionalControlEventCallable
+
+__all__ = ["SimpleAttribution"]
 
 
 class SimpleAttribution(MapLayer):

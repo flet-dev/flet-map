@@ -5,6 +5,8 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["TextSourceAttribution"]
+
 
 class TextSourceAttribution(Control):
     """
