@@ -1,6 +1,15 @@
-from flet_map.circle_layer import CircleLayer, CircleMarker
-from flet_map.map import (
-    Map,
+from .circle_layer import CircleLayer, CircleMarker
+from .map import Map
+from .marker_layer import Marker, MarkerLayer
+from .polygon_layer import PolygonLayer, PolygonMarker
+from .polyline_layer import PolylineLayer, PolylineMarker
+from .rich_attribution import RichAttribution
+from .simple_attribution import SimpleAttribution
+from .text_source_attribution import TextSourceAttribution
+from .tile_layer import TileLayer
+from .types import (
+    DashedStrokePattern,
+    DottedStrokePattern,
     MapEvent,
     MapEventSource,
     MapHoverEvent,
@@ -9,22 +18,10 @@ from flet_map.map import (
     MapLatitudeLongitude,
     MapLatitudeLongitudeBounds,
     MapMultiFingerGesture,
-    MapPointerDeviceType,
     MapPointerEvent,
     MapPositionChangeEvent,
     MapTapEvent,
-)
-from flet_map.marker_layer import Marker, MarkerLayer
-from flet_map.polygon_layer import PolygonLayer, PolygonMarker
-from flet_map.polyline_layer import (
-    DashedStrokePattern,
-    DottedStrokePattern,
+    MapTileLayerEvictErrorTileStrategy,
     PatternFit,
-    PolylineLayer,
-    PolylineMarker,
     SolidStrokePattern,
 )
-from flet_map.rich_attribution import RichAttribution
-from flet_map.simple_attribution import SimpleAttribution
-from flet_map.text_source_attribution import TextSourceAttribution
-from flet_map.tile_layer import MapTileLayerEvictErrorTileStrategy, TileLayer
