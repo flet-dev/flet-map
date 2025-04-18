@@ -5,7 +5,11 @@ from .polygon_layer import PolygonLayer, PolygonMarker
 from .polyline_layer import PolylineLayer, PolylineMarker
 from .rich_attribution import RichAttribution
 from .simple_attribution import SimpleAttribution
-from .text_source_attribution import TextSourceAttribution
+from .source_attribution import (
+    ImageSourceAttribution,
+    SourceAttribution,
+    TextSourceAttribution,
+)
 from .tile_layer import TileLayer
 from .types import (
     DashedStrokePattern,

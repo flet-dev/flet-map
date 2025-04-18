@@ -22,14 +22,14 @@ class CircleMarker(ft.Control):
     coordinates: MapLatitudeLongitude
     color: ft.OptionalColorValue = None
     border_color: ft.OptionalColorValue = None
-    border_stroke_width: ft.OptionalNumber = None
+    border_stroke_width: ft.Number = 0.0
     use_radius_in_meter: bool = False
 
     def before_update(self):
         super().before_update()
         assert (
-                self.border_stroke_width is None or self.border_stroke_width >= 0
-        ), "border_stroke_width cannot be negative"
+            self.border_stroke_width >= 0
+        ), "border_stroke_width must be greater than or equal to 0"
 
 
 @ft.control("CircleLayer")

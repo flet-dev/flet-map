@@ -7,274 +7,220 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
+LatLng? parseLatLng(dynamic value, [LatLng? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return latLngFromJson(j1, defValue);
-}
-
-LatLng? latLngFromJson(Map<String, dynamic>? j, [LatLng? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
   return LatLng(
-      parseDouble(j['latitude'], 0)!, parseDouble(j['longitude'], 0)!);
+      parseDouble(value['latitude'], 0)!, parseDouble(value['longitude'], 0)!);
 }
 
-LatLngBounds? parseLatLngBounds(Control control, String propName,
-    [LatLngBounds? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
-
-  final j1 = json.decode(v);
-  return latLngBoundsFromJson(j1, defValue);
-}
-
-LatLngBounds? latLngBoundsFromJson(Map<String, dynamic>? j,
-    [LatLngBounds? defValue]) {
-  if (j == null ||
-      j['corner_1'] == null ||
-      j['corner_2'] == null ||
-      latLngFromJson(j['corner_1']) == null ||
-      latLngFromJson(j['corner_2']) == null) {
-    return defValue;
+LatLngBounds? parseLatLngBounds(dynamic value, [LatLngBounds? defaultValue]) {
+  if (value == null ||
+      value['corner_1'] == null ||
+      value['corner_2'] == null ||
+      parseLatLng(value['corner_1']) == null ||
+      parseLatLng(value['corner_2']) == null) {
+    return defaultValue;
   }
   return LatLngBounds(
-      latLngFromJson(j['corner_1'])!, latLngFromJson(j['corner_2'])!);
+      parseLatLng(value['corner_1'])!, parseLatLng(value['corner_2'])!);
 }
 
-PatternFit? parsePatternFit(String? value,
-    [PatternFit? defValue = PatternFit.none]) {
-  if (value == null) {
-    return defValue;
-  }
+PatternFit? parsePatternFit(String? value, [PatternFit? defaultValue]) {
+  if (value == null) return defaultValue;
   return PatternFit.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-StrokePattern? parseStrokePattern(Control control, String propName,
-    [StrokePattern? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
+StrokePattern? parseStrokePattern(dynamic value,
+    [StrokePattern? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return strokePatternFromJson(j1, defValue);
-}
-
-StrokePattern? strokePatternFromJson(Map<String, dynamic>? j,
-    [StrokePattern? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
-  if (j['type'] == 'dotted') {
+  if (value['type'] == 'dotted') {
     return StrokePattern.dotted(
-      spacingFactor: parseDouble(j['spacing_factor'], 1)!,
-      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
+      spacingFactor: parseDouble(value['spacing_factor'], 1.5)!,
+      patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
     );
-  } else if (j['type'] == 'solid') {
+  } else if (value['type'] == 'solid') {
     return const StrokePattern.solid();
-  } else if (j['type'] == 'dash') {
-    var segments = j['segments'];
+  } else if (value['type'] == 'dashed') {
+    var segments = value['segments'] ?? [];
     return StrokePattern.dashed(
-      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
-      segments: segments != null
-          ? (jsonDecode(segments) as List)
-              .map((e) => parseDouble(e))
-              .whereNotNull()
-              .toList()
-          : [],
+      patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
+      segments: segments.map((e) => parseDouble(e)).nonNulls.toList(),
     );
   }
-  return defValue;
+  return defaultValue;
 }
 
-InteractionOptions? parseInteractionOptions(Control control, String propName,
-    [InteractionOptions? defValue]) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return defValue;
-  }
-  final j1 = json.decode(v);
-  return interactionOptionsFromJSON(j1, defValue);
-}
-
-InteractionOptions? interactionOptionsFromJSON(dynamic j,
-    [InteractionOptions? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
+InteractionOptions? parseInteractionOptions(dynamic value,
+    [InteractionOptions? defaultValue]) {
+  if (value == null) return defaultValue;
   return InteractionOptions(
       enableMultiFingerGestureRace:
-          parseBool(j["enable_multi_finger_gesture_race"], false)!,
-      pinchMoveThreshold: parseDouble(j["pinch_move_threshold"], 40.0)!,
-      scrollWheelVelocity: parseDouble(j["scroll_wheel_velocity"], 0.005)!,
-      pinchZoomThreshold: parseDouble(j["pinch_zoom_threshold"], 0.5)!,
-      rotationThreshold: parseDouble(j["rotation_threshold"], 20.0)!,
-      flags: parseInt(j["flags"], InteractiveFlag.all)!,
+          parseBool(value["enable_multi_finger_gesture_race"], false)!,
+      pinchMoveThreshold: parseDouble(value["pinch_move_threshold"], 40.0)!,
+      scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
+      pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
+      rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
+      flags: parseInt(value["flags"], InteractiveFlag.all)!,
       rotationWinGestures:
-          parseInt(j["rotation_win_gestures"], MultiFingerGesture.rotate)!,
-      pinchMoveWinGestures: parseInt(j["pinch_move_win_gestures"],
+          parseInt(value["rotation_win_gestures"], MultiFingerGesture.rotate)!,
+      pinchMoveWinGestures: parseInt(value["pinch_move_win_gestures"],
           MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
-      pinchZoomWinGestures: parseInt(j["pinch_zoom_win_gestures"],
+      pinchZoomWinGestures: parseInt(value["pinch_zoom_win_gestures"],
           MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
 }
 
-EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
-    [EvictErrorTileStrategy? defValue]) {
-  if (strategy == null) {
-    return defValue;
-  }
+EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? value,
+    [EvictErrorTileStrategy? defaultValue]) {
+  if (value == null) return defaultValue;
   return EvictErrorTileStrategy.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == strategy.toLowerCase()) ??
-      defValue;
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }
 
-MapOptions? parseConfiguration(
-    Control control, FletControlBackend backend, BuildContext context,
-    [MapOptions? defValue]) {
-  void triggerEvent(String name, dynamic eventData) {
-    var d = "";
-    if (eventData is String) {
-      d = eventData;
-    } else if (eventData is Map) {
-      d = json.encode(eventData);
-    }
-
-    backend.triggerControlEvent(control.id, name, d);
-  }
-
+MapOptions? parseConfiguration(Control control, BuildContext context,
+    [MapOptions? defaultValue]) {
   return MapOptions(
     initialCenter:
-        parseLatLng(control, "initialCenter", const LatLng(50.5, 30.51))!,
+        parseLatLng(control.get("initial_center", const LatLng(50.5, 30.51)))!,
     interactionOptions: parseInteractionOptions(
-        control, "interactionConfiguration", const InteractionOptions())!,
+        control.get("interaction_configuration", const InteractionOptions()))!,
     backgroundColor:
-        control.attrColor("bgColor", context, const Color(0x00000000))!,
-    initialRotation: control.attrDouble("initialRotation", 0.0)!,
-    initialZoom: control.attrDouble("initialZoom", 13.0)!,
-    keepAlive: control.attrBool("keepAlive", false)!,
-    maxZoom: control.attrDouble("maxZoom"),
-    minZoom: control.attrDouble("minZoom"),
-    onPointerHover: control.attrBool("onHover", false)!
+        control.getColor("bgcolor", context, const Color(0x00000000))!,
+    initialRotation: control.getDouble("initial_rotation", 0.0)!,
+    initialZoom: control.getDouble("initial_zoom", 13.0)!,
+    keepAlive: control.getBool("keep_alive", false)!,
+    maxZoom: control.getDouble("max_zoom"),
+    minZoom: control.getDouble("min_zoom"),
+    onPointerHover: control.getBool("on_hover", false)!
         ? (PointerHoverEvent e, LatLng latlng) {
-            triggerEvent("hover", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "lx": e.localPosition.dx,
-              "ly": e.localPosition.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("hover", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": e.position.dx,
+              "global_y": e.position.dy,
+              "local_x": e.localPosition.dx,
+              "local_y": e.localPosition.dy,
+              "device_type": e.kind.name,
             });
           }
         : null,
-    onTap: control.attrBool("onTap", false)!
+    onTap: control.getBool("on_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("tap", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("tap", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": pos.global.dx,
+              "global_y": pos.global.dy,
+              "local_x": pos.relative?.dx,
+              "local_y": pos.relative?.dy,
             });
           }
         : null,
-    onLongPress: control.attrBool("onLongPress", false)!
+    onLongPress: control.getBool("on_long_press", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("long_press", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("long_press", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": pos.global.dx,
+              "global_y": pos.global.dy,
+              "local_x": pos.relative?.dx,
+              "local_y": pos.relative?.dy,
             });
           }
         : null,
-    onPositionChanged: control.attrBool("onPositionChange", false)!
+    onPositionChanged: control.getBool("on_position_change", false)!
         ? (MapCamera camera, bool hasGesture) {
-            triggerEvent("position_change", {
-              "lat": camera.center.latitude,
-              "long": camera.center.longitude,
+            control.triggerEvent("position_change", {
+              "coordinates": {
+                "latitude": camera.center.latitude,
+                "longitude": camera.center.longitude,
+              },
               "min_zoom": camera.minZoom,
               "max_zoom": camera.maxZoom,
-              "rot": camera.rotation,
+              "rotation": camera.rotation,
             });
           }
         : null,
-    onPointerDown: control.attrBool("onPointerDown", false)!
+    onPointerDown: control.getBool("on_pointerDown", false)!
         ? (PointerDownEvent e, LatLng latlng) {
-            triggerEvent("pointer_down", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("pointer_down", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": e.position.dx,
+              "global_y": e.position.dy,
+              "device_type": e.kind.name,
             });
           }
         : null,
-    onPointerCancel: control.attrBool("onPointerCancel", false)!
+    onPointerCancel: control.getBool("on_pointer_cancel", false)!
         ? (PointerCancelEvent e, LatLng latlng) {
-            triggerEvent("pointer_cancel", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("pointer_cancel", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": e.position.dx,
+              "global_y": e.position.dy,
+              "device_type": e.kind.name,
             });
           }
         : null,
-    onPointerUp: control.attrBool("onPointerUp", false)!
+    onPointerUp: control.getBool("on_pointer_up", false)!
         ? (PointerUpEvent e, LatLng latlng) {
-            triggerEvent("pointer_up", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("pointer_up", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": e.position.dx,
+              "global_y": e.position.dy,
+              "device_type": e.kind.name,
             });
           }
         : null,
-    onSecondaryTap: control.attrBool("onSecondaryTap", false)!
+    onSecondaryTap: control.getBool("onSecondary_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("secondary_tap", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("secondary_tap", {
+              "coordinates": {
+                "latitude": latlng.latitude,
+                "longitude": latlng.longitude,
+              },
+              "global_x": pos.global.dx,
+              "global_y": pos.global.dy,
+              "local_x": pos.relative?.dx,
+              "local_y": pos.relative?.dy,
             });
           }
         : null,
-    onMapEvent: control.attrBool("onEvent", false)!
+    onMapEvent: control.getBool("on_event", false)!
         ? (MapEvent e) {
-            triggerEvent("event", {
-              "src": e.source.name,
-              "c_lat": e.camera.center.latitude,
-              "c_long": e.camera.center.longitude,
+            control.triggerEvent("event", {
+              "source": e.source.name,
+              "center": {
+                "latitude": e.camera.center.latitude,
+                "longitude": e.camera.center.longitude,
+              },
               "zoom": e.camera.zoom,
               "min_zoom": e.camera.minZoom,
               "max_zoom": e.camera.maxZoom,
-              "rot": e.camera.rotation,
+              "rotation": e.camera.rotation,
             });
           }
         : null,
-    onMapReady: control.attrBool("onInit", false)!
-        ? () {
-            debugPrint("Map ${control.id} init");
-            backend.triggerControlEvent(control.id, "init");
-          }
+    onMapReady: control.getBool("on_init", false)!
+        ? () => control.triggerEvent("init")
         : null,
   );
 }

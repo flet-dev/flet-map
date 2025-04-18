@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import List, Optional
 
@@ -6,6 +6,7 @@ import flet as ft
 
 
 class MapTileLayerEvictErrorTileStrategy(Enum):
+    NONE = "none"
     DISPOSE = "dispose"
     NOT_VISIBLE = "notVisible"
     NOT_VISIBLE_RESPECT_MARGIN = "notVisibleRespectMargin"
@@ -25,7 +26,7 @@ class PatternFit(Enum):
 
 @dataclass
 class StrokePattern:
-    type: str
+    type: str = ""
 
 
 @dataclass
@@ -36,7 +37,7 @@ class SolidStrokePattern(StrokePattern):
 
 @dataclass
 class DashedStrokePattern(StrokePattern):
-    segments: Optional[List[ft.Number]] = None
+    segments: List[ft.Number] = field(default_factory=list)
     pattern_fit: PatternFit = PatternFit.SCALE_UP
 
     def __post_init__(self):
@@ -45,7 +46,7 @@ class DashedStrokePattern(StrokePattern):
 
 @dataclass
 class DottedStrokePattern(StrokePattern):
-    spacing_factor: ft.OptionalNumber = None
+    spacing_factor: ft.Number = 1.5
     pattern_fit: PatternFit = PatternFit.SCALE_UP
 
     def __post_init__(self):
@@ -75,14 +76,14 @@ class MapInteractiveFlag(IntFlag):
     SCROLL_WHEEL_ZOOM = 1 << 6
     ROTATE = 1 << 7
     ALL = (
-            (1 << 0)
-            | (1 << 1)
-            | (1 << 2)
-            | (1 << 3)
-            | (1 << 4)
-            | (1 << 5)
-            | (1 << 6)
-            | (1 << 7)
+        (1 << 0)
+        | (1 << 1)
+        | (1 << 2)
+        | (1 << 3)
+        | (1 << 4)
+        | (1 << 5)
+        | (1 << 6)
+        | (1 << 7)
     )
 
 

@@ -1,9 +1,10 @@
+from dataclasses import field
 from typing import List, Optional
 
 import flet as ft
 
 from .map_layer import MapLayer
-from .types import MapLatitudeLongitude, StrokePattern
+from .types import MapLatitudeLongitude, SolidStrokePattern, StrokePattern
 
 __all__ = ["PolylineMarker", "PolylineLayer"]
 
@@ -26,18 +27,16 @@ class PolylineMarker(ft.Control):
     stroke_width: ft.Number = 1.0
     border_stroke_width: ft.Number = 0.0
     use_stroke_width_in_meter: bool = False
-    stroke_pattern: Optional[StrokePattern] = None
-    stroke_cap: Optional[ft.StrokeCap] = None
-    stroke_join: Optional[ft.StrokeJoin] = None
+    stroke_pattern: StrokePattern = field(default_factory=lambda: SolidStrokePattern())
+    stroke_cap: ft.StrokeCap = ft.StrokeCap.ROUND
+    stroke_join: ft.StrokeJoin = ft.StrokeJoin.ROUND
 
     def before_update(self):
         super().before_update()
         assert (
-                self.border_stroke_width is None or self.border_stroke_width >= 0
+            self.border_stroke_width >= 0
         ), "border_stroke_width must be greater than or equal to 0"
-        assert (
-                self.stroke_width is None or self.stroke_width >= 0
-        ), "stroke_width must be greater than or equal to 0"
+        assert self.stroke_width >= 0, "stroke_width must be greater than or equal to 0"
 
 
 @ft.control("PolylineLayer")

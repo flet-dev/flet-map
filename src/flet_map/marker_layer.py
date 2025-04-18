@@ -1,4 +1,5 @@
-from typing import List
+from dataclasses import field
+from typing import List, Optional
 
 import flet as ft
 
@@ -20,19 +21,16 @@ class Marker(ft.Control):
 
     content: ft.Control
     coordinates: MapLatitudeLongitude
-    rotate: bool = False
+    rotate: Optional[bool] = None
     height: ft.Number = 30.0
     width: ft.Number = 30.0
     alignment: ft.OptionalAlignment = None
 
     def before_update(self):
         super().before_update()
-        assert (
-                self.height is None or self.height >= 0
-        ), "height must be greater than or equal to 0"
-        assert (
-                self.width is None or self.width >= 0
-        ), "width must be greater than or equal to 0"
+        assert self.content.visible, "content must be visible"
+        assert self.height >= 0, "height must be greater than or equal to 0"
+        assert self.width >= 0, "width must be greater than or equal to 0"
 
 
 @ft.control("MarkerLayer")
@@ -46,5 +44,5 @@ class MarkerLayer(MapLayer):
     """
 
     markers: List[Marker]
-    alignment: ft.OptionalAlignment = None
+    alignment: ft.OptionalAlignment = field(default_factory=lambda: ft.alignment.center)
     rotate: bool = False

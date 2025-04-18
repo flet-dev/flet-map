@@ -6,38 +6,28 @@ import 'package:flutter_map/flutter_map.dart';
 import 'utils/map.dart';
 
 class CircleLayerControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
   final Control control;
 
-  const CircleLayerControl(
-      {super.key,
-      required this.parent, required this.control});
+  const CircleLayerControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CircleLayerControl build: ${control.id}");
 
-    return withControls(control.childIds, (context, circlesView) {
-      debugPrint("CircleLayerControlState build: ${control.id}");
+    var circles = control
+        .children("circles")
+        .where((c) => c.type == "CircleMarker")
+        .map((circle) {
+      return CircleMarker(
+          point: parseLatLng(circle.get("coordinates"))!,
+          color: circle.getColor("color", context, const Color(0xFF00FF00))!,
+          borderColor: circle.getColor(
+              "border_color", context, const Color(0xFFFFFF00))!,
+          borderStrokeWidth: circle.getDouble("border_stroke_width", 0.0)!,
+          useRadiusInMeter: circle.getBool("use_radius_in_meter", false)!,
+          radius: circle.getDouble("radius", 10)!);
+    }).toList();
 
-      var circles = circlesView.controlViews
-          .where((c) =>
-              c.control.type == "map_circle_marker" && c.control.isVisible)
-          .map((circle) {
-        return CircleMarker(
-            point: parseLatLng(circle.control, "coordinates")!,
-            color: circle.control
-                .attrColor("color", context, const Color(0xFF00FF00))!,
-            borderColor: circle.control
-                .attrColor("borderColor", context, const Color(0xFFFFFF00))!,
-            borderStrokeWidth:
-                circle.control.attrDouble("borderStrokeWidth", 0.0)!,
-            useRadiusInMeter:
-                circle.control.attrBool("useRadiusInMeter", false)!,
-            radius: circle.control.attrDouble("radius", 10)!);
-      }).toList();
-
-      return CircleLayer(circles: circles);
-    });
+    return CircleLayer(circles: circles);
   }
 }

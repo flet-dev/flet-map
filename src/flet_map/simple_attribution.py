@@ -1,3 +1,6 @@
+from dataclasses import field
+from typing import Union
+
 import flet as ft
 
 from .map_layer import MapLayer
@@ -15,7 +18,7 @@ class SimpleAttribution(MapLayer):
     Online docs: https://flet.dev/docs/controls/mapsimpleattribution
     """
 
-    text: str
-    alignment: ft.OptionalAlignment = None
+    text: Union[str, ft.Text]
+    alignment: ft.Alignment = field(default=ft.alignment.bottom_right)
     bgcolor: ft.OptionalColorValue = None
     on_click: ft.OptionalControlEventCallable = None

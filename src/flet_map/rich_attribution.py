@@ -3,7 +3,7 @@ from typing import List, Optional
 import flet as ft
 
 from .map_layer import MapLayer
-from .text_source_attribution import TextSourceAttribution
+from .source_attribution import SourceAttribution
 from .types import AttributionAlignment
 
 __all__ = ["RichAttribution"]
@@ -20,10 +20,10 @@ class RichAttribution(MapLayer):
     Online docs: https://flet.dev/docs/controls/maprichattribution
     """
 
-    attributions: List[TextSourceAttribution]
+    attributions: List[SourceAttribution]
     alignment: Optional[AttributionAlignment] = None
     popup_bgcolor: ft.OptionalColorValue = None
     popup_border_radius: ft.OptionalBorderRadiusValue = None
-    popup_initial_display_duration: Optional[int] = None  # todo: use durationvalue?
+    popup_initial_display_duration: ft.OptionalDurationValue = None
     permanent_height: ft.Number = 24.0
     show_flutter_map_attribution: bool = True
