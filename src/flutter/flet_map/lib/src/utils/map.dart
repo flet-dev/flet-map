@@ -81,13 +81,39 @@ EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? value,
       defaultValue;
 }
 
+extension TapPositionExtension on TapPosition {
+  Map<String, dynamic> toMap() => {
+        "gx": global.dx,
+        "gy": global.dy,
+        "lx": relative?.dx,
+        "ly": relative?.dy,
+      };
+}
+
+extension LatLngExtension on LatLng {
+  Map<String, dynamic> toMap() => {
+        "latitude": latitude,
+        "longitude": longitude,
+      };
+}
+
+extension MapCameraExtension on MapCamera {
+  Map<String, dynamic> toMap() => {
+        "center": center.toMap(),
+        "zoom": zoom,
+        "min_zoom": minZoom,
+        "max_zoom": maxZoom,
+        "rotation": rotation,
+      };
+}
+
 MapOptions? parseConfiguration(Control control, BuildContext context,
     [MapOptions? defaultValue]) {
   return MapOptions(
     initialCenter:
-        parseLatLng(control.get("initial_center", const LatLng(50.5, 30.51)))!,
+        parseLatLng(control.get("initial_center"), const LatLng(50.5, 30.51))!,
     interactionOptions: parseInteractionOptions(
-        control.get("interaction_configuration", const InteractionOptions()))!,
+        control.get("interaction_configuration"), const InteractionOptions())!,
     backgroundColor:
         control.getColor("bgcolor", context, const Color(0x00000000))!,
     initialRotation: control.getDouble("initial_rotation", 0.0)!,
@@ -98,109 +124,63 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
     onPointerHover: control.getBool("on_hover", false)!
         ? (PointerHoverEvent e, LatLng latlng) {
             control.triggerEvent("hover", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": e.position.dx,
-              "global_y": e.position.dy,
-              "local_x": e.localPosition.dx,
-              "local_y": e.localPosition.dy,
-              "device_type": e.kind.name,
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
     onTap: control.getBool("on_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("tap", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": pos.global.dx,
-              "global_y": pos.global.dy,
-              "local_x": pos.relative?.dx,
-              "local_y": pos.relative?.dy,
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
     onLongPress: control.getBool("on_long_press", false)!
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("long_press", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": pos.global.dx,
-              "global_y": pos.global.dy,
-              "local_x": pos.relative?.dx,
-              "local_y": pos.relative?.dy,
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
     onPositionChanged: control.getBool("on_position_change", false)!
         ? (MapCamera camera, bool hasGesture) {
             control.triggerEvent("position_change", {
-              "coordinates": {
-                "latitude": camera.center.latitude,
-                "longitude": camera.center.longitude,
-              },
-              "min_zoom": camera.minZoom,
-              "max_zoom": camera.maxZoom,
-              "rotation": camera.rotation,
+              "coordinates": camera.center.toMap(),
+              "has_gesture": hasGesture,
+              "camera": camera.toMap()
             });
           }
         : null,
-    onPointerDown: control.getBool("on_pointerDown", false)!
+    onPointerDown: control.getBool("on_pointer_down", false)!
         ? (PointerDownEvent e, LatLng latlng) {
             control.triggerEvent("pointer_down", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": e.position.dx,
-              "global_y": e.position.dy,
-              "device_type": e.kind.name,
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
     onPointerCancel: control.getBool("on_pointer_cancel", false)!
         ? (PointerCancelEvent e, LatLng latlng) {
             control.triggerEvent("pointer_cancel", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": e.position.dx,
-              "global_y": e.position.dy,
-              "device_type": e.kind.name,
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
     onPointerUp: control.getBool("on_pointer_up", false)!
         ? (PointerUpEvent e, LatLng latlng) {
-            control.triggerEvent("pointer_up", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": e.position.dx,
-              "global_y": e.position.dy,
-              "device_type": e.kind.name,
-            });
+            control.triggerEvent(
+                "pointer_up", {"coordinates": latlng.toMap(), ...e.toMap()});
           }
         : null,
-    onSecondaryTap: control.getBool("onSecondary_tap", false)!
+    onSecondaryTap: control.getBool("on_secondary_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("secondary_tap", {
-              "coordinates": {
-                "latitude": latlng.latitude,
-                "longitude": latlng.longitude,
-              },
-              "global_x": pos.global.dx,
-              "global_y": pos.global.dy,
-              "local_x": pos.relative?.dx,
-              "local_y": pos.relative?.dy,
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
@@ -208,14 +188,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
         ? (MapEvent e) {
             control.triggerEvent("event", {
               "source": e.source.name,
-              "center": {
-                "latitude": e.camera.center.latitude,
-                "longitude": e.camera.center.longitude,
-              },
-              "zoom": e.camera.zoom,
-              "min_zoom": e.camera.minZoom,
-              "max_zoom": e.camera.maxZoom,
-              "rotation": e.camera.rotation,
+              "camera": e.camera.toMap(),
             });
           }
         : null,

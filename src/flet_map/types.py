@@ -25,6 +25,15 @@ class PatternFit(Enum):
 
 
 @dataclass
+class MapCamera:
+    center: "MapLatitudeLongitude"
+    zoom: float
+    min_zoom: float
+    max_zoom: float
+    rotation: float
+
+
+@dataclass
 class StrokePattern:
     type: str = ""
 
@@ -132,45 +141,28 @@ class MapEventSource(Enum):
 
 
 @dataclass
-class MapTapEvent(ft.ControlEvent):
-    local_x: Optional[float]
-    local_y: Optional[float]
-    global_x: float
-    global_y: float
+class MapTapEvent(ft.LongPressStartEvent):
     coordinates: MapLatitudeLongitude
 
 
 @dataclass
-class MapHoverEvent(ft.ControlEvent):
-    local_x: Optional[float]
-    local_y: Optional[float]
-    global_x: float
-    global_y: float
-    device_type: ft.PointerDeviceType
+class MapHoverEvent(ft.HoverEvent):
     coordinates: MapLatitudeLongitude
 
 
 @dataclass
 class MapPositionChangeEvent(ft.ControlEvent):
-    min_zoom: Optional[float]
-    max_zoom: Optional[float]
-    rotation: float
     coordinates: MapLatitudeLongitude
+    camera: MapCamera
+    has_gesture: bool
 
 
 @dataclass
-class MapPointerEvent(ft.ControlEvent):
-    device_type: ft.PointerDeviceType
-    global_y: float
-    global_x: float
+class MapPointerEvent(ft.PointerEvent):
     coordinates: MapLatitudeLongitude
 
 
 @dataclass
 class MapEvent(ft.ControlEvent):
     source: MapEventSource
-    center: MapLatitudeLongitude
-    zoom: float
-    min_zoom: float
-    max_zoom: float
-    rotation: float
+    camera: MapCamera

@@ -47,10 +47,10 @@ class TileLayer(MapLayer):
         super().before_update()
         assert self.tile_size >= 0, "tile_size cannot be negative"
         assert (
-                self.min_native_zoom >= 0
+            self.min_native_zoom >= 0
         ), "min_native_zoom must be greater than or equal to 0"
         assert (
-                self.max_native_zoom >= 0
+            self.max_native_zoom >= 0
         ), "max_native_zoom must be greater than or equal to 0"
         assert self.zoom_offset >= 0, "zoom_offset must be greater than or equal to 0"
         assert self.max_zoom >= 0, "max_zoom must be greater than or equal to 0"

@@ -31,9 +31,12 @@ class TileLayerControl extends StatelessWidget {
       }
     }
     Widget tileLayer = TileLayer(
-        urlTemplate: control.getString("url_template", "")!,
+        urlTemplate: control.getString("url_template"),
         fallbackUrl: control.getString("fallback_url"),
-        subdomains: control.get("subdomains", ['a', 'b', 'c'])!,
+        subdomains: control
+        .get<List>("subdomains")
+        ?.map((e) => e.toString())
+        .toList() ?? ['a', 'b', 'c'],
         tileProvider: CancellableNetworkTileProvider(),
         tileDisplay: const TileDisplay.fadeIn(),
         tileSize: control.getDouble("tile_size", 256)!,

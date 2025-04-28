@@ -1,7 +1,11 @@
-
+import logging
 import random
+
 import flet as ft
+
 import flet_map as map
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page: ft.Page):
@@ -14,7 +18,7 @@ def main(page: ft.Page):
             marker_layer_ref.current.markers.append(
                 map.Marker(
                     content=ft.Icon(
-                        ft.Icons.LOCATION_ON, color=ft.cupertino_colors.DESTRUCTIVE_RED
+                        ft.Icons.LOCATION_ON, color=ft.CupertinoColors.DESTRUCTIVE_RED
                     ),
                     coordinates=e.coordinates,
                 )
@@ -24,8 +28,8 @@ def main(page: ft.Page):
                 map.CircleMarker(
                     radius=random.randint(5, 10),
                     coordinates=e.coordinates,
-                    color=ft.Colors.random_color(),
-                    border_color=ft.Colors.random_color(),
+                    color=ft.Colors.random(),
+                    border_color=ft.Colors.random(),
                     border_stroke_width=4,
                 )
             )
@@ -53,90 +57,90 @@ def main(page: ft.Page):
                     url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     on_image_error=lambda e: print("TileLayer Error"),
                 ),
-                map.RichAttribution(
-                    attributions=[
-                        map.TextSourceAttribution(
-                            text="OpenStreetMap Contributors",
-                            on_click=lambda e: e.page.launch_url(
-                                "https://openstreetmap.org/copyright"
-                            ),
-                        ),
-                        map.TextSourceAttribution(
-                            text="Flet",
-                            on_click=lambda e: e.page.launch_url("https://flet.dev"),
-                        ),
-                    ]
-                ),
-                map.SimpleAttribution(
-                    text="Flet",
-                    alignment=ft.alignment.top_right,
-                    on_click=lambda e: print("Clicked SimpleAttribution"),
-                ),
-                map.MarkerLayer(
-                    ref=marker_layer_ref,
-                    markers=[
-                        map.Marker(
-                            content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(30, 15),
-                        ),
-                        map.Marker(
-                            content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(10, 10),
-                        ),
-                        map.Marker(
-                            content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(25, 45),
-                        ),
-                    ],
-                ),
-                map.CircleLayer(
-                    ref=circle_layer_ref,
-                    circles=[
-                        map.CircleMarker(
-                            radius=10,
-                            coordinates=map.MapLatitudeLongitude(16, 24),
-                            color=ft.Colors.RED,
-                            border_color=ft.Colors.BLUE,
-                            border_stroke_width=4,
-                        ),
-                    ],
-                ),
-                map.PolygonLayer(
-                    polygons=[
-                        map.PolygonMarker(
-                            label="Popular Touristic Area",
-                            label_text_style=ft.TextStyle(
-                                color=ft.Colors.BLACK,
-                                size=15,
-                                weight=ft.FontWeight.BOLD,
-                            ),
-                            color=ft.Colors.with_opacity(0.3, ft.Colors.BLUE),
-                            coordinates=[
-                                map.MapLatitudeLongitude(10, 10),
-                                map.MapLatitudeLongitude(30, 15),
-                                map.MapLatitudeLongitude(25, 45),
-                            ],
-                        ),
-                    ],
-                ),
-                map.PolylineLayer(
-                    polylines=[
-                        map.PolylineMarker(
-                            border_stroke_width=3,
-                            border_color=ft.Colors.RED,
-                            gradient_colors=[ft.Colors.BLACK, ft.Colors.BLACK],
-                            color=ft.Colors.with_opacity(0.6, ft.Colors.GREEN),
-                            coordinates=[
-                                map.MapLatitudeLongitude(10, 10),
-                                map.MapLatitudeLongitude(30, 15),
-                                map.MapLatitudeLongitude(25, 45),
-                            ],
-                        ),
-                    ],
-                ),
+                # map.RichAttribution(
+                #     attributions=[
+                #         map.TextSourceAttribution(
+                #             text="OpenStreetMap Contributors",
+                #             on_click=lambda e: e.page.launch_url(
+                #                 "https://openstreetmap.org/copyright"
+                #             ),
+                #         ),
+                #         map.TextSourceAttribution(
+                #             text="Flet",
+                #             on_click=lambda e: e.page.launch_url("https://flet.dev"),
+                #         ),
+                #     ]
+                # ),
+                # map.SimpleAttribution(
+                #     text="Flet",
+                #     alignment=ft.Alignment.top_right(),
+                #     on_click=lambda e: print("Clicked SimpleAttribution"),
+                # ),
+                # map.MarkerLayer(
+                #     ref=marker_layer_ref,
+                #     markers=[
+                #         map.Marker(
+                #             content=ft.Icon(ft.Icons.LOCATION_ON),
+                #             coordinates=map.MapLatitudeLongitude(30, 15),
+                #         ),
+                #         map.Marker(
+                #             content=ft.Icon(ft.Icons.LOCATION_ON),
+                #             coordinates=map.MapLatitudeLongitude(10, 10),
+                #         ),
+                #         map.Marker(
+                #             content=ft.Icon(ft.Icons.LOCATION_ON),
+                #             coordinates=map.MapLatitudeLongitude(25, 45),
+                #         ),
+                #     ],
+                # ),
+                # map.CircleLayer(
+                #     ref=circle_layer_ref,
+                #     circles=[
+                #         map.CircleMarker(
+                #             radius=10,
+                #             coordinates=map.MapLatitudeLongitude(16, 24),
+                #             color=ft.Colors.RED,
+                #             border_color=ft.Colors.BLUE,
+                #             border_stroke_width=4,
+                #         ),
+                #     ],
+                # ),
+                # map.PolygonLayer(
+                #     polygons=[
+                #         map.PolygonMarker(
+                #             label="Popular Touristic Area",
+                #             label_text_style=ft.TextStyle(
+                #                 color=ft.Colors.BLACK,
+                #                 size=15,
+                #                 weight=ft.FontWeight.BOLD,
+                #             ),
+                #             color=ft.Colors.with_opacity(0.3, ft.Colors.BLUE),
+                #             coordinates=[
+                #                 map.MapLatitudeLongitude(10, 10),
+                #                 map.MapLatitudeLongitude(30, 15),
+                #                 map.MapLatitudeLongitude(25, 45),
+                #             ],
+                #         ),
+                #     ],
+                # ),
+                # map.PolylineLayer(
+                #     polylines=[
+                #         map.PolylineMarker(
+                #             border_stroke_width=3,
+                #             border_color=ft.Colors.RED,
+                #             gradient_colors=[ft.Colors.BLACK, ft.Colors.BLACK],
+                #             color=ft.Colors.with_opacity(0.6, ft.Colors.GREEN),
+                #             coordinates=[
+                #                 map.MapLatitudeLongitude(10, 10),
+                #                 map.MapLatitudeLongitude(30, 15),
+                #                 map.MapLatitudeLongitude(25, 45),
+                #             ],
+                #         ),
+                #     ],
+                # ),
             ],
         ),
     )
 
 
-ft.app(main)
+ft.run(main)

@@ -19,6 +19,6 @@ class SimpleAttribution(MapLayer):
     """
 
     text: Union[str, ft.Text]
-    alignment: ft.Alignment = field(default=ft.alignment.bottom_right)
+    alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.bottom_right())
     bgcolor: ft.OptionalColorValue = None
     on_click: ft.OptionalControlEventCallable = None

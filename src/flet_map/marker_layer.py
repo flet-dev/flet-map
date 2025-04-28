@@ -44,5 +44,7 @@ class MarkerLayer(MapLayer):
     """
 
     markers: List[Marker]
-    alignment: ft.OptionalAlignment = field(default_factory=lambda: ft.alignment.center)
+    alignment: ft.OptionalAlignment = field(
+        default_factory=lambda: ft.Alignment.center()
+    )
     rotate: bool = False
