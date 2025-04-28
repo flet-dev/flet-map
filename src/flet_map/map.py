@@ -37,7 +37,7 @@ class Map(ft.ConstrainedControl):
     interaction_configuration: MapInteractionConfiguration = field(
         default_factory=lambda: MapInteractionConfiguration()
     )
-    bgcolor: ft.OptionalColorValue = None
+    bgcolor: ft.ColorValue = ft.Colors.GREY_300
     keep_alive: bool = False
     max_zoom: ft.OptionalNumber = None
     min_zoom: ft.OptionalNumber = None

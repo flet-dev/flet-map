@@ -2,7 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:latlong2/latlong.dart';
 
 import 'utils/map.dart';
 
@@ -38,12 +37,15 @@ class _MapControlState extends State<MapControl>
     var zoom = parseDouble(args["zoom"]);
     switch (name) {
       case "rotate_from":
-        await _animatedMapController.animatedRotateFrom(
-          args["degree"],
-          curve: animationCurve,
-          duration: animationDuration,
-          cancelPreviousAnimations: cancelPreviousAnimations,
-        );
+        var degree = parseDouble(args["degree"]);
+        if (degree != null) {
+          await _animatedMapController.animatedRotateFrom(
+            degree,
+            curve: animationCurve,
+            duration: animationDuration,
+            cancelPreviousAnimations: cancelPreviousAnimations,
+          );
+        }
         break;
       case "reset_rotation":
         await _animatedMapController.animatedRotateReset(

@@ -141,7 +141,7 @@ class MapEventSource(Enum):
 
 
 @dataclass
-class MapTapEvent(ft.LongPressStartEvent):
+class MapTapEvent(ft.TapEvent):
     coordinates: MapLatitudeLongitude
 
 

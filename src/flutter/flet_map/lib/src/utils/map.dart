@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
@@ -114,8 +112,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
         parseLatLng(control.get("initial_center"), const LatLng(50.5, 30.51))!,
     interactionOptions: parseInteractionOptions(
         control.get("interaction_configuration"), const InteractionOptions())!,
-    backgroundColor:
-        control.getColor("bgcolor", context, const Color(0x00000000))!,
+    backgroundColor: control.getColor("bgcolor", context, Colors.grey[300])!,
     initialRotation: control.getDouble("initial_rotation", 0.0)!,
     initialZoom: control.getDouble("initial_zoom", 13.0)!,
     keepAlive: control.getBool("keep_alive", false)!,

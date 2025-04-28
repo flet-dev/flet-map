@@ -24,7 +24,7 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
           width: marker.getDouble("width", 30.0)!,
           alignment: marker.getAlignment("alignment"),
           builder: (BuildContext context, Animation<double> animation) {
-            return control.buildWidget("content") ??
+            return marker.buildWidget("content") ??
                 const ErrorControl("content must be provided and visible");
           });
     }).toList();
