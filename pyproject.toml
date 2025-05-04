@@ -6,9 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Flet contributors", email = "hello@flet.dev" }
 ]
-classifiers = [
-  "License :: OSI Approved :: Apache Software License",
-]
+license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
@@ -36,13 +34,9 @@ dev-dependencies = [
 ]
 
 [tool.uv.sources]
-flet = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet", rev = "v1" }
+flet = { path = "/Users/ndonkohenri/PycharmProjects/flet-dev/flet/sdk/python/packages/flet", editable = true }
 flet-cli = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet-cli", rev = "v1" }
 flet-desktop = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet-desktop", rev = "v1" }
-flet-web = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet-web", rev = "v1" }
-
-[tool.setuptools]
-license-files = []
 
 [build-system]
 requires = ["setuptools"]
