@@ -94,6 +94,7 @@ class _MapControlState extends State<MapControl>
                 curve: parseCurve(args["curve"], defaultAnimationCurve),
                 duration: durationFromString(
                     args["duration"], defaultAnimationDuration));
+
           case "zoom_to":
             var zoom = parseDouble(args["zoom"]);
             if (zoom != null) {
@@ -102,6 +103,7 @@ class _MapControlState extends State<MapControl>
                   duration: durationFromString(
                       args["duration"], defaultAnimationDuration));
             }
+
           case "move_to":
             var zoom = parseDouble(args["zoom"]);
             var lat = parseDouble(args["lat"]);
@@ -117,6 +119,7 @@ class _MapControlState extends State<MapControl>
               dest: (lat != null && long != null) ? LatLng(lat, long) : null,
               offset: (ox != null && oy != null) ? Offset(ox, oy) : Offset.zero,
             );
+
           case "center_on":
             var zoom = parseDouble(args["zoom"]);
             var lat = parseDouble(args["lat"]);

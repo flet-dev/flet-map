@@ -44,6 +44,7 @@ class TileLayer(MapLayer):
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
         error_image_src: Optional[str] = None,
+        headers: Optional[Dict[str, str]] = None,
         evict_error_tile_strategy: Optional[MapTileLayerEvictErrorTileStrategy] = None,
         on_image_error: OptionalControlEventCallable = None,
         #
@@ -77,6 +78,7 @@ class TileLayer(MapLayer):
         self.error_image_src = error_image_src
         self.enable_retina_mode = enable_retina_mode
         self.on_image_error = on_image_error
+        self.headers = headers
         self.tile_bounds = tile_bounds
         self.evict_error_tile_strategy = evict_error_tile_strategy
         self.subdomains = subdomains
@@ -94,6 +96,8 @@ class TileLayer(MapLayer):
             self._set_attr_json("subdomains", self.__subdomains)
         if isinstance(self.__additional_options, dict):
             self._set_attr_json("additionalOptions", self.__additional_options)
+        if isinstance(self.__headers, dict):
+            self._set_attr_json("headers", self.__headers)
 
     # url_template
     @property
@@ -130,6 +134,14 @@ class TileLayer(MapLayer):
     @additional_options.setter
     def additional_options(self, value: Optional[Dict[str, str]]):
         self.__additional_options = value
+
+    @property
+    def headers(self) -> Optional[Dict[str, str]]:
+        return self.__headers
+
+    @headers.setter
+    def headers(self, value: Optional[Dict[str, str]]):
+        self.__headers = value
 
     # tile_bounds
     @property
