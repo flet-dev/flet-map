@@ -40,15 +40,32 @@ class TileLayerControl extends StatelessWidget with FletStoreMixin {
           errorImage = NetworkImage(assetSrc.path);
         }
       }
+      
       var subdomains = control.attrString("subdomains");
       var additionalOptions = control.attrString("additionalOptions");
+      var headersStr = control.attrString("headers");
+
+      Map<String, String> headers = {};
+      if (headersStr != null) {
+        try {
+          final decodedHeaders = jsonDecode(headersStr) as Map;
+          headers = decodedHeaders.map((k, v) => MapEntry(k.toString(), v.toString()));
+          debugPrint("TileLayerControl headers: $headers");
+        } catch (e) {
+          debugPrint("Error parsing headers: $e");
+        }
+      }
+    
+
       Widget tile = TileLayer(
           urlTemplate: control.attrString("urlTemplate", "")!,
           fallbackUrl: control.attrString("fallbackUrl", "")!,
           subdomains: subdomains != null
               ? jsonDecode(subdomains).cast<String>()
               : ['a', 'b', 'c'],
-          tileProvider: CancellableNetworkTileProvider(),
+          tileProvider:  CancellableNetworkTileProvider(
+            headers: headers,
+          ),
           tileDisplay: const TileDisplay.fadeIn(),
           tileSize: control.attrDouble("tileSize", 256)!,
           minNativeZoom: control.attrInt("minNativeZoom", 0)!,
