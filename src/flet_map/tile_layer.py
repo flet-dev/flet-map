@@ -198,7 +198,11 @@ class TileLayer(MapLayer):
     Defaults to `MapTileLayerEvictErrorTileStrategy.NONE`.
     """
 
-    display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
+    display_mode: TileDisplay = field(
+        default_factory=lambda: FadeInTileDisplay(
+            start_opacity=0.0, reload_start_opacity=0.0
+        )
+    )
     """
     
     Defines how tiles are displayed on the map.

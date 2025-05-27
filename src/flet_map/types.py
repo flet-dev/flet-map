@@ -581,14 +581,14 @@ class FadeInTileDisplay(TileDisplay):
 
     start_opacity: ft.Number = 1.0
     """
-    The opacity of what the tile should start loading in.
+    Opacity start value when a tile is faded in.
     
     Defaults to `1.0`.
     """
 
     reload_start_opacity: ft.Number = 1.0
     """
-    The opacity of what the tile should start loading in when a reload occurred.
+    Opacity start value when a tile is reloaded.
 
     Defaults to `1.0`.
     """
