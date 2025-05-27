@@ -12,22 +12,77 @@ __all__ = ["PolygonMarker", "PolygonLayer"]
 class PolygonMarker(ft.Control):
     """
     A marker for the PolygonLayer.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mappolygonmarker
     """
 
     coordinates: List[MapLatitudeLongitude]
+    """
+    The points for the outline of this polygon.
+    """
+
     label: Optional[str] = None
+    """
+    An optional label for this polygon.
+
+    Note: specifying a label will reduce performance, as the internal
+    canvas must be drawn to and 'saved' more frequently to ensure the proper
+    stacking order is maintained. This can be avoided, potentially at the
+    expense of appearance, by setting `PolygonLayer.draw_labels_last`.
+    """
+
     label_text_style: ft.OptionalTextStyle = None
-    border_color: ft.OptionalColorValue = None
-    color: ft.OptionalColorValue = None
-    border_stroke_width: ft.Number = 0
+    """
+    The text style for the label.
+    """
+
+    border_color: ft.ColorValue = ft.Colors.GREEN
+    """
+    The color of the border outline.
+    
+    Defaults to `ft.Colors.GREEN`.
+    """
+
+    color: ft.ColorValue = ft.Colors.GREEN
+    """
+    The color of the polygon.
+    
+    Defaults to `ft.Colors.GREEN`.
+    """
+
+    border_stroke_width: ft.Number = 0.0
+    """
+    The width of the border outline.
+    
+    Defaults to `0.0`.
+    """
+
     disable_holes_border: bool = False
+    """
+    Whether holes should have borders.
+    
+    Defaults to `False` (enabled).
+    """
+
     rotate_label: bool = False
+    """
+    Whether to rotate the label counter to the camera's rotation, 
+    to ensure it remains upright.
+
+    Defaults to `False`.
+    """
+
     stroke_cap: ft.StrokeCap = ft.StrokeCap.ROUND
+    """
+    Style to use for line endings.
+    
+    Defaults to `ft.StrokeCap.ROUND`.
+    """
+
     stroke_join: ft.StrokeJoin = ft.StrokeJoin.ROUND
+    """
+    Style to use for line segment joins.
+    
+    Defaults to `ft.StrokeJoin.ROUND`.
+    """
 
     def before_update(self):
         super().before_update()
@@ -47,8 +102,47 @@ class PolygonLayer(MapLayer):
     """
 
     polygons: List[PolygonMarker]
-    polygon_culling: bool = False
+    """
+    A list of `PolygonMarker`s to display.
+    """
+
+    polygon_culling: bool = True
+    """
+    Whether to cull polygons and polygon sections that are outside of the viewport.
+    
+    Defaults to `True`.
+    """
+
     polygon_labels: bool = True
+    """
+    Whether to draw per-polygon labels.
+    
+    Defaults to `True`.
+    """
+
     draw_labels_last: bool = False
-    simplification_tolerance: ft.Number = 0.5
+    """
+    Whether to draw labels last and thus over all the polygons.
+    
+    Defaults to `False`.
+    """
+
+    simplification_tolerance: ft.Number = 0.3
+    """
+    Defaults to `0.3`.
+    """
+
     use_alternative_rendering: bool = False
+    """
+    Whether to use an alternative rendering pathway to draw polygons onto the
+    underlying `Canvas`, which can be more performant in 'some' circumstances. 
+    
+    This will not always improve performance, and there are other important
+    considerations before enabling it. It is intended for use when prior
+    profiling indicates more performance is required after other methods are
+    already in use. For example, it may worsen performance when there are a
+    huge number of polygons to triangulate - and so this is best used in
+    conjunction with simplification, not as a replacement.
+    
+    Defaults to `False`.
+    """

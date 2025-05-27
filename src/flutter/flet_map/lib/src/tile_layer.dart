@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -34,11 +32,13 @@ class TileLayerControl extends StatelessWidget {
         urlTemplate: control.getString("url_template"),
         fallbackUrl: control.getString("fallback_url"),
         subdomains: control
-        .get<List>("subdomains")
-        ?.map((e) => e.toString())
-        .toList() ?? ['a', 'b', 'c'],
+                .get<List>("subdomains")
+                ?.map((e) => e.toString())
+                .toList() ??
+            ['a', 'b', 'c'],
         tileProvider: CancellableNetworkTileProvider(),
-        tileDisplay: const TileDisplay.fadeIn(),
+        tileDisplay: parseTileDisplay(
+            control.get("display_mode"), const TileDisplay.fadeIn())!,
         tileSize: control.getDouble("tile_size", 256)!,
         minNativeZoom: control.getInt("min_native_zoom", 0)!,
         maxNativeZoom: control.getInt("max_native_zoom", 19)!,
@@ -56,7 +56,7 @@ class TileLayerControl extends StatelessWidget {
             EvictErrorTileStrategy.none)!,
         errorImage: errorImage,
         errorTileCallback: (TileImage t, Object o, StackTrace? s) {
-          control.triggerEvent("image_error");
+          control.triggerEvent("image_error", o.toString());
         },
         additionalOptions: control.get("additional_options", {})!);
 

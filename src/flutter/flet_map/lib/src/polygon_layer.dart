@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -22,10 +19,8 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
         .map((polygon) {
       return Polygon(
           borderStrokeWidth: polygon.getDouble("border_stroke_width", 0)!,
-          borderColor: polygon.getColor(
-              "border_color", context, const Color(0xFFFFFF00))!,
-          color: polygon.getColor("color", context, const Color(0xFF00FF00))!,
-          // todo: which defaultColor is this
+          borderColor: polygon.getColor("border_color", context, Colors.green)!,
+          color: polygon.getColor("color", context, Colors.green)!,
           disableHolesBorder: polygon.getBool("disable_holes_border", false)!,
           rotateLabel: polygon.getBool("rotate_label", false)!,
           label: polygon.getString("label"),
@@ -42,11 +37,11 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
 
     return PolygonLayer(
       polygons: polygons,
-      polygonCulling: control.getBool("polygon_culling", false)!,
+      polygonCulling: control.getBool("polygon_culling", true)!,
       polygonLabels: control.getBool("polygon_labels", true)!,
       drawLabelsLast: control.getBool("draw_labels_last", false)!,
       simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.5)!,
+          control.getDouble("simplification_tolerance", 0.3)!,
       useAltRendering: control.getBool("use_alternative_rendering", false)!,
     );
   }

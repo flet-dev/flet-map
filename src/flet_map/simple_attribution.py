@@ -12,13 +12,28 @@ __all__ = ["SimpleAttribution"]
 class SimpleAttribution(MapLayer):
     """
     A simple attribution layer displayed on the Map.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapsimpleattribution
     """
 
     text: Union[str, ft.Text]
+    """
+    The attribution message to be displayed.
+    
+    Value is of type `str` and `ft.Text`.
+    """
+
     alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.bottom_right())
-    bgcolor: ft.OptionalColorValue = None
+    """
+    The alignment of this attribution on the map.
+    
+    Defaults to `ft.Alignment.bottom_right()`
+    """
+
+    bgcolor: ft.ColorValue = ft.Colors.SURFACE
+    """
+    The color of the box containing the `text`.
+    
+    Defaults to `ft.Colors.SURFACE`.
+    """
+
     on_click: ft.OptionalControlEventCallable = None
+    """Fired when this attribution is clicked/pressed."""

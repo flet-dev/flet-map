@@ -13,18 +13,50 @@ __all__ = ["Marker", "MarkerLayer"]
 class Marker(ft.Control):
     """
     A marker displayed on the Map at the specified location through the MarkerLayer.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapmarker
     """
 
     content: ft.Control
+    """
+    The content to be displayed at `coordinates`.
+    """
+
     coordinates: MapLatitudeLongitude
+    """
+    The coordinates of the marker.
+    
+    This will be the center of the marker, if `alignment=ft.Alignment.center()`.
+    """
+
     rotate: Optional[bool] = None
+    """
+    Whether to counter rotate this marker to the map's rotation, to keep a fixed orientation.
+    So, when `True`, this marker will always appear upright and vertical from the user's perspective.
+    
+    Note: this is not used to apply a custom rotation in degrees to the marker.
+    
+    Defaults to the value of the parent `MarkerLayer.rotate`.
+    """
+
     height: ft.Number = 30.0
+    """
+    The height of the `content` Control.
+    
+    Defaults to `30.0`.
+    """
+
     width: ft.Number = 30.0
+    """
+    The width of the `content` Control.
+    
+    Defaults to `30.0`.
+    """
+
     alignment: ft.OptionalAlignment = None
+    """
+    Alignment of the marker relative to the normal center at coordinates.
+    
+    Defaults to the value of the parent `MarkerLayer.alignment`.
+    """
 
     def before_update(self):
         super().before_update()
@@ -37,14 +69,25 @@ class Marker(ft.Control):
 class MarkerLayer(MapLayer):
     """
     A layer to display Markers.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapmarkerlayer
     """
 
     markers: List[Marker]
+    """
+    List of `Marker`s to display.
+    """
+
     alignment: ft.OptionalAlignment = field(
         default_factory=lambda: ft.Alignment.center()
     )
+    """
+    Alignment of each marker relative to its normal center at `Marker.coordinates`.
+    
+    Defaults to `ft.Alignment.center()`.
+    """
+
     rotate: bool = False
+    """
+    Whether to counter-rotate `markers` to the map's rotation, to keep a fixed orientation.
+    
+    Defaults to `False`.
+    """

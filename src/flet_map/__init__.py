@@ -12,8 +12,13 @@ from .source_attribution import (
 )
 from .tile_layer import TileLayer
 from .types import (
+    AttributionAlignment,
     DashedStrokePattern,
     DottedStrokePattern,
+    FadeInTileDisplay,
+    InstantaneousTileDisplay,
+    MapCamera,
+    MapCameraFit,
     MapEvent,
     MapEventSource,
     MapHoverEvent,
@@ -28,4 +33,6 @@ from .types import (
     MapTileLayerEvictErrorTileStrategy,
     PatternFit,
     SolidStrokePattern,
+    StrokePattern,
+    TileDisplay,
 )

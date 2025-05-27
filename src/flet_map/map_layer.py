@@ -7,4 +7,14 @@ __all__ = ["MapLayer"]
 class MapLayer(ft.Control):
     """
     Abstract class for all map layers.
+
+    The following layers are available:
+
+    - `CircleLayer`
+    - `MarkerLayer`
+    - `PolygonLayer`
+    - `PolylineLayer`
+    - `RichAttribution`
+    - `SimpleAttribution`
+    - `TileLayer`
     """

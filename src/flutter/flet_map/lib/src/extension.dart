@@ -1,5 +1,4 @@
 import 'package:flet/flet.dart';
-import 'package:flet_map/src/text_source_attribution.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'circle_layer.dart';
@@ -9,7 +8,6 @@ import 'polygon_layer.dart';
 import 'polyline_layer.dart';
 import 'rich_attribution.dart';
 import 'simple_attribution.dart';
-import 'image_source_attribution.dart';
 import 'tile_layer.dart';
 
 class Extension extends FletExtension {
@@ -32,10 +30,6 @@ class Extension extends FletExtension {
         return PolygonLayerControl(key: key, control: control);
       case "PolylineLayer":
         return PolylineLayerControl(key: key, control: control);
-      case "ImageSourceAttribution":
-        return ImageSourceAttributionControl(key: key, control: control);
-      case "TextSourceAttribution":
-        return TextSourceAttributionControl(key: key, control: control);
       default:
         return null;
     }

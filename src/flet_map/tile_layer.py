@@ -4,7 +4,12 @@ from typing import Dict, List, Optional
 import flet as ft
 
 from .map_layer import MapLayer
-from .types import MapLatitudeLongitudeBounds, MapTileLayerEvictErrorTileStrategy
+from .types import (
+    FadeInTileDisplay,
+    MapLatitudeLongitudeBounds,
+    MapTileLayerEvictErrorTileStrategy,
+    TileDisplay,
+)
 
 __all__ = ["TileLayer"]
 
@@ -12,36 +17,201 @@ __all__ = ["TileLayer"]
 @ft.control("TileLayer")
 class TileLayer(MapLayer):
     """
-    The Map's main layer.
-    Displays square raster images in a continuous grid, sourced from the provided utl_template.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/maptilelayer
+    The map's main layer.
+    Displays square raster images in a continuous grid,
+    sourced from the provided `url_template` and `fallback_url`.
     """
 
     url_template: str
+    """
+    The URL template is a string that contains placeholders, 
+    which, when filled in, create a URL/URI to a specific tile.
+    """
+
     fallback_url: Optional[str] = None
+    """
+    Fallback URL template, used if an error occurs when fetching tiles from
+    the `url_template`.
+    
+    Note that specifying this (non-none) will result in tiles not being cached
+    in memory. This is to avoid issues where the `url_template` is flaky, to
+    prevent different tilesets being displayed at the same time.
+    
+    It is expected that this follows the same retina support behaviour as `url_template`.
+    """
+
     subdomains: List[str] = field(default_factory=lambda: ["a", "b", "c"])
+    """
+    List of subdomains used in the URL template.
+
+    For example, if `subdomains` is set to `["a", "b", "c"]` and the 
+    `url_template` is `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`, 
+    the resulting tile URLs will be:
+
+    - "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    - "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    - "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+
+    Defaults to `["a", "b", "c"]`.
+    """
+
     tile_bounds: Optional[MapLatitudeLongitudeBounds] = None
+    """
+    Defines the bounds of the map. 
+    Only tiles that fall within these bounds will be loaded.
+    """
+
     tile_size: ft.Number = 256.0
+    """
+    The tile's size.
+    
+    Defaults to `256.0`.
+    """
+
     min_native_zoom: int = 0
+    """
+    Minimum zoom level supported by the tile source.
+
+    Tiles from below this zoom level will not be displayed, instead tiles at
+    this zoom level will be displayed and scaled.
+    
+    This should usually be 0 (as default), as most tile sources will support
+    zoom levels onwards from this.
+    """
+
     max_native_zoom: int = 19
+    """
+    Maximum zoom number supported by the tile source has available.
+
+    Tiles from above this zoom level will not be displayed, instead tiles at
+    this zoom level will be displayed and scaled.
+    
+    Most tile servers support up to zoom level `19`, which is the default.
+    Otherwise, this should be specified.
+
+    Defaults to `19`.
+    """
+
     zoom_reverse: bool = False
+    """
+    Whether the zoom number used in tile URLs will be reversed (`max_zoom - zoom` instead of `zoom`).
+
+    Defaults to `False`.
+    """
+
     zoom_offset: ft.Number = 0.0
+    """
+    The zoom number used in tile URLs will be offset with this value.
+    
+    Defaults to `0.0`.
+    """
+
     keep_buffer: int = 2
+    """
+    When panning the map, keep this many rows and columns of tiles before unloading them.
+
+    Defaults to `2`.
+    """
+
     pan_buffer: int = 1
+    """
+    When loading tiles only visible tiles are loaded by default. This option
+    increases the loaded tiles by the given number on both axis which can help
+    prevent the user from seeing loading tiles whilst panning. Setting the
+    pan buffer too high can impact performance, typically this is set to `0` or `1`.
+
+    Defaults to `1`.
+    """
+
     enable_tms: bool = False
-    # keep_alive: Optional[bool] = None
+    """
+    Whether to inverse Y-axis numbering for tiles.
+    Turn this on for [TMS](https://en.wikipedia.org/wiki/Tile_Map_Service) services.
+    
+    Defaults to `False`.
+    """
+
     enable_retina_mode: bool = False
-    additional_options: Optional[Dict[str, str]] = None
+    """
+    Whether to enable retina mode.
+    Retina mode improves the resolution of map tiles, particularly on high density displays.
+    
+    Defaults to `False`.
+    """
+
+    additional_options: Dict[str, str] = field(default_factory=dict)
+    """
+    Static information that should replace placeholders in the `url_template`.
+    Applying API keys, for example, is a good usecase of this parameter.
+    
+    Example:
+
+    ```python
+    TileLayer(
+        url_template="https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}{r}.png?access_token={accessToken}",
+        additional_options={
+            'accessToken': '<ACCESS_TOKEN_HERE>',
+            'id': 'mapbox.streets',
+        },
+    ),
+    ```
+    
+    Defaults to `{}`.
+    """
+
     max_zoom: ft.Number = float("inf")
+    """
+    The maximum zoom level up to which this layer will be displayed (inclusive).
+    The main usage for this property is to display a different `TileLayer`
+    when zoomed far in.
+    
+    Prefer `max_native_zoom` for setting the maximum zoom level supported by the
+    tile source. 
+    
+    Typically set to infinity so that there are tiles always displayed.
+
+    Defaults to `float("inf")`.
+    """
+
     min_zoom: ft.Number = 0.0
+    """
+    The minimum zoom level at which this layer is displayed (inclusive).
+    Typically set to `0.0` by default.
+    
+    Defaults to `0.0`.
+    """
+
     error_image_src: Optional[str] = None
+    """
+    The source of the tile image to show in place of the tile that failed to load.
+    
+    See `on_image_error` property for details on the error.
+    """
+
     evict_error_tile_strategy: Optional[
         MapTileLayerEvictErrorTileStrategy
     ] = MapTileLayerEvictErrorTileStrategy.NONE
+    """
+    If a tile was loaded with error, 
+    the tile provider will be asked to evict the image based on this strategy.
+    
+    Defaults to `MapTileLayerEvictErrorTileStrategy.NONE`.
+    """
+
+    display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
+    """
+    
+    Defines how tiles are displayed on the map.
+    
+    Defaults to `FadeInTileDisplay()`.
+    """
+
     on_image_error: ft.OptionalControlEventCallable = None
+    """
+    Fires if an error occurs when fetching the tiles.
+    
+    Event handler argument `data` property contains information about the error.
+    """
 
     def before_update(self):
         super().before_update()

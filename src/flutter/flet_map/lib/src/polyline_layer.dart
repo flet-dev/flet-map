@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -22,10 +19,9 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
         .map((polyline) {
       return Polyline(
           borderStrokeWidth: polyline.getDouble("border_stroke_width", 0)!,
-          borderColor: polyline.getColor(
-              "border_color", context, const Color(0xFFFFFF00))!,
-          color: polyline.getColor("color", context, const Color(0xFF00FF00))!,
-          // todo: which defcolor is this
+          borderColor:
+              polyline.getColor("border_color", context, Colors.yellow)!,
+          color: polyline.getColor("color", context, Colors.yellow)!,
           pattern: parseStrokePattern(
               polyline.get("stroke_pattern"), const StrokePattern.solid())!,
           strokeCap: polyline.getStrokeCap("stroke_cap", StrokeCap.round)!,
@@ -55,7 +51,7 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
       cullingMargin: control.getDouble("culling_margin", 10.0)!,
       minimumHitbox: control.getDouble("min_hittable_radius", 10.0)!,
       simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.4)!,
+          control.getDouble("simplification_tolerance", 0.3)!,
     );
   }
 }

@@ -34,19 +34,37 @@ PatternFit? parsePatternFit(String? value, [PatternFit? defaultValue]) {
 StrokePattern? parseStrokePattern(dynamic value,
     [StrokePattern? defaultValue]) {
   if (value == null) return defaultValue;
-
-  if (value['type'] == 'dotted') {
+  final type = value['_type'];
+  if (type == 'dotted') {
     return StrokePattern.dotted(
       spacingFactor: parseDouble(value['spacing_factor'], 1.5)!,
       patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
     );
-  } else if (value['type'] == 'solid') {
+  } else if (type == 'solid') {
     return const StrokePattern.solid();
-  } else if (value['type'] == 'dashed') {
+  } else if (type == 'dashed') {
     var segments = value['segments'] ?? [];
     return StrokePattern.dashed(
       patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
       segments: segments.map((e) => parseDouble(e)).nonNulls.toList(),
+    );
+  }
+  return defaultValue;
+}
+
+TileDisplay? parseTileDisplay(dynamic value, [TileDisplay? defaultValue]) {
+  if (value == null) return defaultValue;
+  final type = value['_type'];
+  if (type == 'instantaneous') {
+    return TileDisplay.instantaneous(
+      opacity: parseDouble(value['opacity'], 1.0)!,
+    );
+  } else if (type == 'fadein') {
+    return TileDisplay.fadeIn(
+      startOpacity: parseDouble(value['start_opacity'], 1.0)!,
+      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 1.0)!,
+      duration:
+          parseDuration(value['duration'], const Duration(milliseconds: 100))!,
     );
   }
   return defaultValue;
@@ -58,7 +76,9 @@ InteractionOptions? parseInteractionOptions(dynamic value,
   return InteractionOptions(
       enableMultiFingerGestureRace:
           parseBool(value["enable_multi_finger_gesture_race"], false)!,
-      pinchMoveThreshold: parseDouble(value["pinch_move_threshold"], 40.0)!,
+      pinchMoveThreshold: parseDouble(
+        value["pinch_move_threshold"],
+      )!,
       scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
       pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
       rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
@@ -70,6 +90,58 @@ InteractionOptions? parseInteractionOptions(dynamic value,
       pinchZoomWinGestures: parseInt(value["pinch_zoom_win_gestures"],
           MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
 }
+
+CameraFit? parseCameraFit(dynamic value, [CameraFit? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  final bounds = parseLatLngBounds(value["bounds"]);
+  final coordinates = (value["coordinates"] as List?)
+      ?.map((c) => parseLatLng(c))
+      .nonNulls
+      .toList();
+  if (bounds == null && coordinates == null) return defaultValue;
+
+  final forceIntegerZoomLevel =
+      parseBool(value["force_integer_zoom_level"], false)!;
+  final maxZoom = parseDouble(value["max_zoom"]);
+  final minZoom = parseDouble(value["min_zoom"], 0)!;
+  final padding = parsePadding(value["padding"], EdgeInsets.zero)!;
+  if (bounds != null) {
+    return CameraFit.insideBounds(
+      bounds: bounds,
+      forceIntegerZoomLevel: forceIntegerZoomLevel,
+      maxZoom: maxZoom,
+      minZoom: minZoom,
+      padding: padding,
+    );
+  } else {
+    return CameraFit.coordinates(
+      coordinates: coordinates!,
+      forceIntegerZoomLevel: forceIntegerZoomLevel,
+      maxZoom: maxZoom,
+      minZoom: minZoom,
+      padding: padding,
+    );
+  }
+}
+
+// Crs? parseCrs(dynamic value, [Crs? defaultValue]) {
+//   if (value == null) return defaultValue;
+//   return Crs();
+// }
+
+// MapCamera? parseMapCamera(dynamic value, [MapCamera? defaultValue]) {
+//   if (value == null) return defaultValue;
+//   return MapCamera(
+//     crs: Crs(),
+//     center: parseLatLng(value["center"])!,
+//     zoom: parseDouble(value["zoom"], 0)!,
+//     minZoom: parseDouble(value["min_zoom"], 0)!,
+//     maxZoom: parseDouble(value["max_zoom"], 0)!,
+//     rotation: parseDouble(value["rotation"], 0)!,
+//     bounds: parseLatLngBounds(value["bounds"]),
+//   );
+// }
 
 EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? value,
     [EvictErrorTileStrategy? defaultValue]) {
@@ -95,6 +167,12 @@ extension LatLngExtension on LatLng {
       };
 }
 
+extension LatLngBoundsExtension on LatLngBounds {
+  Map<String, dynamic> toMap() => {
+        // TODO
+      };
+}
+
 extension MapCameraExtension on MapCamera {
   Map<String, dynamic> toMap() => {
         "center": center.toMap(),
@@ -102,6 +180,13 @@ extension MapCameraExtension on MapCamera {
         "min_zoom": minZoom,
         "max_zoom": maxZoom,
         "rotation": rotation,
+      };
+}
+
+extension MapEventExtension on MapEvent {
+  Map<String, dynamic> toMap() => {
+        "source": source.name,
+        "camera": camera.toMap(),
       };
 }
 
@@ -118,6 +203,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
     keepAlive: control.getBool("keep_alive", false)!,
     maxZoom: control.getDouble("max_zoom"),
     minZoom: control.getDouble("min_zoom"),
+    initialCameraFit: parseCameraFit(control.get("initial_camera_fit")),
     onPointerHover: control.getBool("on_hover", false)!
         ? (PointerHoverEvent e, LatLng latlng) {
             control.triggerEvent("hover", {
@@ -183,10 +269,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
         : null,
     onMapEvent: control.getBool("on_event", false)!
         ? (MapEvent e) {
-            control.triggerEvent("event", {
-              "source": e.source.name,
-              "camera": e.camera.toMap(),
-            });
+            control.triggerEvent("event", e.toMap());
           }
         : null,
     onMapReady: control.getBool("on_init", false)!
