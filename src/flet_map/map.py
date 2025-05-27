@@ -6,10 +6,10 @@ import flet as ft
 
 from .map_layer import MapLayer
 from .types import (
-    MapCameraFit,
+    CameraFit,
+    InteractionConfiguration,
     MapEvent,
     MapHoverEvent,
-    MapInteractionConfiguration,
     MapLatitudeLongitude,
     MapPointerEvent,
     MapPositionChangeEvent,
@@ -61,13 +61,13 @@ class Map(ft.ConstrainedControl):
     Defaults to `13.0`.
     """
 
-    interaction_configuration: MapInteractionConfiguration = field(
-        default_factory=lambda: MapInteractionConfiguration()
+    interaction_configuration: InteractionConfiguration = field(
+        default_factory=lambda: InteractionConfiguration()
     )
     """
     The interaction configuration.
     
-    Defaults to `MapInteractionConfiguration()`.
+    Defaults to `InteractionConfiguration()`.
     """
 
     bgcolor: ft.ColorValue = ft.Colors.GREY_300
@@ -118,7 +118,7 @@ class Map(ft.ConstrainedControl):
     Defaults to `Duration(milliseconds=500)`.
     """
 
-    initial_camera_fit: Optional[MapCameraFit] = None
+    initial_camera_fit: Optional[CameraFit] = None
     """
     Defines the visible bounds when the map is first loaded. 
     Takes precedence over `initial_center`/`initial_zoom`.

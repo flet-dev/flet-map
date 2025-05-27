@@ -7,8 +7,8 @@ from .map_layer import MapLayer
 from .types import (
     FadeInTileDisplay,
     MapLatitudeLongitudeBounds,
-    MapTileLayerEvictErrorTileStrategy,
     TileDisplay,
+    TileLayerEvictErrorTileStrategy,
 )
 
 __all__ = ["TileLayer"]
@@ -61,11 +61,13 @@ class TileLayer(MapLayer):
     Only tiles that fall within these bounds will be loaded.
     """
 
-    tile_size: ft.Number = 256.0
+    tile_size: int = 256
     """
-    The tile's size.
+    The size in pixels of each tile image.
     
-    Defaults to `256.0`.
+    Should be a positive power of 2.
+    
+    Defaults to `256`.
     """
 
     min_native_zoom: int = 0
@@ -189,13 +191,13 @@ class TileLayer(MapLayer):
     """
 
     evict_error_tile_strategy: Optional[
-        MapTileLayerEvictErrorTileStrategy
-    ] = MapTileLayerEvictErrorTileStrategy.NONE
+        TileLayerEvictErrorTileStrategy
+    ] = TileLayerEvictErrorTileStrategy.NONE
     """
     If a tile was loaded with error, 
     the tile provider will be asked to evict the image based on this strategy.
     
-    Defaults to `MapTileLayerEvictErrorTileStrategy.NONE`.
+    Defaults to `TileLayerEvictErrorTileStrategy.NONE`.
     """
 
     display_mode: TileDisplay = field(
@@ -208,6 +210,13 @@ class TileLayer(MapLayer):
     Defines how tiles are displayed on the map.
     
     Defaults to `FadeInTileDisplay()`.
+    """
+
+    user_agent_package_name: str = "unknown"
+    """
+    The package name of the user agent.
+    
+    Defaults to `"unknown"`.
     """
 
     on_image_error: ft.OptionalControlEventCallable = None

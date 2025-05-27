@@ -39,7 +39,9 @@ class TileLayerControl extends StatelessWidget {
         tileProvider: CancellableNetworkTileProvider(),
         tileDisplay: parseTileDisplay(
             control.get("display_mode"), const TileDisplay.fadeIn())!,
-        tileSize: control.getDouble("tile_size", 256)!,
+        tileDimension: control.getInt("tile_size", 256)!,
+        userAgentPackageName:
+            control.getString("user_agent_package_name", 'unknown')!,
         minNativeZoom: control.getInt("min_native_zoom", 0)!,
         maxNativeZoom: control.getInt("max_native_zoom", 19)!,
         zoomReverse: control.getBool("zoom_reverse", false)!,

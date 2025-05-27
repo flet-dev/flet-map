@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -74,21 +75,27 @@ InteractionOptions? parseInteractionOptions(dynamic value,
     [InteractionOptions? defaultValue]) {
   if (value == null) return defaultValue;
   return InteractionOptions(
-      enableMultiFingerGestureRace:
-          parseBool(value["enable_multi_finger_gesture_race"], false)!,
-      pinchMoveThreshold: parseDouble(
-        value["pinch_move_threshold"],
-      )!,
-      scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
-      pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
-      rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
-      flags: parseInt(value["flags"], InteractiveFlag.all)!,
-      rotationWinGestures:
-          parseInt(value["rotation_win_gestures"], MultiFingerGesture.rotate)!,
-      pinchMoveWinGestures: parseInt(value["pinch_move_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
-      pinchZoomWinGestures: parseInt(value["pinch_zoom_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
+    enableMultiFingerGestureRace:
+        parseBool(value["enable_multi_finger_gesture_race"], false)!,
+    pinchMoveThreshold: parseDouble(
+      value["pinch_move_threshold"],
+    )!,
+    scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
+    pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
+    rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
+    flags: parseInt(value["flags"], InteractiveFlag.all)!,
+    rotationWinGestures:
+        parseInt(value["rotation_win_gestures"], MultiFingerGesture.rotate)!,
+    pinchMoveWinGestures: parseInt(value["pinch_move_win_gestures"],
+        MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
+    pinchZoomWinGestures: parseInt(value["pinch_zoom_win_gestures"],
+        MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
+    keyboardOptions: parseKeyboardOptions(
+        value["keyboard_configuration"], const KeyboardOptions())!,
+    cursorKeyboardRotationOptions: parseCursorKeyboardRotationOptions(
+        value["cursor_keyboard_rotation_configuration"],
+        const CursorKeyboardRotationOptions())!,
+  );
 }
 
 CameraFit? parseCameraFit(dynamic value, [CameraFit? defaultValue]) {
@@ -123,6 +130,59 @@ CameraFit? parseCameraFit(dynamic value, [CameraFit? defaultValue]) {
       padding: padding,
     );
   }
+}
+
+KeyboardOptions? parseKeyboardOptions(dynamic value,
+    [KeyboardOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return KeyboardOptions(
+      autofocus: parseBool(value["autofocus"], true)!,
+      animationCurveDuration: parseDuration(value["animation_curve_duration"],
+          const Duration(milliseconds: 450))!,
+      animationCurveCurve:
+          parseCurve(value["animation_curve_curve"], Curves.easeInOut)!,
+      enableArrowKeysPanning:
+          parseBool(value["enable_arrow_keys_panning"], true)!,
+      enableQERotating: parseBool(value["enable_qe_rotating"], true)!,
+      enableRFZooming: parseBool(value["enable_rf_zooming"], true)!,
+      enableWASDPanning: parseBool(value["enable_wasd_panning"], true)!,
+      leapMaxOfCurveComponent:
+          parseDouble(value["leap_max_of_curve_component"], 0.6)!,
+      // maxPanVelocity: ,
+      maxRotateVelocity: parseDouble(value["max_rotate_velocity"], 3)!,
+      maxZoomVelocity: parseDouble(value["max_zoom_velocity"], 0.03)!,
+      panLeapVelocityMultiplier:
+          parseDouble(value["pan_leap_velocity_multiplier"], 5)!,
+      rotateLeapVelocityMultiplier:
+          parseDouble(value["rotate_leap_velocity_multiplier"], 3)!,
+      zoomLeapVelocityMultiplier:
+          parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
+      performLeapTriggerDuration: parseDuration(
+          value["perform_leap_trigger_duration"],
+          const Duration(milliseconds: 100))!,
+      animationCurveReverseDuration: parseDuration(
+          value["animation_curve_reverse_duration"],
+          const Duration(milliseconds: 600))!);
+}
+
+CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
+    [CursorRotationBehaviour? defValue]) {
+  if (value == null) return defValue;
+  return CursorRotationBehaviour.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
+    [CursorKeyboardRotationOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return CursorKeyboardRotationOptions(
+      setNorthOnClick: parseBool(value["set_north_on_click"], true)!,
+      behaviour: parseCursorRotationBehaviour(
+          value["behaviour"], CursorRotationBehaviour.offset)!,
+      isKeyTrigger: (LogicalKeyboardKey key) {
+        return (value["trigger_keys"] as List).contains(key);
+      });
 }
 
 // Crs? parseCrs(dynamic value, [Crs? defaultValue]) {
@@ -168,9 +228,10 @@ extension LatLngExtension on LatLng {
 }
 
 extension LatLngBoundsExtension on LatLngBounds {
-  Map<String, dynamic> toMap() => {
-        // TODO
-      };
+  // TODO
+  // Map<String, dynamic> toMap() => {
+  //
+  //     };
 }
 
 extension MapCameraExtension on MapCamera {
@@ -268,9 +329,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
           }
         : null,
     onMapEvent: control.getBool("on_event", false)!
-        ? (MapEvent e) {
-            control.triggerEvent("event", e.toMap());
-          }
+        ? (MapEvent e) => control.triggerEvent("event", e.toMap())
         : null,
     onMapReady: control.getBool("on_init", false)!
         ? () => control.triggerEvent("init")
