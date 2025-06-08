@@ -22,18 +22,14 @@ __all__ = ["Map"]
 @ft.control("Map")
 class Map(ft.ConstrainedControl):
     """
-    Map Control.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/map
+    An interactive map control that allows displaying various layers.
     """
 
     layers: List[MapLayer]
     """
     A list of layers to be displayed (stack-like) on the map.
 
-    Value is of type [`MapLayer`](/docs/reference/types/maplayer).
+    Value is of type `MapLayer`.
     """
 
     initial_center: MapLatitudeLongitude = field(
@@ -42,7 +38,7 @@ class Map(ft.ConstrainedControl):
     """
     The initial center of the map.
 
-    Value is of type [`MapLatitudeLongitude`](/docs/reference/types/maplatitudelongitude).
+    Value is of type `MapLatitudeLongitude`.
     Defaults to `MapLatitudeLongitude(latitude=50.5, longitude=30.51)`.
     """
 
@@ -202,13 +198,11 @@ class Map(ft.ConstrainedControl):
         """
         Applies a rotation of `degree` to the current rotation.
 
-        :param degree: The number of degrees to increment to the current rotation.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            degree: The number of degrees to increment to the current rotation.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="rotate_from",
@@ -230,13 +224,11 @@ class Map(ft.ConstrainedControl):
         """
         Applies a rotation of `degree` to the current rotation.
 
-        :param degree: The number of degrees to increment to the current rotation.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            degree: The number of degrees to increment to the current rotation.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.rotate_from_async(
@@ -251,14 +243,12 @@ class Map(ft.ConstrainedControl):
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
-        Resets the map's rotation to `0` degrees.
+        Resets the map's rotation to 0 degrees.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="reset_rotation",
@@ -276,14 +266,12 @@ class Map(ft.ConstrainedControl):
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
-        Resets the map's rotation to `0` degrees.
+        Resets the map's rotation to 0 degrees.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.reset_rotation_async(
@@ -300,12 +288,10 @@ class Map(ft.ConstrainedControl):
         """
         Zooms in by one zoom-level from the current one.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="zoom_in",
@@ -325,12 +311,10 @@ class Map(ft.ConstrainedControl):
         """
         Zooms in by one zoom-level from the current one.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.zoom_in_async(
@@ -347,12 +331,10 @@ class Map(ft.ConstrainedControl):
         """
         Zooms out by one zoom-level from the current one.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="zoom_out",
@@ -372,12 +354,10 @@ class Map(ft.ConstrainedControl):
         """
         Zooms out by one zoom-level from the current one.
 
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.zoom_out_async(
@@ -395,13 +375,11 @@ class Map(ft.ConstrainedControl):
         """
         Zoom the map to a specific zoom level.
 
-        :param zoom: The zoom level to zoom to.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            zoom: The zoom level to zoom to.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="zoom_to",
@@ -423,13 +401,11 @@ class Map(ft.ConstrainedControl):
         """
         Zoom the map to a specific zoom level.
 
-        :param zoom: The zoom level to zoom to.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            zoom: The zoom level to zoom to.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.zoom_to_async(
@@ -450,19 +426,14 @@ class Map(ft.ConstrainedControl):
         """
         Moves to a specific location.
 
-        :param destination: The destination point to move to.
-        :param zoom: The zoom level to be applied.
-        If provided, must be greater than or equal to `0.0`.
-        :param rotation: Rotation (in degrees) to be applied.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param offset: The offset to be used.
-        Only works where `rotation` is `None`, due to a flutter_map limitation.
-        Defaults to `Offset(0, 0)`.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            destination: The destination point to move to.
+            zoom: The zoom level to be applied. If provided, must be greater than or equal to 0.0.
+            rotation: Rotation (in degrees) to be applied.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            offset: The offset to be used. Only works when `rotation` is None. Defaults to Offset(0, 0).
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         assert zoom >= 0, "zoom must be greater than or equal to zero"
         await self._invoke_method_async(
@@ -491,19 +462,14 @@ class Map(ft.ConstrainedControl):
         """
         Moves to a specific location.
 
-        :param destination: The destination point to move to.
-        :param zoom: The zoom level to be applied.
-        If provided, must be greater than or equal to `0.0`.
-        :param rotation: Rotation (in degrees) to be applied.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param offset: The offset to be used.
-        Only works where `rotation` is `None`, due to a flutter_map limitation.
-        Defaults to `Offset(0, 0)`.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            destination: The destination point to move to.
+            zoom: The zoom level to be applied. If provided, must be greater than or equal to 0.0.
+            rotation: Rotation (in degrees) to be applied.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            offset: The offset to be used. Only works when `rotation` is None. Defaults to Offset(0, 0).
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.move_to_async(
@@ -526,16 +492,14 @@ class Map(ft.ConstrainedControl):
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
-        Centers the map on the `point`.
+        Centers the map on the given point.
 
-        :param point: The point on which to center the map.
-        :param zoom: The zoom level to be applied.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            point: The point on which to center the map.
+            zoom: The zoom level to be applied.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         await self._invoke_method_async(
             method_name="center_on",
@@ -557,16 +521,14 @@ class Map(ft.ConstrainedControl):
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
-        Centers the map on the `point`.
+        Centers the map on the given point.
 
-        :param point: The point on which to center the map.
-        :param zoom: The zoom level to be applied.
-        :param animation_curve: The curve of the animation.
-        If `None` (the default), `Map.animation_curve` will be used.
-        :param animation_duration: The duration of the animation.
-        If `None` (the default), `Map.animation_duration` will be used.
-        :param cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations
-        before starting this new one. Defaults to `False`.
+        Args:
+            point: The point on which to center the map.
+            zoom: The zoom level to be applied.
+            animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
+            animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
+            cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
         """
         asyncio.create_task(
             self.center_on_async(

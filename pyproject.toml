@@ -1,7 +1,7 @@
 [project]
 name = "flet-map"
 version = "0.2.0"
-description = "Map control for Flet"
+description = "Display interactive Maps in your Flet apps."
 readme = "README.md"
 authors = [
     { name = "Flet contributors", email = "hello@flet.dev" }
@@ -21,22 +21,23 @@ Issues = "https://github.com/flet-dev/flet-map/issues"
 [tool.setuptools.package-data]
 "flutter.flet_map" = ["**/*"]
 
-[tool.uv]
-dev-dependencies = [
-    "flet",
-    "flet-cli",
-    "flet-desktop",
-    "flet-web",
-    #"mkdocs",
-    #"mkdocs-material",
-    #"mkdocstrings[python]"
+[dependency-groups]
+dev = [
     "pre-commit>=4.2.0",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "mike",
+    "markdown>=3.6",
+    "pymdown-extensions",
+    "mkdocs-glightbox",
+    "pygments>=2.16",
 ]
 
 [tool.uv.sources]
-flet = { path = "/Users/ndonkohenri/PycharmProjects/flet-dev/flet/sdk/python/packages/flet", editable = true }
-flet-cli = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet-cli", rev = "v1" }
-flet-desktop = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet-desktop", rev = "v1" }
+flet = { git = "https://github.com/flet-dev/flet", subdirectory = "sdk/python/packages/flet", rev = "v1" }
 
 [build-system]
 requires = ["setuptools"]
