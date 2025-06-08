@@ -6,7 +6,7 @@
 
 A Flet extension for displaying interactive maps in your Flet applications.
 
-It is based on the [map](https://pub.dev/packages/flutter_map) Flutter package.
+It is based on the [flutter_map](https://pub.dev/packages/flutter_map) Flutter package.
 
 ## Platform Support
 
