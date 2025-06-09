@@ -129,63 +129,63 @@ class Map(ft.ConstrainedControl):
     """
     Fires when a tap event occurs.
 
-    Event handler argument is of type `MapTapEvent`.
+    Event handler argument is of type [`MapTapEvent`][(p).types.].
     """
 
     on_hover: ft.OptionalEventCallable[MapHoverEvent] = None
     """
     Fires when a hover event occurs.
 
-    Event handler argument is of type `MapHoverEvent`.
+    Event handler argument is of type [`MapHoverEvent`][(p).types.].
     """
 
     on_secondary_tap: ft.OptionalEventCallable[MapTapEvent] = None
     """
     Fires when a secondary tap event occurs.
 
-    Event handler argument is of type `MapTapEvent`.
+    Event handler argument is of type [`MapTapEvent`][(p).types.].
     """
 
     on_long_press: ft.OptionalEventCallable[MapTapEvent] = None
     """
     Fires when a long press event occurs.
 
-    Event handler argument is of type `MapTapEvent`.
+    Event handler argument is of type [`MapTapEvent`][(p).types.].
     """
 
     on_event: ft.OptionalEventCallable[MapEvent] = None
     """
     Fires when any map events occurs.
 
-    Event handler argument is of type `MapEvent`.
+    Event handler argument is of type [`MapEvent`][(p).types.].
     """
 
     on_position_change: ft.OptionalEventCallable[MapPositionChangeEvent] = None
     """
     Fires when the map position changes.
 
-    Event handler argument is of type `MapPositionChangeEvent`.
+    Event handler argument is of type [`MapPositionChangeEvent`][(p).types.].
     """
 
     on_pointer_down: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer down event occurs.
 
-    Event handler argument is of type `MapPointerEvent`.
+    Event handler argument is of type [`MapPointerEvent`][(p).types.].
     """
 
     on_pointer_cancel: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer cancel event occurs.
     
-    Event handler argument is of type `MapPointerEvent`.
+    Event handler argument is of type [`MapPointerEvent`][(p).types.].
     """
 
     on_pointer_up: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer up event occurs.
 
-    Event handler argument is of type `MapPointerEvent`.
+    Event handler argument is of type [`MapPointerEvent`][(p).types.].
     """
 
     async def rotate_from_async(
@@ -428,14 +428,17 @@ class Map(ft.ConstrainedControl):
 
         Args:
             destination: The destination point to move to.
-            zoom: The zoom level to be applied. If provided, must be greater than or equal to 0.0.
+            zoom: The zoom level to be applied. If provided, must be greater than or equal to `0.0`.
             rotation: Rotation (in degrees) to be applied.
             animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
             animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
-            offset: The offset to be used. Only works when `rotation` is None. Defaults to Offset(0, 0).
+            offset: The offset to be used. Only works when `rotation` is `None`.
             cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
+
+        Raises:
+            AssertionError: If `zoom` is not `None` and is negative.
         """
-        assert zoom >= 0, "zoom must be greater than or equal to zero"
+        assert zoom is None or zoom >= 0, "zoom must be greater than or equal to zero"
         await self._invoke_method_async(
             method_name="move_to",
             arguments={
@@ -464,12 +467,15 @@ class Map(ft.ConstrainedControl):
 
         Args:
             destination: The destination point to move to.
-            zoom: The zoom level to be applied. If provided, must be greater than or equal to 0.0.
+            zoom: The zoom level to be applied. If provided, must be greater than or equal to `0.0`.
             rotation: Rotation (in degrees) to be applied.
             animation_curve: The curve of the animation. If None (the default), `Map.animation_curve` will be used.
             animation_duration: The duration of the animation. If None (the default), `Map.animation_duration` will be used.
-            offset: The offset to be used. Only works when `rotation` is None. Defaults to Offset(0, 0).
+            offset: The offset to be used. Only works when `rotation` is `None`.
             cancel_ongoing_animations: Whether to cancel/stop all ongoing map-animations before starting this new one.
+
+        Raises:
+            AssertionError: If `zoom` is not `None` and is negative.
         """
         asyncio.create_task(
             self.move_to_async(

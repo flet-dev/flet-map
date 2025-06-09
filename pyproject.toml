@@ -14,7 +14,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet.dev/docs/controls/map"
+Documentation = "https://flet-dev.github.io/flet-map"
 Repository = "https://github.com/flet-dev/flet-map"
 Issues = "https://github.com/flet-dev/flet-map/issues"
 
