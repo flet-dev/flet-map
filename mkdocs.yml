@@ -63,7 +63,7 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/flet-dev/flet-permission-handler
+      link: https://github.com/flet-dev
     - icon: fontawesome/brands/discord
       link: https://discord.gg/bCFXYgZR3b
     - icon: fontawesome/brands/x-twitter
@@ -75,35 +75,48 @@ extra:
 nav:
   - Getting Started: index.md
   - API Reference:
-      - CircleLayer: circle_layer.md
       - Map: map.md
-      - MapLayer: map_layer.md
-      - PolygonLayer: polygon_layer.md
-      - PolylineLayer: polyline_layer.md
-      - RichAttribution: rich_attribution.md
-      - SimpleAttribution: simple_attribution.md
-      - SourceAttribution: source_attribution.md
-      - TileLayer: tile_layer.md
+      - Markers:
+          - CircleMarker: circle_marker.md
+          - Marker: marker.md
+          - PolygonMarker: polygon_marker.md
+          - PolylineMarker: polyline_marker.md
+      - Layers:
+          - Attribution:
+            - RichAttribution: rich_attribution.md
+            - SimpleAttribution: simple_attribution.md
+            - SourceAttribution: source_attribution.md
+            - ImageSourceAttribution: image_source_attribution.md
+            - TextSourceAttribution: text_source_attribution.md
+          - CircleLayer: circle_layer.md
+          - MapLayer: map_layer.md
+          - MarkerLayer: marker_layer.md
+          - PolygonLayer: polygon_layer.md
+          - PolylineLayer: polyline_layer.md
+          - TileLayer: tile_layer.md
       - Types:
           - AttributionAlignment: types/attribution_alignment.md
           - Camera: types/camera.md
           - CameraFit: types/camera_fit.md
           - CursorKeyboardRotationConfiguration: types/cursor_keyboard_rotation_configuration.md
           - CursorRotationBehaviour: types/cursor_rotation_behaviour.md
+          - Events:
+              - MapEvent: types/map_event.md
+              - MapHoverEvent: types/map_hover_event.md
+              - MapPositionChangeEvent: types/map_position_change_event.md
+              - MapTapEvent: types/map_tap_event.md
+              - MapPointerEvent: types/map_pointer_event.md
           - FadeInTileDisplay: types/fade_in_tile_display.md
           - InstantaneousTileDisplay: types/instantaneous_tile_display.md
           - InteractionConfiguration: types/interaction_configuration.md
           - InteractiveFlag: types/interactive_flag.md
           - KeyboardConfiguration: types/keyboard_configuration.md
-          - MapEvent: types/map_event.md
           - MapEventSource: types/map_event_source.md
-          - MapHoverEvent: types/map_hover_event.md
           - MapLatitudeLongitude: types/map_latitude_longitude.md
           - MapLatitudeLongitudeBounds: types/map_latitude_longitude_bounds.md
-          - MapPointerEvent: types/map_pointer_event.md
           - MultiFingerGesture: types/multi_finger_gesture.md
           - PatternFit: types/pattern_fit.md
-          - Map: types/stroke_pattern.md
+          - StrokePattern: types/stroke_pattern.md
           - TileDisplay: types/tile_display.md
           - TileLayerEvictErrorTileStrategy: types/tile_layer_evict_error_tile_strategy.md
   - Changelog: changelog.md
@@ -116,6 +129,10 @@ validation:
   unrecognized_links: warn
   anchors: warn
 
+watch:
+  - docs
+  - src
+
 # Plugins
 plugins:
   # - footnotes
@@ -125,10 +142,11 @@ plugins:
       alias_type: symlink
   - glightbox
   - mkdocstrings:
-      default_handler: python
+      default_handler: python_xref
       handlers:
-        python:
+        python_xref:
           options:
+            relative_crossrefs: true
             docstring_style: google
             show_signature_annotations: true
             signature_crossrefs: true

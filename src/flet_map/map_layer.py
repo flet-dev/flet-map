@@ -10,11 +10,11 @@ class MapLayer(ft.Control):
 
     The following layers are available:
 
-    - `CircleLayer`
-    - `MarkerLayer`
-    - `PolygonLayer`
-    - `PolylineLayer`
-    - `RichAttribution`
-    - `SimpleAttribution`
-    - `TileLayer`
+    - [`CircleLayer`][(p).circle_layer.]
+    - [`MarkerLayer`][(p).marker_layer.]
+    - [`PolygonLayer`][(p).polygon_layer.]
+    - [`PolylineLayer`][(p).polyline_layer.]
+    - [`RichAttribution`][(p).rich_attribution.]
+    - [`SimpleAttribution`][(p).simple_attribution.]
+    - [`TileLayer`][(p).tile_layer.]
     """

@@ -20,8 +20,9 @@ class RichAttribution(MapLayer):
     attributions: List[SourceAttribution]
     """
     List of attributions to display.
-    `TextSourceAttribution`s are shown in a popup box, 
-    unlike `ImageSourceAttribution`, which are visible permanently.
+    
+    [`TextSourceAttribution`][(p).source_attribution.]s are shown in a popup box, 
+    unlike [`ImageSourceAttribution`][(p).source_attribution.], which are visible permanently.
     """
 
     alignment: Optional[AttributionAlignment] = None
@@ -48,7 +49,7 @@ class RichAttribution(MapLayer):
     The popup box will be open by default and be hidden this long after the map is initialised.
     
     This is useful with certain sources/tile servers that make immediate
-    attribution mandatory and are not attributed with a permanently visible `ImageSourceAttribution`.
+    attribution mandatory and are not attributed with a permanently visible [`ImageSourceAttribution`][(p).source_attribution.].
     
     Defaults to `ft.Duration()`.
     """
@@ -63,7 +64,7 @@ class RichAttribution(MapLayer):
 
     show_flutter_map_attribution: bool = True
     """
-    Whether to add an additional attribution logo and text for ['flutter-map'](https://docs.fleaflet.dev/),
+    Whether to add an additional attribution logo and text for [`flutter-map`](https://docs.fleaflet.dev/),
     on which 'flet-map' package is based for map-renderings.
     
     Defaults to `True`.

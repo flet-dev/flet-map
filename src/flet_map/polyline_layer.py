@@ -12,17 +12,17 @@ __all__ = ["PolylineMarker", "PolylineLayer"]
 @ft.control("PolylineMarker")
 class PolylineMarker(ft.Control):
     """
-    A marker for the `PolylineLayer`.
+    A marker for the [`PolylineLayer`][..].
     """
 
     coordinates: List[MapLatitudeLongitude]
     """
-    The list of coordinates for the Polyline.
+    The list of coordinates for the polyline.
     """
 
     colors_stop: Optional[List[ft.Number]] = None
     """
-    The stops for the `gradient_colors`.
+    The stops for the [`gradient_colors`][..].
     """
 
     gradient_colors: Optional[List[ft.ColorValue]] = None
@@ -49,6 +49,9 @@ class PolylineMarker(ft.Control):
     The width of the stroke.
     
     Defaults to `1.0`.
+    
+    Note:
+        Must be non-negative.
     """
 
     border_stroke_width: ft.Number = 0.0
@@ -56,6 +59,9 @@ class PolylineMarker(ft.Control):
     The width of the stroke with of the line border.
     
     Defaults to `0.0` (disabled).
+    
+    Note:
+        Must be non-negative.
     """
 
     use_stroke_width_in_meter: bool = False
@@ -98,12 +104,12 @@ class PolylineMarker(ft.Control):
 @ft.control("PolylineLayer")
 class PolylineLayer(MapLayer):
     """
-    A layer to display `PolylineMarker`s.
+    A layer to display [`PolylineMarker`][..]s.
     """
 
     polylines: List[PolylineMarker]
     """
-    List polylines to be drawn. 
+    List of [`PolylineMarker`][...]s to be drawn. 
     """
 
     culling_margin: ft.Number = 10.0
@@ -115,7 +121,7 @@ class PolylineLayer(MapLayer):
 
     min_hittable_radius: ft.Number = 10.0
     """
-    The minimum radius of the hittable area around each `Polyline` in logical pixels.
+    The minimum radius of the hittable area around each polyline in logical pixels.
     
     The entire visible area is always hittable, but if the visible area is
     smaller than this, then this will be the hittable area.

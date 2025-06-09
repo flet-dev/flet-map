@@ -12,12 +12,18 @@ __all__ = ["Marker", "MarkerLayer"]
 @ft.control("Marker")
 class Marker(ft.Control):
     """
-    A marker displayed on the Map at the specified location through the MarkerLayer.
+    A marker displayed on the Map at the specified location through the [`MarkerLayer`][..].
+
+    Raises:
+        AssertionError: If the [`content`][(c).] is not visible, or if [`height`][(c).] or [`width`][(c).] are negative.
     """
 
     content: ft.Control
     """
-    The content to be displayed at `coordinates`.
+    The content to be displayed at [`coordinates`][..].
+    
+    Note:
+        Must be provided and visible.
     """
 
     coordinates: MapLatitudeLongitude
@@ -34,28 +40,34 @@ class Marker(ft.Control):
     
     Note: this is not used to apply a custom rotation in degrees to the marker.
     
-    Defaults to the value of the parent `MarkerLayer.rotate`.
+    Defaults to the value of the parent [`MarkerLayer.rotate`][(m).].
     """
 
     height: ft.Number = 30.0
     """
-    The height of the `content` Control.
+    The height of the [`content`][..] Control.
     
     Defaults to `30.0`.
+    
+    Note:
+        Must be non-negative.
     """
 
     width: ft.Number = 30.0
     """
-    The width of the `content` Control.
+    The width of the [`content`][..] Control.
     
     Defaults to `30.0`.
+    
+    Note:
+        Must be non-negative.
     """
 
     alignment: ft.OptionalAlignment = None
     """
-    Alignment of the marker relative to the normal center at coordinates.
+    Alignment of the marker relative to the normal center at [`coordinates`][..].
     
-    Defaults to the value of the parent `MarkerLayer.alignment`.
+    Defaults to the value of the parent [`MarkerLayer.alignment`][(m).].
     """
 
     def before_update(self):
@@ -73,7 +85,7 @@ class MarkerLayer(MapLayer):
 
     markers: List[Marker]
     """
-    List of `Marker`s to display.
+    List of [`Marker`][(m).]s to display.
     """
 
     alignment: ft.OptionalAlignment = field(

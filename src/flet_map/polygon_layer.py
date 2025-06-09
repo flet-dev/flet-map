@@ -11,7 +11,7 @@ __all__ = ["PolygonMarker", "PolygonLayer"]
 @ft.control("PolygonMarker")
 class PolygonMarker(ft.Control):
     """
-    A marker for the PolygonLayer.
+    A marker for the [`PolygonLayer`][..].
     """
 
     coordinates: List[MapLatitudeLongitude]
@@ -26,7 +26,7 @@ class PolygonMarker(ft.Control):
     Note: specifying a label will reduce performance, as the internal
     canvas must be drawn to and 'saved' more frequently to ensure the proper
     stacking order is maintained. This can be avoided, potentially at the
-    expense of appearance, by setting `PolygonLayer.draw_labels_last`.
+    expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(m).].
     """
 
     label_text_style: ft.OptionalTextStyle = None
@@ -53,6 +53,9 @@ class PolygonMarker(ft.Control):
     The width of the border outline.
     
     Defaults to `0.0`.
+    
+    Note:
+        Must be non-negative.
     """
 
     disable_holes_border: bool = False
@@ -95,15 +98,11 @@ class PolygonMarker(ft.Control):
 class PolygonLayer(MapLayer):
     """
     A layer to display PolygonMarkers.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mappolygonlayer
     """
 
     polygons: List[PolygonMarker]
     """
-    A list of `PolygonMarker`s to display.
+    A list of [`PolygonMarker`][(m).]s to display.
     """
 
     polygon_culling: bool = True

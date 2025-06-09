@@ -17,9 +17,15 @@ __all__ = ["TileLayer"]
 @ft.control("TileLayer")
 class TileLayer(MapLayer):
     """
-    The map's main layer.
     Displays square raster images in a continuous grid,
-    sourced from the provided `url_template` and `fallback_url`.
+    sourced from the provided [`url_template`][(c).] and [`fallback_url`][(c).].
+
+    Typically the first layer to be added to a [`Map`][(p).map.], as it provides the tiles on which
+    other layers are displayed.
+
+    Raises:
+        AssertionError: If one or more of the following is negative:
+            [`tile_size`][(c).], [`min_native_zoom`][(c).], [`max_native_zoom`][(c).], [`zoom_offset`][(c).], [`max_zoom`][(c).], [`min_zoom`][(c).]
     """
 
     url_template: str
@@ -31,26 +37,26 @@ class TileLayer(MapLayer):
     fallback_url: Optional[str] = None
     """
     Fallback URL template, used if an error occurs when fetching tiles from
-    the `url_template`.
+    the [`url_template`][..].
     
     Note that specifying this (non-none) will result in tiles not being cached
-    in memory. This is to avoid issues where the `url_template` is flaky, to
+    in memory. This is to avoid issues where the [`url_template`][..] is flaky, to
     prevent different tilesets being displayed at the same time.
     
-    It is expected that this follows the same retina support behaviour as `url_template`.
+    It is expected that this follows the same retina support behaviour as [`url_template`][..].
     """
 
     subdomains: List[str] = field(default_factory=lambda: ["a", "b", "c"])
     """
     List of subdomains used in the URL template.
 
-    For example, if `subdomains` is set to `["a", "b", "c"]` and the 
+    For example, if [`subdomains`][..] is set to `["a", "b", "c"]` and the 
     `url_template` is `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`, 
     the resulting tile URLs will be:
 
-    - "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    - "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    - "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    - `"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"`
+    - `"https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"`
+    - `"https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"`
 
     Defaults to `["a", "b", "c"]`.
     """
@@ -64,10 +70,12 @@ class TileLayer(MapLayer):
     tile_size: int = 256
     """
     The size in pixels of each tile image.
-    
     Should be a positive power of 2.
     
     Defaults to `256`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     min_native_zoom: int = 0
@@ -79,6 +87,11 @@ class TileLayer(MapLayer):
     
     This should usually be 0 (as default), as most tile sources will support
     zoom levels onwards from this.
+    
+    Defaults to `0`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     max_native_zoom: int = 19
@@ -92,6 +105,9 @@ class TileLayer(MapLayer):
     Otherwise, this should be specified.
 
     Defaults to `19`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     zoom_reverse: bool = False
@@ -106,6 +122,9 @@ class TileLayer(MapLayer):
     The zoom number used in tile URLs will be offset with this value.
     
     Defaults to `0.0`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     keep_buffer: int = 2
@@ -143,20 +162,19 @@ class TileLayer(MapLayer):
 
     additional_options: Dict[str, str] = field(default_factory=dict)
     """
-    Static information that should replace placeholders in the `url_template`.
+    Static information that should replace placeholders in the [`url_template`][..].
     Applying API keys, for example, is a good usecase of this parameter.
     
     Example:
-
-    ```python
-    TileLayer(
-        url_template="https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}{r}.png?access_token={accessToken}",
-        additional_options={
-            'accessToken': '<ACCESS_TOKEN_HERE>',
-            'id': 'mapbox.streets',
-        },
-    ),
-    ```
+        ```python
+        TileLayer(
+            url_template="https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}{r}.png?access_token={accessToken}",
+            additional_options={
+                'accessToken': '<ACCESS_TOKEN_HERE>',
+                'id': 'mapbox.streets',
+            },
+        ),
+        ```
     
     Defaults to `{}`.
     """
@@ -173,14 +191,20 @@ class TileLayer(MapLayer):
     Typically set to infinity so that there are tiles always displayed.
 
     Defaults to `float("inf")`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     min_zoom: ft.Number = 0.0
     """
     The minimum zoom level at which this layer is displayed (inclusive).
-    Typically set to `0.0` by default.
+    Typically `0.0`.
     
     Defaults to `0.0`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
     """
 
     error_image_src: Optional[str] = None
@@ -200,11 +224,7 @@ class TileLayer(MapLayer):
     Defaults to `TileLayerEvictErrorTileStrategy.NONE`.
     """
 
-    display_mode: TileDisplay = field(
-        default_factory=lambda: FadeInTileDisplay(
-            start_opacity=0.0, reload_start_opacity=0.0
-        )
-    )
+    display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
     """
     
     Defines how tiles are displayed on the map.
@@ -228,7 +248,7 @@ class TileLayer(MapLayer):
 
     def before_update(self):
         super().before_update()
-        assert self.tile_size >= 0, "tile_size cannot be negative"
+        assert self.tile_size >= 0, "tile_size must be greater than or equal to 0"
         assert (
             self.min_native_zoom >= 0
         ), "min_native_zoom must be greater than or equal to 0"

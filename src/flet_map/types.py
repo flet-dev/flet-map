@@ -35,7 +35,7 @@ __all__ = [
 
 
 class TileLayerEvictErrorTileStrategy(Enum):
-    """Strategies on how to handle tile errors"""
+    """Strategies on how to handle tile errors."""
 
     NONE = "none"
     """Never evict images for tiles which failed to load."""
@@ -59,7 +59,7 @@ class TileLayerEvictErrorTileStrategy(Enum):
 
 
 class AttributionAlignment(Enum):
-    """Position to anchor `RichAttribution` control relative to the map."""
+    """Position to anchor [`RichAttribution`][(p).rich_attribution.] control relative to the map."""
 
     BOTTOM_LEFT = "bottomLeft"
     """The bottom left corner."""
@@ -70,7 +70,7 @@ class AttributionAlignment(Enum):
 
 class PatternFit(Enum):
     """
-    Determines how a non-solid [StrokePattern] should be fit to a line
+    Determines how a non-solid [`StrokePattern`][..] should be fit to a line
     when their lengths are not equal or multiples
     """
 
@@ -86,13 +86,13 @@ class PatternFit(Enum):
     SCALE_DOWN = "scaleDown"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (smaller version regarding rounding, cf. `SCALE_UP`)
+    polyline (smaller version regarding rounding, cf. [`SCALE_UP`][..]).
     """
 
     SCALE_UP = "scaleUp"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (bigger version regarding rounding, cf. `SCALE_DOWN`)
+    polyline (bigger version regarding rounding, cf. [`SCALE_DOWN`][..]).
     """
 
     APPEND_DOT = "appendDot"
@@ -108,7 +108,7 @@ class PatternFit(Enum):
     extending the final dash to the last point if it would not normally reach
     that point (there is a gap at that location).
     
-    Only useful when working with `DashedStrokePattern`. 
+    Only useful when working with [`DashedStrokePattern`][...]. 
     Similar to `APPEND_DOT` for `DottedStrokePattern`.
     """
 
@@ -148,7 +148,11 @@ class StrokePattern:
     and the exact characteristics of each.
 
     This is an abstract class and shouldn't be used directly.
-    See usable derivatives: `SolidStrokePattern`, `DashedStrokePattern` and `DottedStrokePattern`.
+
+    See usable derivatives:
+    - [`SolidStrokePattern`][..]
+    - [`DashedStrokePattern`][..]
+    - [`DottedStrokePattern`][..]
     """
 
     _type: str = ""
@@ -164,7 +168,20 @@ class SolidStrokePattern(StrokePattern):
 
 @dataclass
 class DashedStrokePattern(StrokePattern):
+    """
+    A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
+
+    Raises:
+        AssertionError: If `segments` does not contain at least two items, or has an odd length.
+    """
+
     segments: List[ft.Number] = field(default_factory=list)
+    """
+    A list of alternating dash and gap lengths, in pixels.
+    
+    Note:
+        Must contain at least two items, and have an even length.
+    """
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their lengths are not equal or multiples.
@@ -180,7 +197,12 @@ class DashedStrokePattern(StrokePattern):
 
 @dataclass
 class DottedStrokePattern(StrokePattern):
-    """A stroke pattern of circular dots, spaced with `spacing_factor`."""
+    """
+    A stroke pattern of circular dots, spaced with [`spacing_factor`][(c).].
+
+    Raises:
+        AssertionError: If [`spacing_factor`][(c).] is negative.
+    """
 
     spacing_factor: ft.Number = 1.5
     """
@@ -189,15 +211,18 @@ class DottedStrokePattern(StrokePattern):
     A value of `1.0` will result in spacing equal to the `stroke_width`. 
     Increasing the value increases the spacing with the same scaling.
     
-    May also be scaled by the use of `PatternFit.SCALE_UP`.
+    May also be scaled by the use of [`PatternFit.SCALE_UP`][...].
     
     Defaults to `1.5`.
+    
+    Note:
+        Must be non-negative.
     """
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their lengths are not equal or multiples.
 
-    Defaults to `PatternFit.SCALE_UP`.
+    Defaults to [`PatternFit.SCALE_UP`][...].
     """
 
     def __post_init__(self):
@@ -237,8 +262,8 @@ class InteractiveFlag(IntFlag):
     Flags to enable/disable certain interaction events on the map.
 
     Example:
-        - `InteractiveFlag.ALL` enables all events
-        - `InteractiveFlag.NONE` disables all events
+        - `InteractiveFlag.ALL` to enable all events
+        - `InteractiveFlag.NONE` to disable all events
     """
 
     NONE = 0
@@ -283,15 +308,17 @@ class InteractiveFlag(IntFlag):
     @staticmethod
     def has_flag(left_flags: int, right_flags: int) -> bool:
         """
-        Returns `True` if `left_flags` has at least one member in `right_flags` (intersection).
+        Returns:
+            `True` if `left_flags` has at least one member in `right_flags` (intersection).
         """
         return left_flags & right_flags != 0
 
     @staticmethod
     def has_multi_finger(flags: int) -> bool:
         """
-        return Returns `True` if any multi-finger gesture flags
-        (`MultiFingerGesture.PINCH_MOVE`, `MultiFingerGesture.PINCH_ZOOM`, `MultiFingerGesture.ROTATE`) are enabled.
+        Returns:
+            `True` if any multi-finger gesture flags
+            ([`MultiFingerGesture.PINCH_MOVE`][...], [`MultiFingerGesture.PINCH_ZOOM`][...], [`MultiFingerGesture.ROTATE`][...]) are enabled.
         """
         return InteractiveFlag.has_flag(
             flags,
@@ -304,60 +331,95 @@ class InteractiveFlag(IntFlag):
 
     @staticmethod
     def has_drag(flags: int) -> bool:
-        """Returns `True` if the `DRAG` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`DRAG`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.DRAG)
 
     @staticmethod
     def has_fling_animation(flags: int) -> bool:
-        """Returns `True` if the `FLING_ANIMATION` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`FLING_ANIMATION`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.FLING_ANIMATION)
 
     @staticmethod
     def has_pinch_move(flags: int) -> bool:
-        """Returns `True` if the `PINCH_MOVE` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`PINCH_MOVE`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.PINCH_MOVE)
 
     @staticmethod
     def has_fling_pinch_zoom(flags: int) -> bool:
-        """Returns `True` if the `PINCH_ZOOM` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`PINCH_ZOOM`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.PINCH_ZOOM)
 
     @staticmethod
     def has_double_tap_drag_zoom(flags: int) -> bool:
-        """Returns `True` if the `DOUBLE_TAP_DRAG_ZOOM` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`DOUBLE_TAP_DRAG_ZOOM`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.DOUBLE_TAP_DRAG_ZOOM)
 
     @staticmethod
     def has_double_tap_zoom(flags: int) -> bool:
-        """Returns `True` if the `DOUBLE_TAP_ZOOM` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`DOUBLE_TAP_ZOOM`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.DOUBLE_TAP_ZOOM)
 
     @staticmethod
     def has_rotate(flags: int) -> bool:
-        """Returns `True` if the `ROTATE` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`ROTATE`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.ROTATE)
 
     @staticmethod
     def has_scroll_wheel_zoom(flags: int) -> bool:
-        """Returns `True` if the `SCROLL_WHEEL_ZOOM` interactive flag is enabled."""
+        """
+        Returns:
+            `True` if the [`SCROLL_WHEEL_ZOOM`][..] interactive flag is enabled.
+        """
         return InteractiveFlag.has_flag(flags, InteractiveFlag.SCROLL_WHEEL_ZOOM)
 
 
 class MultiFingerGesture(IntFlag):
+    """Flags to enable/disable certain multi-finger gestures on the map."""
+
     NONE = 0
+    """"""
+
     PINCH_MOVE = 1 << 0
+    """"""
+
     PINCH_ZOOM = 1 << 1
+    """"""
+
     ROTATE = 1 << 2
+    """"""
+
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
+    """"""
 
 
 @dataclass
 class InteractionConfiguration:
     enable_multi_finger_gesture_race: bool = False
     """
-    If `True`, then `rotation_threshold` and `pinch_zoom_threshold` and `pinch_move_threshold` will race.
+    If `True`, then [`rotation_threshold`][..] and [`pinch_zoom_threshold`][..] and [`pinch_move_threshold`][..] will race.
     If multiple gestures win at the same time, 
-    then precedence: `pinch_zoom_win_gestures` > `rotation_win_gestures` > `pinch_move_win_gestures`
+    then precedence: [`pinch_zoom_win_gestures`][..] > [`rotation_win_gestures`][..] > [`pinch_move_win_gestures`][..]
     
     Defaults to `False`.
     """
@@ -365,12 +427,13 @@ class InteractionConfiguration:
     pinch_move_threshold: ft.Number = 40.0
     """
     Map starts to move when `pinch_move_threshold` has been achieved 
-    or another multi finger gesture wins which allows `MultiFingerGesture.PINCH_MOVE`.
-    
-    Note: if `InteractionConfiguration.flags` doesn't contain `InteractiveFlag.PINCH_MOVE` 
-    or `enable_multi_finger_gesture_race` is false then pinch move cannot win.
+    or another multi finger gesture wins which allows [`MultiFingerGesture.PINCH_MOVE`][...].
     
     Defaults to `False`.
+    
+    Note: 
+        If [`InteractionConfiguration.flags`][...] doesn't contain [`InteractiveFlag.PINCH_MOVE`][...] 
+        or [`enable_multi_finger_gesture_race`][..] is false then pinch move cannot win.
     """
 
     scroll_wheel_velocity: ft.Number = 0.005
@@ -382,53 +445,52 @@ class InteractionConfiguration:
 
     pinch_zoom_threshold: ft.Number = 0.5
     """
-    Map starts to zoom when pinchZoomThreshold has been achieved or 
-    another multi finger gesture wins which allows `MultiFingerGesture.PINCH_ZOOM`.
-    
-    Note: if `InteractionConfiguration.flags` doesn't contain `InteractiveFlag.PINCH_ZOOM`.
-    or `enable_multi_finger_gesture_race` is false then zoom cannot win.
+    Map starts to zoom when `pinch_zoom_threshold` has been achieved or 
+    another multi finger gesture wins which allows [`MultiFingerGesture.PINCH_ZOOM`][...].
     
     Defaults to `0.5`.
+    
+    Note: 
+        If [`InteractionConfiguration.flags`][...] doesn't contain [`InteractiveFlag.PINCH_ZOOM`][...]
+        or [`enable_multi_finger_gesture_race`][..] is false then zoom cannot win.
     """
 
     rotation_threshold: ft.Number = 20.0
     """
     Map starts to rotate when `rotation_threshold` has been achieved or 
-    another multi finger gesture wins which allows `MultiFingerGesture.ROTATE`.
-    
-    Note: if `InteractionConfiguration.flags` doesn't contain `InteractiveFlag.ROTATE`
-    or `enable_multi_finger_gesture_race` is false then rotate cannot win.
+    another multi finger gesture wins which allows [`MultiFingerGesture.ROTATE`][...].
     
     Defaults to `20.0`.
+    
+    Note: 
+        If [`InteractionConfiguration.flags`][...] doesn't contain [`InteractiveFlag.ROTATE`][...]
+        or [`enable_multi_finger_gesture_race`][..] is false then rotate cannot win.
     """
 
     flags: InteractiveFlag = InteractiveFlag.ALL
     """
     Defines the map events to be enabled/disabled.
     
-    Defaults to `InteractiveFlag.ALL`.
+    Defaults to [`InteractiveFlag.ALL`][...].
     """
 
     rotation_win_gestures: MultiFingerGesture = MultiFingerGesture.ROTATE
     """
-    When `rotation_threshold` wins over `pinch_zoom_threshold` and 
-    `pinch_move_threshold` then `rotation_win_gestures` gestures will be used. 
+    When [`rotation_threshold`[..] wins over [`pinch_zoom_threshold`[..] and 
+    [`pinch_move_threshold`[..] then `rotation_win_gestures` gestures will be used. 
     
-    By default only `MultiFingerGesture.ROTATE` gesture will take effect 
-    see `MultiFingerGesture` for custom settings.
-    
-    Defaults to `MultiFingerGesture.ROTATE`.
+    Defaults to [`MultiFingerGesture.ROTATE`][...].
     """
 
     pinch_move_win_gestures: MultiFingerGesture = (
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When `pinch_move_threshold` wins over `rotation_threshold` 
-    and `pinch_zoom_threshold` then `pinch_move_win_gestures` gestures will be used. 
+    When [`pinch_move_threshold`][..] wins over [`rotation_threshold`][..]
+    and [`pinch_zoom_threshold`][..] then `pinch_move_win_gestures` gestures will be used. 
     
-    By default `MultiFingerGesture.PINCH_MOVE` and `MultiFingerGesture.PINCH_ZOOM`
-    gestures will take effect see `MultiFingerGesture` for custom settings.
+    By default [`MultiFingerGesture.PINCH_MOVE`][...] and [`MultiFingerGesture.PINCH_ZOOM`][...]
+    gestures will take effect see [`MultiFingerGesture`][...] for custom settings.
     
     Defaults to `MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE`.
     """
@@ -437,10 +499,10 @@ class InteractionConfiguration:
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When `pinch_zoom_threshold` wins over `rotation_threshold` and `pinch_move_threshold`
+    When [`pinch_zoom_threshold`][..] wins over [`rotation_threshold`][..] and [`pinch_move_threshold`][..]
     then `pinch_zoom_win_gestures` gestures will be used.
     
-    By default `MultiFingerGesture.PINCH_ZOOM` and `MultiFingerGesture.PINCH_MOVE` 
+    By default [`MultiFingerGesture.PINCH_ZOOM`][...] and [`MultiFingerGesture.PINCH_MOVE`][...] 
     gestures will take effect see `MultiFingerGesture` for custom settings.
     
     Defaults to `MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE`.
@@ -452,9 +514,6 @@ class InteractionConfiguration:
     """
     Options to configure how keyboard keys may be used to control the map.
     
-    See `CursorKeyboardRotationConfiguration` for options to control the keyboard and mouse cursor
-    being used together to rotate the map.
-    
     Keyboard movements using the arrow keys are enabled by default.
     
     Defaults to `KeyboardConfiguration()`.
@@ -464,11 +523,15 @@ class InteractionConfiguration:
         field(default_factory=lambda: CursorKeyboardRotationConfiguration())
     )
     """
+    Options to control the keyboard and mouse cursor being used together to rotate the map.
     
+    Defaults to `CursorKeyboardRotationConfiguration()`.
     """
 
 
 class MapEventSource(Enum):
+    """Defines the source of a [`MapEvent`][..]."""
+
     MAP_CONTROLLER = "mapController"
     """The `MapEvent` is caused programmatically by the `MapController`."""
 
@@ -535,7 +598,7 @@ class MapEventSource(Enum):
     """The `MapEvent` is caused by a 'CTRL + drag' rotation gesture."""
 
     KEYBOARD = "keyboard"
-    """The `MapEvent` is caused by a keyboard key. See `KeyboardConfiguration` for details."""
+    """The `MapEvent` is caused by a keyboard key. See [`KeyboardConfiguration`][...] for details."""
 
 
 @dataclass
@@ -543,17 +606,24 @@ class CameraFit:
     """
     Defines how the camera should fit the bounds or coordinates, depending on which one was provided.
 
-    One of `bounds` or `coordinates` must be specified, but not both.
+    Raises:
+        AssertionError: If both [`bounds`][(c).] and [`coordinates`][(c).] are `None` or not `None`.
     """
 
     bounds: Optional[MapLatitudeLongitudeBounds] = None
     """
     The bounds which the camera should contain once it is fitted.
+    
+    Note:
+        If this is not `None`, [`coordinates`][..] should be `None`, and vice versa.
     """
 
     coordinates: Optional[List[MapLatitudeLongitude]] = None
     """
     The coordinates which the camera should contain once it is fitted.
+    
+    Note:
+        If this is not `None`, [`bounds`][..] should be `None`, and vice versa.
     """
 
     max_zoom: ft.OptionalNumber = None
@@ -627,7 +697,10 @@ class TileDisplay:
     Defines how the tile should get displayed on the map.
 
     This is an abstract class and shouldn't be used directly.
-    See usable derivatives: `InstantaneousTileDisplay`, and `FadeInTileDisplay`.
+
+    See usable derivatives:
+    - `InstantaneousTileDisplay`
+    - `FadeInTileDisplay`
     """
 
     _type: str = ""
@@ -664,18 +737,18 @@ class FadeInTileDisplay(TileDisplay):
     Defaults to `ft.Duration(milliseconds=100)`.
     """
 
-    start_opacity: ft.Number = 1.0
+    start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is faded in.
     
-    Defaults to `1.0`.
+    Defaults to `0.0`.
     """
 
-    reload_start_opacity: ft.Number = 1.0
+    reload_start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is reloaded.
 
-    Defaults to `1.0`.
+    Defaults to `0.0`.
     """
 
     def __post_init__(self):
@@ -701,8 +774,9 @@ class KeyboardConfiguration:
     called a 'leap'. The leap consists of a part of the curved portion, and also
     scales the velocity of the concerned gesture.
 
-    See `CursorKeyboardRotationConfiguration` for options to control the keyboard and
-    mouse cursor being used together to rotate the map.
+    Info:
+        See [`CursorKeyboardRotationConfiguration`][..] for options to control the keyboard and
+        mouse cursor being used together to rotate the map.
     """
 
     autofocus: bool = True
@@ -717,7 +791,7 @@ class KeyboardConfiguration:
     )
     """
     Duration of the curved (`ft.Curve.EASE_IN`) portion of the animation occuring
-    after a key down event (and after a key up event if `animation_curve_reverse_duration` is `None`)
+    after a key down event (and after a key up event if [`animation_curve_reverse_duration`][..] is `None`)
 
     Defaults to `ft.Duration(milliseconds=450)`.
     """
@@ -729,15 +803,14 @@ class KeyboardConfiguration:
     Duration of the curved (reverse `ft.Curve.EASE_IN`) portion of the animation
     occuring after a key up event.
 
-    Set to `None` to use `animation_curve_duration`.
+    Set to `None` to use [`animation_curve_duration`][..].
 
     Defaults to `ft.Duration(milliseconds=600)`.
     """
 
     animation_curve_curve: bool = True
     """
-    Curve of the curved portion of the animation occuring after key down and
-    key up events.
+    Curve of the curved portion of the animation occuring after key down and key up events.
 
     Defaults to `True`.
     """
@@ -798,7 +871,7 @@ class KeyboardConfiguration:
 
     Must be greater than 0 and less than or equal to 1. 
     To disable leaping, or change the maximum length of the key press 
-    that will trigger a leap, see `perform_leap_trigger_duration`.
+    that will trigger a leap, see [`perform_leap_trigger_duration`[..].
     
     Defaults to `0.6`.
     """
@@ -828,9 +901,9 @@ class KeyboardConfiguration:
     The amount to scale the panning offset velocity by during a leap animation.
 
     The larger the number, the larger the movement during a leap. 
-    To change the duration of a leap, see `leap_max_of_curve_component`.
+    To change the duration of a leap, see [`leap_max_of_curve_component`[..].
     
-    This may cause the pan velocity to exceed `max_pan_velocity`.
+    This may cause the pan velocity to exceed [`max_pan_velocity`[..].
 
     Defaults to `5`.
     """
@@ -840,9 +913,9 @@ class KeyboardConfiguration:
     The amount to scale the rotation velocity by during a leap animation
 
     The larger the number, the larger the rotation difference during a leap.
-    To change the duration of a leap, see `leap_max_of_curve_component`.
+    To change the duration of a leap, see [`leap_max_of_curve_component`[..].
     
-    This may cause the pan velocity to exceed `max_rotate_velocity`.
+    This may cause the pan velocity to exceed [`max_rotate_velocity`[..].
 
     Defaults to `3`.
     """
@@ -852,9 +925,9 @@ class KeyboardConfiguration:
     The amount to scale the zooming velocity by during a leap animation.
     
     The larger the number, the larger the zoom difference during a leap. To
-    change the duration of a leap, see `leap_max_of_curve_component`.
+    change the duration of a leap, see [`leap_max_of_curve_component`[..].
     
-    This may cause the pan velocity to exceed `max_zoom_velocity`.
+    This may cause the pan velocity to exceed [`max_zoom_velocity`[..].
 
     Defaults to `3`.
     """
@@ -866,8 +939,8 @@ class KeyboardConfiguration:
     Maximum duration between the key down and key up events of an animation
     which will trigger a 'leap'.
     
-    To customize the leap itself, see the `leap_max_of_curve_component` &
-    `*leap_velocity_multiplier` properties.
+    To customize the leap itself, see the [`leap_max_of_curve_component`[..] &
+    `[*leap_velocity_multiplier`[..] properties.
     
     Set to `None` to disable leaping.
 
@@ -879,7 +952,8 @@ class KeyboardConfiguration:
         """
         Disable keyboard control of the map.
 
-        `CursorKeyboardRotationConfiguration` may still be active, and is not disabled if this is disabled.
+        Info:
+            `CursorKeyboardRotationConfiguration` may still be active, and is not disabled if this is disabled.
         """
         return KeyboardConfiguration(
             enable_arrow_keys_panning=False,

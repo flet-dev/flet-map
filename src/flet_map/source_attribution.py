@@ -8,26 +8,35 @@ __all__ = ["ImageSourceAttribution", "SourceAttribution", "TextSourceAttribution
 @dataclass(kw_only=True)
 class SourceAttribution(ft.BaseControl):
     """
-    Abstract class for source attribution controls: `ImageSourceAttribution` and `TextSourceAttribution`
+    Abstract class for source attribution controls:
+
+    - [`ImageSourceAttribution`][..]
+    - [`TextSourceAttribution`][..]
     """
 
 
 @ft.control("ImageSourceAttribution")
 class ImageSourceAttribution(SourceAttribution):
     """
-    An image attribution permanently displayed adjacent to the open/close icon of a `RichAttribution` control.
-    For it to be displayed, it should be part of a `RichAttribution.attributions` list.
+    An image attribution permanently displayed adjacent to the open/close icon of a [`RichAttribution`][(p).rich_attribution.] control.
+    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).rich_attribution.] list.
+
+    Raises:
+        AssertionError: If the [`image`][(c).] is not visible.
     """
 
     image: ft.Image
     """
     The `Image` to be displayed.
+    
+    Note:
+        Must be provided and visible.
     """
 
     height: ft.OptionalNumber = 24.0
     """
     The height of the image.
-    Should be the same as `RichAttribution.permanent_height`, otherwise layout issues may occur.
+    Should be the same as [`RichAttribution.permanent_height`][(p).rich_attribution.], otherwise layout issues may occur.
     
     Defaults to `24.0`.
     """
@@ -47,18 +56,18 @@ class ImageSourceAttribution(SourceAttribution):
 class TextSourceAttribution(SourceAttribution):
     """
     A text source attribution displayed on the Map.
-    For it to be displayed, it should be part of a RichAttribution.attributions list.
+    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).rich_attribution.] list.
     """
 
     text: str
-    """The text to display as attribution, styled with `text_style`."""
+    """The text to display as attribution, styled with [`text_style`][..]."""
 
     text_style: ft.OptionalTextStyle = None
-    """Style used to display the `text`."""
+    """Style used to display the [`text`][..]."""
 
     prepend_copyright: bool = True
     """
-    Whether to add the '©' character to the start of `text` automatically.
+    Whether to add the '©' character to the start of [`text`][..] automatically.
     
     Defaults to `True`.
     """
