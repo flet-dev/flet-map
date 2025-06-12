@@ -20,7 +20,7 @@ class TileLayer(MapLayer):
     Displays square raster images in a continuous grid,
     sourced from the provided [`url_template`][(c).] and [`fallback_url`][(c).].
 
-    Typically the first layer to be added to a [`Map`][(p).map.], as it provides the tiles on which
+    Typically the first layer to be added to a [`Map`][(p).], as it provides the tiles on which
     other layers are displayed.
 
     Raises:
