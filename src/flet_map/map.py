@@ -129,63 +129,63 @@ class Map(ft.ConstrainedControl):
     """
     Fires when a tap event occurs.
 
-    Event handler argument is of type [`MapTapEvent`][(p).types.].
+    Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
     on_hover: ft.OptionalEventCallable[MapHoverEvent] = None
     """
     Fires when a hover event occurs.
 
-    Event handler argument is of type [`MapHoverEvent`][(p).types.].
+    Event handler argument is of type [`MapHoverEvent`][(p).].
     """
 
     on_secondary_tap: ft.OptionalEventCallable[MapTapEvent] = None
     """
     Fires when a secondary tap event occurs.
 
-    Event handler argument is of type [`MapTapEvent`][(p).types.].
+    Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
     on_long_press: ft.OptionalEventCallable[MapTapEvent] = None
     """
     Fires when a long press event occurs.
 
-    Event handler argument is of type [`MapTapEvent`][(p).types.].
+    Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
     on_event: ft.OptionalEventCallable[MapEvent] = None
     """
     Fires when any map events occurs.
 
-    Event handler argument is of type [`MapEvent`][(p).types.].
+    Event handler argument is of type [`MapEvent`][(p).].
     """
 
     on_position_change: ft.OptionalEventCallable[MapPositionChangeEvent] = None
     """
     Fires when the map position changes.
 
-    Event handler argument is of type [`MapPositionChangeEvent`][(p).types.].
+    Event handler argument is of type [`MapPositionChangeEvent`][(p).].
     """
 
     on_pointer_down: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer down event occurs.
 
-    Event handler argument is of type [`MapPointerEvent`][(p).types.].
+    Event handler argument is of type [`MapPointerEvent`][(p).].
     """
 
     on_pointer_cancel: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer cancel event occurs.
     
-    Event handler argument is of type [`MapPointerEvent`][(p).types.].
+    Event handler argument is of type [`MapPointerEvent`][(p).].
     """
 
     on_pointer_up: ft.OptionalEventCallable[MapPointerEvent] = None
     """
     Fires when a pointer up event occurs.
 
-    Event handler argument is of type [`MapPointerEvent`][(p).types.].
+    Event handler argument is of type [`MapPointerEvent`][(p).].
     """
 
     async def rotate_from_async(

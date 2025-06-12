@@ -59,7 +59,7 @@ class TileLayerEvictErrorTileStrategy(Enum):
 
 
 class AttributionAlignment(Enum):
-    """Position to anchor [`RichAttribution`][(p).rich_attribution.] control relative to the map."""
+    """Position to anchor [`RichAttribution`][(p).] control relative to the map."""
 
     BOTTOM_LEFT = "bottomLeft"
     """The bottom left corner."""

@@ -18,8 +18,8 @@ class SourceAttribution(ft.BaseControl):
 @ft.control("ImageSourceAttribution")
 class ImageSourceAttribution(SourceAttribution):
     """
-    An image attribution permanently displayed adjacent to the open/close icon of a [`RichAttribution`][(p).rich_attribution.] control.
-    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).rich_attribution.] list.
+    An image attribution permanently displayed adjacent to the open/close icon of a [`RichAttribution`][(p).] control.
+    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).] list.
 
     Raises:
         AssertionError: If the [`image`][(c).] is not visible.
@@ -36,7 +36,7 @@ class ImageSourceAttribution(SourceAttribution):
     height: ft.OptionalNumber = 24.0
     """
     The height of the image.
-    Should be the same as [`RichAttribution.permanent_height`][(p).rich_attribution.], otherwise layout issues may occur.
+    Should be the same as [`RichAttribution.permanent_height`][(p).], otherwise layout issues may occur.
     
     Defaults to `24.0`.
     """
@@ -56,7 +56,7 @@ class ImageSourceAttribution(SourceAttribution):
 class TextSourceAttribution(SourceAttribution):
     """
     A text source attribution displayed on the Map.
-    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).rich_attribution.] list.
+    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).] list.
     """
 
     text: str
