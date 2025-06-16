@@ -84,13 +84,13 @@ class Map(ft.ConstrainedControl):
     Defaults to `False`.
     """
 
-    max_zoom: ft.OptionalNumber = None
+    max_zoom: Optional[ft.Number] = None
     """
     The maximum (highest) zoom level of every layer. 
     Each layer can specify additional zoom level restrictions.
     """
 
-    min_zoom: ft.OptionalNumber = None
+    min_zoom: Optional[ft.Number] = None
     """
     The minimum (smallest) zoom level of every layer. 
     Each layer can specify additional zoom level restrictions.
@@ -191,8 +191,8 @@ class Map(ft.ConstrainedControl):
     async def rotate_from_async(
         self,
         degree: ft.Number,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -217,8 +217,8 @@ class Map(ft.ConstrainedControl):
     def rotate_from(
         self,
         degree: ft.Number,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -238,8 +238,8 @@ class Map(ft.ConstrainedControl):
 
     async def reset_rotation_async(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -261,7 +261,7 @@ class Map(ft.ConstrainedControl):
 
     def reset_rotation(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
         animation_duration: ft.DurationValue = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
@@ -281,8 +281,8 @@ class Map(ft.ConstrainedControl):
 
     async def zoom_in_async(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -304,8 +304,8 @@ class Map(ft.ConstrainedControl):
 
     def zoom_in(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -324,8 +324,8 @@ class Map(ft.ConstrainedControl):
 
     async def zoom_out_async(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -347,8 +347,8 @@ class Map(ft.ConstrainedControl):
 
     def zoom_out(
         self,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -368,8 +368,8 @@ class Map(ft.ConstrainedControl):
     async def zoom_to_async(
         self,
         zoom: ft.Number,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -394,8 +394,8 @@ class Map(ft.ConstrainedControl):
     def zoom_to(
         self,
         zoom: ft.Number,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -416,10 +416,10 @@ class Map(ft.ConstrainedControl):
     async def move_to_async(
         self,
         destination: Optional[MapLatitudeLongitude] = None,
-        zoom: ft.OptionalNumber = None,
-        rotation: ft.OptionalNumber = None,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        zoom: Optional[ft.Number] = None,
+        rotation: Optional[ft.Number] = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         offset: ft.OffsetValue = ft.Offset(0, 0),
         cancel_ongoing_animations: bool = False,
     ) -> None:
@@ -455,10 +455,10 @@ class Map(ft.ConstrainedControl):
     def move_to(
         self,
         destination: Optional[MapLatitudeLongitude] = None,
-        zoom: ft.OptionalNumber = None,
-        rotation: ft.OptionalNumber = None,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        zoom: Optional[ft.Number] = None,
+        rotation: Optional[ft.Number] = None,
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         offset: ft.OffsetValue = ft.Offset(0, 0),
         cancel_ongoing_animations: bool = False,
     ) -> None:
@@ -492,9 +492,9 @@ class Map(ft.ConstrainedControl):
     async def center_on_async(
         self,
         point: MapLatitudeLongitude,
-        zoom: ft.OptionalNumber,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        zoom: Optional[ft.Number],
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """
@@ -521,9 +521,9 @@ class Map(ft.ConstrainedControl):
     def center_on(
         self,
         point: Optional[MapLatitudeLongitude],
-        zoom: ft.OptionalNumber,
-        animation_curve: ft.OptionalAnimationCurve = None,
-        animation_duration: ft.OptionalDurationValue = None,
+        zoom: Optional[ft.Number],
+        animation_curve: Optional[ft.AnimationCurve] = None,
+        animation_duration: Optional[ft.DurationValue] = None,
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """

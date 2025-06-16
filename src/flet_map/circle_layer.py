@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import flet as ft
 
@@ -23,10 +23,10 @@ class CircleMarker(ft.Control):
     coordinates: MapLatitudeLongitude
     """The center coordinates of the circle"""
 
-    color: ft.OptionalColorValue = None
+    color: Optional[ft.ColorValue] = None
     """The color of the circle area."""
 
-    border_color: ft.OptionalColorValue = None
+    border_color: Optional[ft.ColorValue] = None
     """
     The color of the circle border line.
     

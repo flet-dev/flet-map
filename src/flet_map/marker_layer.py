@@ -63,7 +63,7 @@ class Marker(ft.Control):
         Must be non-negative.
     """
 
-    alignment: ft.OptionalAlignment = None
+    alignment: Optional[ft.Alignment] = None
     """
     Alignment of the marker relative to the normal center at [`coordinates`][..].
     
@@ -88,7 +88,7 @@ class MarkerLayer(MapLayer):
     List of [`Marker`][(m).]s to display.
     """
 
-    alignment: ft.OptionalAlignment = field(
+    alignment: Optional[ft.Alignment] = field(
         default_factory=lambda: ft.Alignment.center()
     )
     """

@@ -30,19 +30,19 @@ class RichAttribution(MapLayer):
     The position in which to anchor this attribution control.
     """
 
-    popup_bgcolor: ft.OptionalColorValue = ft.Colors.SURFACE
+    popup_bgcolor: Optional[ft.ColorValue] = ft.Colors.SURFACE
     """
     The color to use as the popup box's background color.
     
     Defaults to `ft.Colors.SURFACE`.
     """
 
-    popup_border_radius: ft.OptionalBorderRadiusValue = None
+    popup_border_radius: Optional[ft.BorderRadiusValue] = None
     """
     The radius of the edges of the popup box.
     """
 
-    popup_initial_display_duration: ft.OptionalDurationValue = field(
+    popup_initial_display_duration: ft.DurationValue = field(
         default_factory=lambda: ft.Duration()
     )
     """

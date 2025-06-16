@@ -626,7 +626,7 @@ class CameraFit:
         If this is not `None`, [`bounds`][..] should be `None`, and vice versa.
     """
 
-    max_zoom: ft.OptionalNumber = None
+    max_zoom: Optional[ft.Number] = None
     """
     The inclusive upper zoom limit used for the resulting fit.
     If the zoom level calculated for the fit exceeds the `max_zoom` value, `max_zoom` will be used instead.
@@ -796,7 +796,7 @@ class KeyboardConfiguration:
     Defaults to `ft.Duration(milliseconds=450)`.
     """
 
-    animation_curve_reverse_duration: ft.OptionalDurationValue = field(
+    animation_curve_reverse_duration: ft.DurationValue = field(
         default_factory=lambda: ft.Duration(milliseconds=600)
     )
     """
@@ -932,7 +932,7 @@ class KeyboardConfiguration:
     Defaults to `3`.
     """
 
-    perform_leap_trigger_duration: ft.OptionalDurationValue = field(
+    perform_leap_trigger_duration: ft.DurationValue = field(
         default_factory=lambda: ft.Duration(milliseconds=100)
     )
     """

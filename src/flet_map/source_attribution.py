@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 import flet as ft
 
@@ -33,7 +34,7 @@ class ImageSourceAttribution(SourceAttribution):
         Must be provided and visible.
     """
 
-    height: ft.OptionalNumber = 24.0
+    height: ft.Number = 24.0
     """
     The height of the image.
     Should be the same as [`RichAttribution.permanent_height`][(p).], otherwise layout issues may occur.
@@ -41,7 +42,7 @@ class ImageSourceAttribution(SourceAttribution):
     Defaults to `24.0`.
     """
 
-    tooltip: ft.OptionalString = None
+    tooltip: Optional[str] = None
     """Tooltip text to be displayed when the image is hovered over."""
 
     on_click: ft.OptionalControlEventCallable = None
@@ -62,7 +63,7 @@ class TextSourceAttribution(SourceAttribution):
     text: str
     """The text to display as attribution, styled with [`text_style`][..]."""
 
-    text_style: ft.OptionalTextStyle = None
+    text_style: Optional[ft.TextStyle] = None
     """Style used to display the [`text`][..]."""
 
     prepend_copyright: bool = True

@@ -29,7 +29,7 @@ class PolygonMarker(ft.Control):
     expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(m).].
     """
 
-    label_text_style: ft.OptionalTextStyle = None
+    label_text_style: Optional[ft.TextStyle] = None
     """
     The text style for the label.
     """
