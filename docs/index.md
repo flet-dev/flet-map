@@ -28,24 +28,21 @@ This package supports the following platforms:
 To install the `flet-map` package and add it to your project dependencies:
 
 === "uv"
-
-```bash
-uv add flet-map
-```
+    ```bash
+    uv add flet-map
+    ```
 
 === "pip"
-
-```bash
-pip install flet-map
-```
-
-    You will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
+    ```bash
+    pip install flet-map  # (1)!
+    ```
 
 === "poetry"
+    ```bash
+    poetry add flet-map
+    ```
 
-```bash
-poetry add flet-map
-```
+1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
 ## Example
 
