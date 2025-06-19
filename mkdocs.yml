@@ -110,7 +110,7 @@ nav:
           - FadeInTileDisplay: types/fade_in_tile_display.md
           - InstantaneousTileDisplay: types/instantaneous_tile_display.md
           - InteractionConfiguration: types/interaction_configuration.md
-          - InteractiveFlag: types/interactive_flag.md
+          - InteractionFlag: types/interaction_flag.md
           - KeyboardConfiguration: types/keyboard_configuration.md
           - MapEventSource: types/map_event_source.md
           - MapLatitudeLongitude: types/map_latitude_longitude.md
