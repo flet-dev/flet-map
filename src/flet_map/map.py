@@ -29,7 +29,7 @@ class Map(ft.ConstrainedControl):
     """
     A list of layers to be displayed (stack-like) on the map.
 
-    Value is of type `MapLayer`.
+    Value is of type [`MapLayer`][(p).].
     """
 
     initial_center: MapLatitudeLongitude = field(
@@ -39,22 +39,17 @@ class Map(ft.ConstrainedControl):
     The initial center of the map.
 
     Value is of type `MapLatitudeLongitude`.
-    Defaults to `MapLatitudeLongitude(latitude=50.5, longitude=30.51)`.
     """
 
     initial_rotation: ft.Number = 0.0
     """
     The rotation (in degrees) when the map is first loaded.
-    
-    Defaults to `0.0`.
     """
 
     initial_zoom: ft.Number = 13.0
     """
     The zoom when the map is first loaded. 
     If initial_camera_fit is defined this has no effect.
-    
-    Defaults to `13.0`.
     """
 
     interaction_configuration: InteractionConfiguration = field(
@@ -62,15 +57,11 @@ class Map(ft.ConstrainedControl):
     )
     """
     The interaction configuration.
-    
-    Defaults to `InteractionConfiguration()`.
     """
 
     bgcolor: ft.ColorValue = ft.Colors.GREY_300
     """
     The background color of this control.
-    
-    Defaults to `ft.Colors.GREY_300`.
     """
 
     keep_alive: bool = False
@@ -80,8 +71,6 @@ class Map(ft.ConstrainedControl):
     If the map is within a complex layout, such as a `ListView`,
     the map will reset to it's inital position after it appears back into view.
     To ensure this doesn't happen, enable this flag to prevent it from rebuilding.
-    
-    Defaults to `False`.
     """
 
     max_zoom: Optional[ft.Number] = None
@@ -100,8 +89,6 @@ class Map(ft.ConstrainedControl):
     """
     The default animation curve to be used for map-animations 
     when calling instance methods like `zoom_in()`, `rotate_from()`, `move_to()` etc.
-    
-    Defaults to `AnimationCurve.FAST_OUT_SLOWIN`.
     """
 
     animation_duration: ft.DurationValue = field(
@@ -110,8 +97,6 @@ class Map(ft.ConstrainedControl):
     """
     The default animation duration to be used for map-animations 
     when calling instance methods like `zoom_in()`, `rotate_from()`, `move_to()` etc.
-    
-    Defaults to `Duration(milliseconds=500)`.
     """
 
     initial_camera_fit: Optional[CameraFit] = None
@@ -120,68 +105,68 @@ class Map(ft.ConstrainedControl):
     Takes precedence over `initial_center`/`initial_zoom`.
     """
 
-    on_init: ft.OptionalControlEventCallable = None
+    on_init: ft.OptionalControlEventHandler["Map"] = None
     """
     Fires when the map is initialized.
     """
 
-    on_tap: ft.OptionalEventCallable[MapTapEvent] = None
+    on_tap: ft.OptionalEventHandler[MapTapEvent["Map"]] = None
     """
     Fires when a tap event occurs.
 
     Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
-    on_hover: ft.OptionalEventCallable[MapHoverEvent] = None
+    on_hover: ft.OptionalEventHandler[MapHoverEvent["Map"]] = None
     """
     Fires when a hover event occurs.
 
     Event handler argument is of type [`MapHoverEvent`][(p).].
     """
 
-    on_secondary_tap: ft.OptionalEventCallable[MapTapEvent] = None
+    on_secondary_tap: ft.OptionalEventHandler[MapTapEvent["Map"]] = None
     """
     Fires when a secondary tap event occurs.
 
     Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
-    on_long_press: ft.OptionalEventCallable[MapTapEvent] = None
+    on_long_press: ft.OptionalEventHandler[MapTapEvent["Map"]] = None
     """
     Fires when a long press event occurs.
 
     Event handler argument is of type [`MapTapEvent`][(p).].
     """
 
-    on_event: ft.OptionalEventCallable[MapEvent] = None
+    on_event: ft.OptionalEventHandler[MapEvent["Map"]] = None
     """
     Fires when any map events occurs.
 
     Event handler argument is of type [`MapEvent`][(p).].
     """
 
-    on_position_change: ft.OptionalEventCallable[MapPositionChangeEvent] = None
+    on_position_change: ft.OptionalEventHandler[MapPositionChangeEvent["Map"]] = None
     """
     Fires when the map position changes.
 
     Event handler argument is of type [`MapPositionChangeEvent`][(p).].
     """
 
-    on_pointer_down: ft.OptionalEventCallable[MapPointerEvent] = None
+    on_pointer_down: ft.OptionalEventHandler[MapPointerEvent["Map"]] = None
     """
     Fires when a pointer down event occurs.
 
     Event handler argument is of type [`MapPointerEvent`][(p).].
     """
 
-    on_pointer_cancel: ft.OptionalEventCallable[MapPointerEvent] = None
+    on_pointer_cancel: ft.OptionalEventHandler[MapPointerEvent["Map"]] = None
     """
     Fires when a pointer cancel event occurs.
     
     Event handler argument is of type [`MapPointerEvent`][(p).].
     """
 
-    on_pointer_up: ft.OptionalEventCallable[MapPointerEvent] = None
+    on_pointer_up: ft.OptionalEventHandler[MapPointerEvent["Map"]] = None
     """
     Fires when a pointer up event occurs.
 

@@ -57,8 +57,6 @@ class TileLayer(MapLayer):
     - `"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"`
     - `"https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"`
     - `"https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"`
-
-    Defaults to `["a", "b", "c"]`.
     """
 
     tile_bounds: Optional[MapLatitudeLongitudeBounds] = None
@@ -71,8 +69,6 @@ class TileLayer(MapLayer):
     """
     The size in pixels of each tile image.
     Should be a positive power of 2.
-    
-    Defaults to `256`.
     
     Note:
         Must be greater than or equal to `0.0`.
@@ -88,8 +84,6 @@ class TileLayer(MapLayer):
     This should usually be 0 (as default), as most tile sources will support
     zoom levels onwards from this.
     
-    Defaults to `0`.
-    
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -103,8 +97,6 @@ class TileLayer(MapLayer):
     
     Most tile servers support up to zoom level `19`, which is the default.
     Otherwise, this should be specified.
-
-    Defaults to `19`.
     
     Note:
         Must be greater than or equal to `0.0`.
@@ -113,15 +105,11 @@ class TileLayer(MapLayer):
     zoom_reverse: bool = False
     """
     Whether the zoom number used in tile URLs will be reversed (`max_zoom - zoom` instead of `zoom`).
-
-    Defaults to `False`.
     """
 
     zoom_offset: ft.Number = 0.0
     """
     The zoom number used in tile URLs will be offset with this value.
-    
-    Defaults to `0.0`.
     
     Note:
         Must be greater than or equal to `0.0`.
@@ -130,8 +118,6 @@ class TileLayer(MapLayer):
     keep_buffer: int = 2
     """
     When panning the map, keep this many rows and columns of tiles before unloading them.
-
-    Defaults to `2`.
     """
 
     pan_buffer: int = 1
@@ -140,24 +126,18 @@ class TileLayer(MapLayer):
     increases the loaded tiles by the given number on both axis which can help
     prevent the user from seeing loading tiles whilst panning. Setting the
     pan buffer too high can impact performance, typically this is set to `0` or `1`.
-
-    Defaults to `1`.
     """
 
     enable_tms: bool = False
     """
     Whether to inverse Y-axis numbering for tiles.
     Turn this on for [TMS](https://en.wikipedia.org/wiki/Tile_Map_Service) services.
-    
-    Defaults to `False`.
     """
 
     enable_retina_mode: bool = False
     """
     Whether to enable retina mode.
     Retina mode improves the resolution of map tiles, particularly on high density displays.
-    
-    Defaults to `False`.
     """
 
     additional_options: Dict[str, str] = field(default_factory=dict)
@@ -175,8 +155,6 @@ class TileLayer(MapLayer):
             },
         ),
         ```
-    
-    Defaults to `{}`.
     """
 
     max_zoom: ft.Number = float("inf")
@@ -189,8 +167,6 @@ class TileLayer(MapLayer):
     tile source. 
     
     Typically set to infinity so that there are tiles always displayed.
-
-    Defaults to `float("inf")`.
     
     Note:
         Must be greater than or equal to `0.0`.
@@ -200,8 +176,6 @@ class TileLayer(MapLayer):
     """
     The minimum zoom level at which this layer is displayed (inclusive).
     Typically `0.0`.
-    
-    Defaults to `0.0`.
     
     Note:
         Must be greater than or equal to `0.0`.
@@ -220,26 +194,20 @@ class TileLayer(MapLayer):
     """
     If a tile was loaded with error, 
     the tile provider will be asked to evict the image based on this strategy.
-    
-    Defaults to `TileLayerEvictErrorTileStrategy.NONE`.
     """
 
     display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
     """
     
     Defines how tiles are displayed on the map.
-    
-    Defaults to `FadeInTileDisplay()`.
     """
 
     user_agent_package_name: str = "unknown"
     """
     The package name of the user agent.
-    
-    Defaults to `"unknown"`.
     """
 
-    on_image_error: ft.OptionalControlEventCallable = None
+    on_image_error: ft.OptionalControlEventHandler["TileLayer"] = None
     """
     Fires if an error occurs when fetching the tiles.
     

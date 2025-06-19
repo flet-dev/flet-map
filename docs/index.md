@@ -21,6 +21,32 @@ This package supports the following platforms:
 | Android  |     ✅     |
 | Web      |     ✅     |
 
+## Usage
+
+### Installation
+
+To install the `flet-map` package and add it to your project dependencies:
+
+=== "uv"
+
+```bash
+uv add flet-map
+```
+
+=== "pip"
+
+```bash
+pip install flet-map
+```
+
+    You will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
+
+=== "poetry"
+
+```bash
+poetry add flet-map
+```
+
 ## Example
 
 ```python title="main.py"

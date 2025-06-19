@@ -12,7 +12,7 @@ __all__ = ["Marker", "MarkerLayer"]
 @ft.control("Marker")
 class Marker(ft.Control):
     """
-    A marker displayed on the Map at the specified location through the [`MarkerLayer`][..].
+    A marker displayed on the Map at the specified location through the [`MarkerLayer`][(p).].
 
     Raises:
         AssertionError: If the [`content`][(c).] is not visible, or if [`height`][(c).] or [`width`][(c).] are negative.
@@ -40,14 +40,12 @@ class Marker(ft.Control):
     
     Note: this is not used to apply a custom rotation in degrees to the marker.
     
-    Defaults to the value of the parent [`MarkerLayer.rotate`][(m).].
+    Defaults to the value of the parent [`MarkerLayer.rotate`][(p).].
     """
 
     height: ft.Number = 30.0
     """
     The height of the [`content`][..] Control.
-    
-    Defaults to `30.0`.
     
     Note:
         Must be non-negative.
@@ -56,8 +54,6 @@ class Marker(ft.Control):
     width: ft.Number = 30.0
     """
     The width of the [`content`][..] Control.
-    
-    Defaults to `30.0`.
     
     Note:
         Must be non-negative.
@@ -93,13 +89,9 @@ class MarkerLayer(MapLayer):
     )
     """
     Alignment of each marker relative to its normal center at `Marker.coordinates`.
-    
-    Defaults to `ft.Alignment.center()`.
     """
 
     rotate: bool = False
     """
     Whether to counter-rotate `markers` to the map's rotation, to keep a fixed orientation.
-    
-    Defaults to `False`.
     """

@@ -12,7 +12,7 @@ __all__ = ["PolylineMarker", "PolylineLayer"]
 @ft.control("PolylineMarker")
 class PolylineMarker(ft.Control):
     """
-    A marker for the [`PolylineLayer`][..].
+    A marker for the [`PolylineLayer`][(p).].
     """
 
     coordinates: List[MapLatitudeLongitude]
@@ -33,22 +33,16 @@ class PolylineMarker(ft.Control):
     border_color: ft.ColorValue = ft.Colors.YELLOW
     """
     The border's color.
-    
-    Defaults to `ft.Colors.YELLOW`.
     """
 
     color: ft.ColorValue = ft.Colors.YELLOW
     """
     The color of the line stroke.
-    
-    Defaults to `ft.Colors.YELLOW`.
     """
 
     stroke_width: ft.Number = 1.0
     """
     The width of the stroke.
-    
-    Defaults to `1.0`.
     
     Note:
         Must be non-negative.
@@ -58,8 +52,6 @@ class PolylineMarker(ft.Control):
     """
     The width of the stroke with of the line border.
     
-    Defaults to `0.0` (disabled).
-    
     Note:
         Must be non-negative.
     """
@@ -67,30 +59,22 @@ class PolylineMarker(ft.Control):
     use_stroke_width_in_meter: bool = False
     """
     Whether the stroke's width should have meters as unit.
-    
-    Defaults to `False`.
     """
 
     stroke_pattern: StrokePattern = field(default_factory=lambda: SolidStrokePattern())
     """
     Determines whether the line should be solid, dotted, or dashed, and the
     exact characteristics of each.
-    
-    Defaults to `SolidStrokePattern()`.
     """
 
     stroke_cap: ft.StrokeCap = ft.StrokeCap.ROUND
     """
     Style to use for line endings.
-    
-    Defaults to `ft.StrokeCap.ROUND`.
     """
 
     stroke_join: ft.StrokeJoin = ft.StrokeJoin.ROUND
     """
     Style to use for line segment joins.
-    
-    Defaults to `ft.StrokeJoin.ROUND`.
     """
 
     def before_update(self):
@@ -104,19 +88,17 @@ class PolylineMarker(ft.Control):
 @ft.control("PolylineLayer")
 class PolylineLayer(MapLayer):
     """
-    A layer to display [`PolylineMarker`][..]s.
+    A layer to display [`PolylineMarker`][(p).]s.
     """
 
     polylines: List[PolylineMarker]
     """
-    List of [`PolylineMarker`][...]s to be drawn. 
+    List of [`PolylineMarker`][(p).]s to be drawn. 
     """
 
     culling_margin: ft.Number = 10.0
     """
     Acceptable extent outside of viewport before culling polyline segments.
-    
-    Defaults to `10.0`.
     """
 
     min_hittable_radius: ft.Number = 10.0
@@ -125,11 +107,8 @@ class PolylineLayer(MapLayer):
     
     The entire visible area is always hittable, but if the visible area is
     smaller than this, then this will be the hittable area.
-    
-    Defaults to `10.0`.
     """
 
     simplify_tolerance: ft.Number = 0.3
     """
-    Defaults to `0.3`.
     """

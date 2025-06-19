@@ -22,7 +22,7 @@ from .types import (
     FadeInTileDisplay,
     InstantaneousTileDisplay,
     InteractionConfiguration,
-    InteractiveFlag,
+    InteractionFlag,
     KeyboardConfiguration,
     MapEvent,
     MapEventSource,

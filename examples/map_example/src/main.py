@@ -37,8 +37,8 @@ def main(page: ft.Page):
             expand=True,
             initial_center=ftm.MapLatitudeLongitude(15, 10),
             initial_zoom=4.2,
-            interaction_configuration=ftm.MapInteractionConfiguration(
-                flags=ftm.MapInteractiveFlag.ALL
+            interaction_configuration=ftm.InteractionConfiguration(
+                flags=ftm.InteractionFlag.ALL
             ),
             on_tap=handle_tap,
             on_secondary_tap=handle_tap,

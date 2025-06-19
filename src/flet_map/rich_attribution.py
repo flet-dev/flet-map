@@ -33,8 +33,6 @@ class RichAttribution(MapLayer):
     popup_bgcolor: Optional[ft.ColorValue] = ft.Colors.SURFACE
     """
     The color to use as the popup box's background color.
-    
-    Defaults to `ft.Colors.SURFACE`.
     """
 
     popup_border_radius: Optional[ft.BorderRadiusValue] = None
@@ -50,22 +48,16 @@ class RichAttribution(MapLayer):
     
     This is useful with certain sources/tile servers that make immediate
     attribution mandatory and are not attributed with a permanently visible [`ImageSourceAttribution`][(p).].
-    
-    Defaults to `ft.Duration()`.
     """
 
     permanent_height: ft.Number = 24.0
     """
     The height of the permanent row in which is found the popup menu toggle button.
     Also determines spacing between the items within the row.
-    
-    Defaults to `24.0`.
     """
 
     show_flutter_map_attribution: bool = True
     """
     Whether to add an additional attribution logo and text for [`flutter-map`](https://docs.fleaflet.dev/),
     on which 'flet-map' package is based for map-renderings.
-    
-    Defaults to `True`.
     """

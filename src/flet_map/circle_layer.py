@@ -11,7 +11,7 @@ __all__ = ["CircleMarker", "CircleLayer"]
 @ft.control("CircleMarker")
 class CircleMarker(ft.Control):
     """
-    A circular marker displayed on the Map at the specified location through the [`CircleLayer`][..].
+    A circular marker displayed on the Map at the specified location through the [`CircleLayer`][(p).].
 
     Raises:
         AssertionError: If the [`border_stroke_width`][(c).] is negative.
@@ -37,8 +37,6 @@ class CircleMarker(ft.Control):
     """
     The stroke width for the circle border. 
     
-    Defaults to `0` (no border).
-    
     Note:
         Must be non-negative.
     """
@@ -46,8 +44,6 @@ class CircleMarker(ft.Control):
     use_radius_in_meter: bool = False
     """
     Whether the [`radius`][..] should use the unit meters.
-    
-    Defaults to `False`.
     """
 
     def before_update(self):
@@ -60,8 +56,8 @@ class CircleMarker(ft.Control):
 @ft.control("CircleLayer")
 class CircleLayer(MapLayer):
     """
-    A layer to display [`CircleMarker`][..]s.
+    A layer to display [`CircleMarker`][(p).]s.
     """
 
     circles: List[CircleMarker]
-    """A list of [`CircleMarker`][...]s to display."""
+    """A list of [`CircleMarker`][(p).]s to display."""

@@ -11,8 +11,8 @@ class SourceAttribution(ft.BaseControl):
     """
     Abstract class for source attribution controls:
 
-    - [`ImageSourceAttribution`][..]
-    - [`TextSourceAttribution`][..]
+    - [`ImageSourceAttribution`][(p).]
+    - [`TextSourceAttribution`][(p).]
     """
 
 
@@ -38,14 +38,12 @@ class ImageSourceAttribution(SourceAttribution):
     """
     The height of the image.
     Should be the same as [`RichAttribution.permanent_height`][(p).], otherwise layout issues may occur.
-    
-    Defaults to `24.0`.
     """
 
     tooltip: Optional[str] = None
     """Tooltip text to be displayed when the image is hovered over."""
 
-    on_click: ft.OptionalControlEventCallable = None
+    on_click: ft.OptionalControlEventHandler["ImageSourceAttribution"] = None
     """Fired when this attribution is clicked/pressed."""
 
     def before_update(self):
@@ -69,9 +67,7 @@ class TextSourceAttribution(SourceAttribution):
     prepend_copyright: bool = True
     """
     Whether to add the '©' character to the start of [`text`][..] automatically.
-    
-    Defaults to `True`.
     """
 
-    on_click: ft.OptionalControlEventCallable = None
+    on_click: ft.OptionalControlEventHandler["TextSourceAttribution"] = None
     """Fired when this attribution is clicked/pressed."""

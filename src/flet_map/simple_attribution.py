@@ -24,16 +24,12 @@ class SimpleAttribution(MapLayer):
     alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.bottom_right())
     """
     The alignment of this attribution on the map.
-    
-    Defaults to `ft.Alignment.bottom_right()`
     """
 
     bgcolor: ft.ColorValue = ft.Colors.SURFACE
     """
     The color of the box containing the `text`.
-    
-    Defaults to `ft.Colors.SURFACE`.
     """
 
-    on_click: ft.OptionalControlEventCallable = None
+    on_click: ft.OptionalControlEventHandler["SimpleAttribution"] = None
     """Fired when this attribution is clicked/pressed."""
