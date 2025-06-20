@@ -3,9 +3,7 @@ name = "flet-map"
 version = "0.2.0"
 description = "Display interactive Maps in your Flet apps."
 readme = "README.md"
-authors = [
-    { name = "Flet contributors", email = "hello@flet.dev" }
-]
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
@@ -66,10 +64,6 @@ select = [
     "SIM",
     # isort
     "I"
-]
-ignore = [
-    # Pyflakes
-    "F401", # unused import
 ]
 preview = true
 

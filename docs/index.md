@@ -48,4 +48,4 @@ To install the `flet-map` package and add it to your project dependencies:
 
 ```python title="main.py"
 --8<-- "examples/map_example/src/main.py"
-``` 
+```
