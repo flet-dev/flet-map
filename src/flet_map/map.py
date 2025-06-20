@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
@@ -25,7 +25,7 @@ class Map(ft.ConstrainedControl):
     An interactive map control that allows displaying various layers.
     """
 
-    layers: List[MapLayer]
+    layers: list[MapLayer]
     """
     A list of layers to be displayed (stack-like) on the map.
 
