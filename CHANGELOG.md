@@ -11,14 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Deployed online documentation: https://flet-dev.github.io/flet-map/
 - New controls:
-  - `SourceAttribution`
-  - `ImageSourceAttribution`
+    - `SourceAttribution`
+    - `ImageSourceAttribution`
 - New types:
-  - `Camera`
-  - `CameraFit`
-  - `CursorKeyboardRotationConfiguration`
-  - `CursorRotationBehaviour`
-  - `KeyboardConfiguration`
+    - `Camera`
+    - `CameraFit`
+    - `CursorKeyboardRotationConfiguration`
+    - `CursorRotationBehaviour`
+    - `KeyboardConfiguration`
 
 
 
@@ -26,10 +26,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Refactored all controls to use `@flet.control` dataclass-style definition.
 - The following classes were renamed:
-  - `MapInteractionConfiguration` → `InteractionConfiguration`
-  - `MapInteractiveFlag` → `InteractionFlag`
-  - `MapMultiFingerGesture` → `MultiFingerGesture`
-  - `MapTileLayerEvictErrorTileStrategy` → `TileLayerEvictErrorTileStrategy`
+    - `MapInteractionConfiguration` → `InteractionConfiguration`
+    - `MapInteractiveFlag` → `InteractionFlag`
+    - `MapMultiFingerGesture` → `MultiFingerGesture`
+    - `MapTileLayerEvictErrorTileStrategy` → `TileLayerEvictErrorTileStrategy`
 
 ## [0.1.0] - 2025-01-15
 
