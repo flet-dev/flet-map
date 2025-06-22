@@ -163,7 +163,7 @@ class TileLayer(MapLayer):
     The main usage for this property is to display a different `TileLayer`
     when zoomed far in.
     
-    Prefer `max_native_zoom` for setting the maximum zoom level supported by the
+    Prefer [`max_native_zoom`][..] for setting the maximum zoom level supported by the
     tile source. 
     
     Typically set to infinity so that there are tiles always displayed.
@@ -185,7 +185,7 @@ class TileLayer(MapLayer):
     """
     The source of the tile image to show in place of the tile that failed to load.
     
-    See `on_image_error` property for details on the error.
+    See [`on_image_error`][..] property for details on the error.
     """
 
     evict_error_tile_strategy: Optional[
@@ -216,13 +216,21 @@ class TileLayer(MapLayer):
 
     def before_update(self):
         super().before_update()
-        assert self.tile_size >= 0, "tile_size must be greater than or equal to 0"
-        assert (
-            self.min_native_zoom >= 0
-        ), "min_native_zoom must be greater than or equal to 0"
-        assert (
-            self.max_native_zoom >= 0
-        ), "max_native_zoom must be greater than or equal to 0"
-        assert self.zoom_offset >= 0, "zoom_offset must be greater than or equal to 0"
-        assert self.max_zoom >= 0, "max_zoom must be greater than or equal to 0"
-        assert self.min_zoom >= 0, "min_zoom must be greater than or equal to 0"
+        assert self.tile_size >= 0, (
+            f"tile_size must be greater than or equal to 0, got {self.tile_size}"
+        )
+        assert self.min_native_zoom >= 0, (
+            f"min_native_zoom must be greater than or equal to 0, got {self.min_native_zoom}"
+        )
+        assert self.max_native_zoom >= 0, (
+            f"max_native_zoom must be greater than or equal to 0, got {self.max_native_zoom}"
+        )
+        assert self.zoom_offset >= 0, (
+            f"zoom_offset must be greater than or equal to 0, got {self.zoom_offset}"
+        )
+        assert self.max_zoom >= 0, (
+            f"max_zoom must be greater than or equal to 0, got {self.max_zoom}"
+        )
+        assert self.min_zoom >= 0, (
+            f"min_zoom must be greater than or equal to 0, got {self.min_zoom}"
+        )

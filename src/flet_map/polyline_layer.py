@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
@@ -15,17 +15,17 @@ class PolylineMarker(ft.Control):
     A marker for the [`PolylineLayer`][(p).].
     """
 
-    coordinates: List[MapLatitudeLongitude]
+    coordinates: list[MapLatitudeLongitude]
     """
     The list of coordinates for the polyline.
     """
 
-    colors_stop: Optional[List[ft.Number]] = None
+    colors_stop: Optional[list[ft.Number]] = None
     """
     The stops for the [`gradient_colors`][..].
     """
 
-    gradient_colors: Optional[List[ft.ColorValue]] = None
+    gradient_colors: Optional[list[ft.ColorValue]] = None
     """
     The List of colors in case a gradient should get used.
     """
@@ -91,7 +91,7 @@ class PolylineLayer(MapLayer):
     A layer to display [`PolylineMarker`][(p).]s.
     """
 
-    polylines: List[PolylineMarker]
+    polylines: list[PolylineMarker]
     """
     List of [`PolylineMarker`][(p).]s to be drawn. 
     """
@@ -109,6 +109,7 @@ class PolylineLayer(MapLayer):
     smaller than this, then this will be the hittable area.
     """
 
-    simplify_tolerance: ft.Number = 0.3
+    simplification_tolerance: ft.Number = 0.3
     """
+    
     """

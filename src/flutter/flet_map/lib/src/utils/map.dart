@@ -157,12 +157,8 @@ KeyboardOptions? parseKeyboardOptions(dynamic value,
           parseDouble(value["rotate_leap_velocity_multiplier"], 3)!,
       zoomLeapVelocityMultiplier:
           parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
-      performLeapTriggerDuration: parseDuration(
-          value["perform_leap_trigger_duration"],
-          const Duration(milliseconds: 100))!,
-      animationCurveReverseDuration: parseDuration(
-          value["animation_curve_reverse_duration"],
-          const Duration(milliseconds: 600))!);
+      performLeapTriggerDuration: parseDuration(value["perform_leap_trigger_duration"]),
+      animationCurveReverseDuration: parseDuration(value["animation_curve_reverse_duration"]));
 }
 
 CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,

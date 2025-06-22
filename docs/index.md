@@ -37,12 +37,13 @@ To install the `flet-map` package and add it to your project dependencies:
     pip install flet-map  # (1)!
     ```
 
+    1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
+
 === "poetry"
     ```bash
     poetry add flet-map
     ```
 
-1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
 ## Example
 

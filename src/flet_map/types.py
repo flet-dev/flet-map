@@ -392,19 +392,19 @@ class MultiFingerGesture(IntFlag):
     """Flags to enable/disable certain multi-finger gestures on the map."""
 
     NONE = 0
-    """"""
+    """No multi-finger gesture."""
 
     PINCH_MOVE = 1 << 0
-    """"""
+    """Pinch move gesture, which allows moving the map by dragging with two fingers."""
 
     PINCH_ZOOM = 1 << 1
-    """"""
+    """Pinch zoom gesture, which allows zooming in and out by pinching with two fingers."""
 
     ROTATE = 1 << 2
-    """"""
+    """Rotate gesture, which allows rotating the map by twisting two fingers."""
 
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
-    """"""
+    """All multi-finger gestures defined in this enum."""
 
 
 @dataclass
@@ -750,7 +750,7 @@ class KeyboardConfiguration:
     after a key down event (and after a key up event if [`animation_curve_reverse_duration`][..] is `None`)
     """
 
-    animation_curve_reverse_duration: ft.DurationValue = field(
+    animation_curve_reverse_duration: Optional[ft.DurationValue] = field(
         default_factory=lambda: ft.Duration(milliseconds=600)
     )
     """
@@ -862,7 +862,7 @@ class KeyboardConfiguration:
     This may cause the pan velocity to exceed [`max_zoom_velocity`[..].
     """
 
-    perform_leap_trigger_duration: ft.DurationValue = field(
+    perform_leap_trigger_duration: Optional[ft.DurationValue] = field(
         default_factory=lambda: ft.Duration(milliseconds=100)
     )
     """
@@ -935,6 +935,7 @@ class CursorKeyboardRotationConfiguration:
     Does not disable cursor/keyboard rotation, or adjust its triggers: see `is_key_trriger`.
     """
 
+    # TODO
     trigger_keys: list = field(
         default_factory=lambda: [
             # ft.LogicalKeyboardKey.CONTROL,
