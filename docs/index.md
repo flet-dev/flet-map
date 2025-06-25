@@ -4,7 +4,7 @@
 [![downloads](https://static.pepy.tech/badge/flet-map/month)](https://pepy.tech/project/flet-map)
 [![license](https://img.shields.io/github/license/flet-dev/flet-map.svg)](https://github.com/flet-dev/flet-map/blob/main/LICENSE)
 
-A Flet extension for displaying interactive maps in your Flet applications.
+A [Flet](https://flet.dev) extension for displaying interactive maps.
 
 It is based on the [flutter_map](https://pub.dev/packages/flutter_map) Flutter package.
 
