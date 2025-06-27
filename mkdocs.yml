@@ -1,0 +1,226 @@
+# Project information
+site_name: "flet-map"
+site_url: https://flet-dev.github.io/flet-map/
+site_author: Flet Contributors
+site_description: Display interactive Maps in your Flet apps.
+
+# Repository
+edit_uri: edit/main/docs/
+repo_name: flet-dev/flet-map
+repo_url: https://github.com/flet-dev/flet-map
+
+# Copyright
+copyright: Copyright &copy; 2025 Flet Contributors
+
+# Theme
+theme:
+  name: "material"
+  favicon: 'images/favicon.ico'
+  logo: 'images/logo.svg'
+  icon:
+    annotation: material/plus-circle
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+    - scheme: slate
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.action.annotate
+    - content.action.copy
+    - content.tooltips
+    - content.action.tooltips
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    # - navigation.tabs
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/flet-dev
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/bCFXYgZR3b
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/fletdev
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/fletdev.bsky.social
+
+# Navigation
+nav:
+  - Getting Started: index.md
+  - API Reference:
+      - Map: map.md
+      - Markers:
+          - CircleMarker: circle_marker.md
+          - Marker: marker.md
+          - PolygonMarker: polygon_marker.md
+          - PolylineMarker: polyline_marker.md
+      - Layers:
+          - Attribution:
+            - RichAttribution: rich_attribution.md
+            - SimpleAttribution: simple_attribution.md
+            - SourceAttribution: source_attribution.md
+            - ImageSourceAttribution: image_source_attribution.md
+            - TextSourceAttribution: text_source_attribution.md
+          - CircleLayer: circle_layer.md
+          - MapLayer: map_layer.md
+          - MarkerLayer: marker_layer.md
+          - PolygonLayer: polygon_layer.md
+          - PolylineLayer: polyline_layer.md
+          - TileLayer: tile_layer.md
+      - Types:
+          - AttributionAlignment: types/attribution_alignment.md
+          - Camera: types/camera.md
+          - CameraFit: types/camera_fit.md
+          - CursorKeyboardRotationConfiguration: types/cursor_keyboard_rotation_configuration.md
+          - CursorRotationBehaviour: types/cursor_rotation_behaviour.md
+          - Events:
+              - MapEvent: types/map_event.md
+              - MapHoverEvent: types/map_hover_event.md
+              - MapPositionChangeEvent: types/map_position_change_event.md
+              - MapTapEvent: types/map_tap_event.md
+              - MapPointerEvent: types/map_pointer_event.md
+          - FadeInTileDisplay: types/fade_in_tile_display.md
+          - InstantaneousTileDisplay: types/instantaneous_tile_display.md
+          - InteractionConfiguration: types/interaction_configuration.md
+          - InteractionFlag: types/interaction_flag.md
+          - KeyboardConfiguration: types/keyboard_configuration.md
+          - MapEventSource: types/map_event_source.md
+          - MapLatitudeLongitude: types/map_latitude_longitude.md
+          - MapLatitudeLongitudeBounds: types/map_latitude_longitude_bounds.md
+          - MultiFingerGesture: types/multi_finger_gesture.md
+          - PatternFit: types/pattern_fit.md
+          - StrokePattern: types/stroke_pattern.md
+          - TileDisplay: types/tile_display.md
+          - TileLayerEvictErrorTileStrategy: types/tile_layer_evict_error_tile_strategy.md
+  - Changelog: changelog.md
+  - License: license.md
+
+# Validation
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+watch:
+  - docs
+  - src
+
+# Plugins
+plugins:
+  # - footnotes
+  - search:
+      lang: en
+  - mike:
+      alias_type: symlink
+  - glightbox
+  - section-index
+  - mkdocstrings:
+      default_handler: python_xref
+      handlers:
+        python_xref:
+          options:
+            relative_crossrefs: true
+            docstring_style: google
+            show_signature_annotations: true
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_bases: true
+            show_source: false
+            group_by_category: true
+            show_category_heading: false
+            show_labels: false
+            show_if_no_docstring: true
+            docstring_section_style: spacy
+            inherited_members: true
+            preload_modules: [ flet ]
+            filters:
+              - "!^_"   # Exclude private members starting with only one underscore
+              - "!before_update"
+              - "!before_event"
+              - "!clean"
+              - "!did_mount"
+              - "!init"
+              - "!is_isolated"
+              - "!update"
+              - "!will_unmount"
+            extensions:
+              - griffe_modernized_annotations
+          inventories:
+            - url: https://docs.python.org/3/objects.inv
+              domains: [ py, std ]
+            - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+
+# Markdown Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: "#"
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

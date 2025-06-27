@@ -1,141 +1,63 @@
-from enum import Enum
-from typing import Any, List, Optional
+from dataclasses import field
+from typing import List, Optional
 
-from flet.core.border_radius import BorderRadius
-from flet.core.control import OptionalNumber
-from flet_map.map_layer import MapLayer
-from flet_map.text_source_attribution import TextSourceAttribution
-from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+import flet as ft
 
+from .map_layer import MapLayer
+from .source_attribution import SourceAttribution
+from .types import AttributionAlignment
 
-class AttributionAlignment(Enum):
-    BOTTOM_LEFT = "bottomLeft"
-    BOTTOM_RIGHT = "bottomRight"
+__all__ = ["RichAttribution"]
 
 
+@ft.control("RichAttribution")
 class RichAttribution(MapLayer):
     """
-    An animated and interactive attribution layer that supports both logos/images and text
-    (displayed in a popup controlled by an icon button adjacent to the logos).
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/maprichattribution
+    An animated and interactive attribution layer that supports both images and text
+    (displayed in a popup controlled by an icon button adjacent to the images).
     """
 
-    def __init__(
-        self,
-        attributions: List[TextSourceAttribution],
-        alignment: Optional[AttributionAlignment] = None,
-        popup_bgcolor: Optional[ColorValue] = None,
-        popup_border_radius: Optional[BorderRadius] = None,
-        popup_initial_display_duration: Optional[int] = None,
-        permanent_height: OptionalNumber = None,
-        show_flutter_map_attribution: Optional[bool] = None,
-        #
-        # MapLayer
-        #
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
+    attributions: List[SourceAttribution]
+    """
+    List of attributions to display.
+    
+    [`TextSourceAttribution`][(p).]s are shown in a popup box, 
+    unlike [`ImageSourceAttribution`][(p).], which are visible permanently.
+    """
 
-        MapLayer.__init__(
-            self,
-            ref=ref,
-            visible=visible,
-            data=data,
-        )
+    alignment: Optional[AttributionAlignment] = None
+    """
+    The position in which to anchor this attribution control.
+    """
 
-        self.attributions = attributions
-        self.alignment = alignment
-        self.popup_bgcolor = popup_bgcolor
-        self.permanent_height = permanent_height
-        self.show_flutter_map_attribution = show_flutter_map_attribution
-        self.popup_border_radius = popup_border_radius
-        self.popup_initial_display_duration = popup_initial_display_duration
+    popup_bgcolor: Optional[ft.ColorValue] = ft.Colors.SURFACE
+    """
+    The color to use as the popup box's background color.
+    """
 
-    def _get_control_name(self):
-        return "map_rich_attribution"
+    popup_border_radius: Optional[ft.BorderRadiusValue] = None
+    """
+    The radius of the edges of the popup box.
+    """
 
-    def _get_children(self):
-        return self.attributions
+    popup_initial_display_duration: ft.DurationValue = field(
+        default_factory=lambda: ft.Duration()
+    )
+    """
+    The popup box will be open by default and be hidden this long after the map is initialised.
+    
+    This is useful with certain sources/tile servers that make immediate
+    attribution mandatory and are not attributed with a permanently visible [`ImageSourceAttribution`][(p).].
+    """
 
-    def before_update(self):
-        super().before_update()
-        self._set_attr_json("popupBorderRadius", self.__popup_border_radius)
-        self._set_attr_json("alignment", self.__alignment)
+    permanent_height: ft.Number = 24.0
+    """
+    The height of the permanent row in which is found the popup menu toggle button.
+    Also determines spacing between the items within the row.
+    """
 
-    # permanent_height
-    @property
-    def permanent_height(self) -> float:
-        return self._get_attr("permanentHeight", data_type="float", def_value=24.0)
-
-    @permanent_height.setter
-    def permanent_height(self, value: OptionalNumber):
-        assert value is None or value >= 0, "permanent_height cannot be negative"
-        self._set_attr("permanentHeight", value)
-
-    # popup_initial_display_duration
-    @property
-    def popup_initial_display_duration(self) -> int:
-        return self._get_attr(
-            "popupInitialDisplayDuration", data_type="int", def_value=0
-        )
-
-    @popup_initial_display_duration.setter
-    def popup_initial_display_duration(self, value: Optional[int]):
-        assert (
-            value is None or value >= 0
-        ), "popup_initial_display_duration cannot be negative"
-        self._set_attr("popupInitialDisplayDuration", value)
-
-    # popup_border_radius
-    @property
-    def popup_border_radius(self) -> Optional[BorderRadius]:
-        return self.__popup_border_radius
-
-    @popup_border_radius.setter
-    def popup_border_radius(self, value: Optional[BorderRadius]):
-        self.__popup_border_radius = value
-
-    # alignment
-    @property
-    def alignment(self) -> Optional[AttributionAlignment]:
-        return self.__alignment
-
-    @alignment.setter
-    def alignment(self, value: Optional[AttributionAlignment]):
-        self.__alignment = value
-        self._set_enum_attr("alignment", value, AttributionAlignment)
-
-    # show_flutter_map_attribution
-    @property
-    def show_flutter_map_attribution(self) -> bool:
-        return self._get_attr(
-            "showFlutterMapAttribution", data_type="bool", def_value=True
-        )
-
-    @show_flutter_map_attribution.setter
-    def show_flutter_map_attribution(self, value: Optional[bool]):
-        self._set_attr("showFlutterMapAttribution", value)
-
-    # popup_bgcolor
-    @property
-    def popup_bgcolor(self) -> Optional[str]:
-        return self.__popup_bgcolor
-
-    @popup_bgcolor.setter
-    def popup_bgcolor(self, value: Optional[str]):
-        self.__popup_bgcolor = value
-        self._set_enum_attr("popupBgcolor", value, ColorEnums)
-
-    # attributions
-    @property
-    def attributions(self) -> List[TextSourceAttribution]:
-        return self.__attributions
-
-    @attributions.setter
-    def attributions(self, value: List[TextSourceAttribution]):
-        self.__attributions = value
+    show_flutter_map_attribution: bool = True
+    """
+    Whether to add an additional attribution logo and text for [`flutter-map`](https://docs.fleaflet.dev/),
+    on which 'flet-map' package is based for map-renderings.
+    """

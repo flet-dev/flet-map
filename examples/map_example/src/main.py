@@ -1,109 +1,105 @@
-
 import random
+
 import flet as ft
-import flet_map as map
+
+import flet_map as ftm
 
 
 def main(page: ft.Page):
-    marker_layer_ref = ft.Ref[map.MarkerLayer]()
-    circle_layer_ref = ft.Ref[map.CircleLayer]()
+    marker_layer_ref = ft.Ref[ftm.MarkerLayer]()
+    circle_layer_ref = ft.Ref[ftm.CircleLayer]()
 
-    def handle_tap(e: map.MapTapEvent):
-        print(e)
+    def handle_tap(e: ftm.MapTapEvent):
         if e.name == "tap":
             marker_layer_ref.current.markers.append(
-                map.Marker(
+                ftm.Marker(
                     content=ft.Icon(
-                        ft.Icons.LOCATION_ON, color=ft.cupertino_colors.DESTRUCTIVE_RED
+                        ft.Icons.LOCATION_ON, color=ft.CupertinoColors.DESTRUCTIVE_RED
                     ),
                     coordinates=e.coordinates,
                 )
             )
         elif e.name == "secondary_tap":
             circle_layer_ref.current.circles.append(
-                map.CircleMarker(
+                ftm.CircleMarker(
                     radius=random.randint(5, 10),
                     coordinates=e.coordinates,
-                    color=ft.Colors.random_color(),
-                    border_color=ft.Colors.random_color(),
+                    color=ft.Colors.random(),
+                    border_color=ft.Colors.random(),
                     border_stroke_width=4,
                 )
             )
         page.update()
 
-    def handle_event(e: map.MapEvent):
-        print(e)
-
     page.add(
         ft.Text("Click anywhere to add a Marker, right-click to add a CircleMarker."),
-        map.Map(
+        ftm.Map(
             expand=True,
-            initial_center=map.MapLatitudeLongitude(15, 10),
+            initial_center=ftm.MapLatitudeLongitude(15, 10),
             initial_zoom=4.2,
-            interaction_configuration=map.MapInteractionConfiguration(
-                flags=map.MapInteractiveFlag.ALL
+            interaction_configuration=ftm.InteractionConfiguration(
+                flags=ftm.InteractionFlag.ALL
             ),
-            on_init=lambda e: print(f"Initialized Map"),
             on_tap=handle_tap,
             on_secondary_tap=handle_tap,
             on_long_press=handle_tap,
-            on_event=lambda e: print(e),
+            on_event=print,
             layers=[
-                map.TileLayer(
-                    url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                ftm.TileLayer(
+                    url_template="https://tile.openstreetftm.org/{z}/{x}/{y}.png",
                     on_image_error=lambda e: print("TileLayer Error"),
                 ),
-                map.RichAttribution(
+                ftm.RichAttribution(
                     attributions=[
-                        map.TextSourceAttribution(
+                        ftm.TextSourceAttribution(
                             text="OpenStreetMap Contributors",
                             on_click=lambda e: e.page.launch_url(
-                                "https://openstreetmap.org/copyright"
+                                "https://openstreetftm.org/copyright"
                             ),
                         ),
-                        map.TextSourceAttribution(
+                        ftm.TextSourceAttribution(
                             text="Flet",
                             on_click=lambda e: e.page.launch_url("https://flet.dev"),
                         ),
                     ]
                 ),
-                map.SimpleAttribution(
+                ftm.SimpleAttribution(
                     text="Flet",
-                    alignment=ft.alignment.top_right,
+                    alignment=ft.Alignment.top_right(),
                     on_click=lambda e: print("Clicked SimpleAttribution"),
                 ),
-                map.MarkerLayer(
+                ftm.MarkerLayer(
                     ref=marker_layer_ref,
                     markers=[
-                        map.Marker(
+                        ftm.Marker(
                             content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(30, 15),
+                            coordinates=ftm.MapLatitudeLongitude(30, 15),
                         ),
-                        map.Marker(
+                        ftm.Marker(
                             content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(10, 10),
+                            coordinates=ftm.MapLatitudeLongitude(10, 10),
                         ),
-                        map.Marker(
+                        ftm.Marker(
                             content=ft.Icon(ft.Icons.LOCATION_ON),
-                            coordinates=map.MapLatitudeLongitude(25, 45),
+                            coordinates=ftm.MapLatitudeLongitude(25, 45),
                         ),
                     ],
                 ),
-                map.CircleLayer(
+                ftm.CircleLayer(
                     ref=circle_layer_ref,
                     circles=[
-                        map.CircleMarker(
+                        ftm.CircleMarker(
                             radius=10,
-                            coordinates=map.MapLatitudeLongitude(16, 24),
+                            coordinates=ftm.MapLatitudeLongitude(16, 24),
                             color=ft.Colors.RED,
                             border_color=ft.Colors.BLUE,
                             border_stroke_width=4,
                         ),
                     ],
                 ),
-                map.PolygonLayer(
+                ftm.PolygonLayer(
                     polygons=[
-                        map.PolygonMarker(
+                        ftm.PolygonMarker(
                             label="Popular Touristic Area",
                             label_text_style=ft.TextStyle(
                                 color=ft.Colors.BLACK,
@@ -112,24 +108,24 @@ def main(page: ft.Page):
                             ),
                             color=ft.Colors.with_opacity(0.3, ft.Colors.BLUE),
                             coordinates=[
-                                map.MapLatitudeLongitude(10, 10),
-                                map.MapLatitudeLongitude(30, 15),
-                                map.MapLatitudeLongitude(25, 45),
+                                ftm.MapLatitudeLongitude(10, 10),
+                                ftm.MapLatitudeLongitude(30, 15),
+                                ftm.MapLatitudeLongitude(25, 45),
                             ],
                         ),
                     ],
                 ),
-                map.PolylineLayer(
+                ftm.PolylineLayer(
                     polylines=[
-                        map.PolylineMarker(
+                        ftm.PolylineMarker(
                             border_stroke_width=3,
                             border_color=ft.Colors.RED,
                             gradient_colors=[ft.Colors.BLACK, ft.Colors.BLACK],
                             color=ft.Colors.with_opacity(0.6, ft.Colors.GREEN),
                             coordinates=[
-                                map.MapLatitudeLongitude(10, 10),
-                                map.MapLatitudeLongitude(30, 15),
-                                map.MapLatitudeLongitude(25, 45),
+                                ftm.MapLatitudeLongitude(10, 10),
+                                ftm.MapLatitudeLongitude(30, 15),
+                                ftm.MapLatitudeLongitude(25, 45),
                             ],
                         ),
                     ],
@@ -139,4 +135,4 @@ def main(page: ft.Page):
     )
 
 
-ft.app(main)
+ft.run(main)

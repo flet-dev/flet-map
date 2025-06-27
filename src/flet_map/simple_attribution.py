@@ -1,86 +1,35 @@
-from typing import Any, Optional
+from dataclasses import field
+from typing import Union
 
-from flet.core.alignment import Alignment
-from flet_map.map_layer import MapLayer
-from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, OptionalControlEventCallable
+import flet as ft
+
+from .map_layer import MapLayer
+
+__all__ = ["SimpleAttribution"]
 
 
+@ft.control("SimpleAttribution")
 class SimpleAttribution(MapLayer):
     """
     A simple attribution layer displayed on the Map.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapsimpleattribution
     """
 
-    def __init__(
-        self,
-        text: str,
-        alignment: Optional[Alignment] = None,
-        bgcolor: Optional[ColorValue] = None,
-        on_click: OptionalControlEventCallable = None,
-        #
-        # MapLayer
-        #
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
+    text: Union[str, ft.Text]
+    """
+    The attribution message to be displayed.
+    
+    Value is of type `str` and `ft.Text`.
+    """
 
-        MapLayer.__init__(
-            self,
-            ref=ref,
-            visible=visible,
-            data=data,
-        )
+    alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.bottom_right())
+    """
+    The alignment of this attribution on the map.
+    """
 
-        self.text = text
-        self.alignment = alignment
-        self.bgcolor = bgcolor
-        self.on_click = on_click
+    bgcolor: ft.ColorValue = ft.Colors.SURFACE
+    """
+    The color of the box containing the `text`.
+    """
 
-    def _get_control_name(self):
-        return "map_simple_attribution"
-
-    def before_update(self):
-        super().before_update()
-        self._set_attr_json("alignment", self.__alignment)
-
-    # alignment
-    @property
-    def alignment(self) -> Optional[Alignment]:
-        return self.__alignment
-
-    @alignment.setter
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
-
-    # bgcolor
-    @property
-    def bgcolor(self) -> Optional[ColorValue]:
-        return self.__bgcolor
-
-    @bgcolor.setter
-    def bgcolor(self, value: Optional[ColorValue]):
-        self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
-
-    # text
-    @property
-    def text(self) -> str:
-        return self._get_attr("text")
-
-    @text.setter
-    def text(self, value: str):
-        self._set_attr("text", value)
-
-    # on_click
-    @property
-    def on_change(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("click")
-
-    @on_change.setter
-    def on_change(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("click", handler)
+    on_click: ft.OptionalControlEventHandler["SimpleAttribution"] = None
+    """Fired when this attribution is clicked/pressed."""

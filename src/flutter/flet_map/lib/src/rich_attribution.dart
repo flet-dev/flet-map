@@ -5,15 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'utils/attribution_alignment.dart';
 
 class RichAttributionControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final FletControlBackend backend;
 
-  const RichAttributionControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.backend});
+  const RichAttributionControl({super.key, required this.control});
 
   @override
   State<RichAttributionControl> createState() => _RichAttributionControlState();
@@ -25,37 +19,43 @@ class _RichAttributionControlState extends State<RichAttributionControl>
   Widget build(BuildContext context) {
     debugPrint("RichAttributionControl build: ${widget.control.id}");
 
-    return withControls(widget.control.childIds, (context, attributionsView) {
-      debugPrint("RichAttributionControlState build: ${widget.control.id}");
+    var attributions = widget.control
+        .children("attributions")
+        .map((Control c) {
+          if (c.type == "TextSourceAttribution") {
+            return TextSourceAttribution(
+              c.getString("text", "Placeholder Text")!,
+              textStyle: c.getTextStyle("text_style", Theme.of(context)),
+              onTap: () => c.triggerEvent("click"),
+              prependCopyright: c.getBool("prepend_copyright", true)!,
+            );
+          } else if (c.type == "ImageSourceAttribution") {
+            var image = c.buildWidget("image");
+            if (image == null) return null;
+            return LogoSourceAttribution(
+              image,
+              height: c.getDouble("height", 24.0)!,
+              tooltip: c.getString("tooltip"),
+              onTap: () => c.triggerEvent("click"),
+            );
+          }
+        })
+        .nonNulls
+        .toList();
 
-      var attributions = attributionsView.controlViews
-          .map((v) => v.control)
-          .where((c) => c.type == "map_text_source_attribution" && c.isVisible)
-          .map((Control itemCtrl) {
-        return TextSourceAttribution(
-          itemCtrl.attrs["text"] ?? "Placeholder Text",
-          textStyle: parseTextStyle(Theme.of(context), itemCtrl, "textStyle"),
-          onTap: () {
-            widget.backend.triggerControlEvent(itemCtrl.id, "click");
-          },
-          prependCopyright: itemCtrl.attrBool("prependCopyright", true)!,
-        );
-      }).toList();
-
-      return RichAttributionWidget(
+    return RichAttributionWidget(
         attributions: attributions,
-        permanentHeight: widget.control.attrDouble("permanentHeight", 24)!,
-        popupBackgroundColor: widget.control.attrColor("popupBgColor", context),
+        permanentHeight: widget.control.getDouble("permanent_height", 24.0)!,
+        popupBackgroundColor: widget.control.getColor(
+            "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
         showFlutterMapAttribution:
-            widget.control.attrBool("showFlutterMapAttribution", true)!,
+            widget.control.getBool("show_flutter_map_attribution", true)!,
         alignment: parseAttributionAlignment(
-            widget.control.attrString("alignment"),
+            widget.control.getString("alignment"),
             AttributionAlignment.bottomRight)!,
         popupBorderRadius:
-            parseBorderRadius(widget.control, "popupBorderRadius"),
-        popupInitialDisplayDuration: Duration(
-            seconds: widget.control.attrInt("popupInitialDisplayDuration", 0)!),
-      );
-    });
+            widget.control.getBorderRadius("popup_border_radius"),
+        popupInitialDisplayDuration: widget.control
+            .getDuration("popup_initial_display_duration", Duration.zero)!);
   }
 }

@@ -1,278 +1,236 @@
-from enum import Enum
-from typing import Any, Dict, List, Optional
+from dataclasses import field
+from typing import Dict, List, Optional
 
-from flet.core.control import OptionalNumber
-from flet_map.map import MapLatitudeLongitudeBounds
-from flet_map.map_layer import MapLayer
-from flet.core.ref import Ref
-from flet.core.types import OptionalControlEventCallable
+import flet as ft
+
+from .map_layer import MapLayer
+from .types import (
+    FadeInTileDisplay,
+    MapLatitudeLongitudeBounds,
+    TileDisplay,
+    TileLayerEvictErrorTileStrategy,
+)
+
+__all__ = ["TileLayer"]
 
 
-class MapTileLayerEvictErrorTileStrategy(Enum):
-    DISPOSE = "dispose"
-    NOT_VISIBLE = "notVisible"
-    NOT_VISIBLE_RESPECT_MARGIN = "notVisibleRespectMargin"
-
-
+@ft.control("TileLayer")
 class TileLayer(MapLayer):
     """
-    The Map's main layer.
-    Displays square raster images in a continuous grid, sourced from the provided utl_template.
+    Displays square raster images in a continuous grid,
+    sourced from the provided [`url_template`][(c).] and [`fallback_url`][(c).].
 
-    -----
+    Typically the first layer to be added to a [`Map`][(p).], as it provides the tiles on which
+    other layers are displayed.
 
-    Online docs: https://flet.dev/docs/controls/maptilelayer
+    Raises:
+        AssertionError: If one or more of the following is negative:
+            [`tile_size`][(c).], [`min_native_zoom`][(c).], [`max_native_zoom`][(c).], [`zoom_offset`][(c).], [`max_zoom`][(c).], [`min_zoom`][(c).]
     """
 
-    def __init__(
-        self,
-        url_template: str,
-        fallback_url: Optional[str] = None,
-        subdomains: Optional[List[str]] = None,
-        tile_bounds: Optional[MapLatitudeLongitudeBounds] = None,
-        tile_size: OptionalNumber = None,
-        min_native_zoom: Optional[int] = None,
-        max_native_zoom: Optional[int] = None,
-        zoom_reverse: Optional[bool] = None,
-        zoom_offset: OptionalNumber = None,
-        keep_buffer: Optional[int] = None,
-        pan_buffer: Optional[int] = None,
-        enable_tms: Optional[bool] = None,
-        keep_alive: Optional[bool] = None,
-        enable_retina_mode: Optional[bool] = None,
-        additional_options: Optional[Dict[str, str]] = None,
-        max_zoom: OptionalNumber = None,
-        min_zoom: OptionalNumber = None,
-        error_image_src: Optional[str] = None,
-        evict_error_tile_strategy: Optional[MapTileLayerEvictErrorTileStrategy] = None,
-        on_image_error: OptionalControlEventCallable = None,
-        #
-        # MapLayer
-        #
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
+    url_template: str
+    """
+    The URL template is a string that contains placeholders, 
+    which, when filled in, create a URL/URI to a specific tile.
+    """
 
-        MapLayer.__init__(
-            self,
-            ref=ref,
-            visible=visible,
-            data=data,
-        )
+    fallback_url: Optional[str] = None
+    """
+    Fallback URL template, used if an error occurs when fetching tiles from
+    the [`url_template`][..].
+    
+    Note that specifying this (non-none) will result in tiles not being cached
+    in memory. This is to avoid issues where the [`url_template`][..] is flaky, to
+    prevent different tilesets being displayed at the same time.
+    
+    It is expected that this follows the same retina support behaviour as [`url_template`][..].
+    """
 
-        self.url_template = url_template
-        self.fallback_url = fallback_url
-        self.tile_size = tile_size
-        self.min_native_zoom = min_native_zoom
-        self.max_native_zoom = max_native_zoom
-        self.zoom_reverse = zoom_reverse
-        self.zoom_offset = zoom_offset
-        self.keep_buffer = keep_buffer
-        self.pan_buffer = pan_buffer
-        self.enable_tms = enable_tms
-        self.keep_alive = keep_alive
-        self.max_zoom = max_zoom
-        self.min_zoom = min_zoom
-        self.error_image_src = error_image_src
-        self.enable_retina_mode = enable_retina_mode
-        self.on_image_error = on_image_error
-        self.tile_bounds = tile_bounds
-        self.evict_error_tile_strategy = evict_error_tile_strategy
-        self.subdomains = subdomains
-        self.additional_options = additional_options
+    subdomains: List[str] = field(default_factory=lambda: ["a", "b", "c"])
+    """
+    List of subdomains used in the URL template.
 
-    def _get_control_name(self):
-        return "map_tile_layer"
+    For example, if [`subdomains`][..] is set to `["a", "b", "c"]` and the 
+    `url_template` is `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`, 
+    the resulting tile URLs will be:
+
+    - `"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"`
+    - `"https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"`
+    - `"https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"`
+    """
+
+    tile_bounds: Optional[MapLatitudeLongitudeBounds] = None
+    """
+    Defines the bounds of the map. 
+    Only tiles that fall within these bounds will be loaded.
+    """
+
+    tile_size: int = 256
+    """
+    The size in pixels of each tile image.
+    Should be a positive power of 2.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    min_native_zoom: int = 0
+    """
+    Minimum zoom level supported by the tile source.
+
+    Tiles from below this zoom level will not be displayed, instead tiles at
+    this zoom level will be displayed and scaled.
+    
+    This should usually be 0 (as default), as most tile sources will support
+    zoom levels onwards from this.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    max_native_zoom: int = 19
+    """
+    Maximum zoom number supported by the tile source has available.
+
+    Tiles from above this zoom level will not be displayed, instead tiles at
+    this zoom level will be displayed and scaled.
+    
+    Most tile servers support up to zoom level `19`, which is the default.
+    Otherwise, this should be specified.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    zoom_reverse: bool = False
+    """
+    Whether the zoom number used in tile URLs will be reversed (`max_zoom - zoom` instead of `zoom`).
+    """
+
+    zoom_offset: ft.Number = 0.0
+    """
+    The zoom number used in tile URLs will be offset with this value.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    keep_buffer: int = 2
+    """
+    When panning the map, keep this many rows and columns of tiles before unloading them.
+    """
+
+    pan_buffer: int = 1
+    """
+    When loading tiles only visible tiles are loaded by default. This option
+    increases the loaded tiles by the given number on both axis which can help
+    prevent the user from seeing loading tiles whilst panning. Setting the
+    pan buffer too high can impact performance, typically this is set to `0` or `1`.
+    """
+
+    enable_tms: bool = False
+    """
+    Whether to inverse Y-axis numbering for tiles.
+    Turn this on for [TMS](https://en.wikipedia.org/wiki/Tile_Map_Service) services.
+    """
+
+    enable_retina_mode: bool = False
+    """
+    Whether to enable retina mode.
+    Retina mode improves the resolution of map tiles, particularly on high density displays.
+    """
+
+    additional_options: Dict[str, str] = field(default_factory=dict)
+    """
+    Static information that should replace placeholders in the [`url_template`][..].
+    Applying API keys, for example, is a good usecase of this parameter.
+    
+    Example:
+        ```python
+        TileLayer(
+            url_template="https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}{r}.png?access_token={accessToken}",
+            additional_options={
+                'accessToken': '<ACCESS_TOKEN_HERE>',
+                'id': 'mapbox.streets',
+            },
+        ),
+        ```
+    """
+
+    max_zoom: ft.Number = float("inf")
+    """
+    The maximum zoom level up to which this layer will be displayed (inclusive).
+    The main usage for this property is to display a different `TileLayer`
+    when zoomed far in.
+    
+    Prefer [`max_native_zoom`][..] for setting the maximum zoom level supported by the
+    tile source. 
+    
+    Typically set to infinity so that there are tiles always displayed.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    min_zoom: ft.Number = 0.0
+    """
+    The minimum zoom level at which this layer is displayed (inclusive).
+    Typically `0.0`.
+    
+    Note:
+        Must be greater than or equal to `0.0`.
+    """
+
+    error_image_src: Optional[str] = None
+    """
+    The source of the tile image to show in place of the tile that failed to load.
+    
+    See [`on_image_error`][..] property for details on the error.
+    """
+
+    evict_error_tile_strategy: Optional[
+        TileLayerEvictErrorTileStrategy
+    ] = TileLayerEvictErrorTileStrategy.NONE
+    """
+    If a tile was loaded with error, 
+    the tile provider will be asked to evict the image based on this strategy.
+    """
+
+    display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
+    """
+    
+    Defines how tiles are displayed on the map.
+    """
+
+    user_agent_package_name: str = "unknown"
+    """
+    The package name of the user agent.
+    """
+
+    on_image_error: ft.OptionalControlEventHandler["TileLayer"] = None
+    """
+    Fires if an error occurs when fetching the tiles.
+    
+    Event handler argument `data` property contains information about the error.
+    """
 
     def before_update(self):
         super().before_update()
-        assert self.url_template, "url_template is required"
-        if isinstance(self.__tile_bounds, MapLatitudeLongitudeBounds):
-            self._set_attr_json("tileBounds", self.__tile_bounds)
-        if isinstance(self.__subdomains, list):
-            self._set_attr_json("subdomains", self.__subdomains)
-        if isinstance(self.__additional_options, dict):
-            self._set_attr_json("additionalOptions", self.__additional_options)
-
-    # url_template
-    @property
-    def url_template(self) -> str:
-        return self._get_attr("urlTemplate")
-
-    @url_template.setter
-    def url_template(self, value: str):
-        self._set_attr("urlTemplate", value)
-
-    # fallback_url
-    @property
-    def fallback_url(self) -> Optional[str]:
-        return self._get_attr("fallbackUrl")
-
-    @fallback_url.setter
-    def fallback_url(self, value: Optional[str]):
-        self._set_attr("fallbackUrl", value)
-
-    # subdomains
-    @property
-    def subdomains(self) -> Optional[List[str]]:
-        return self.__subdomains
-
-    @subdomains.setter
-    def subdomains(self, value: Optional[List[str]]):
-        self.__subdomains = value
-
-    # additional_options
-    @property
-    def additional_options(self) -> Optional[Dict[str, str]]:
-        return self.__additional_options
-
-    @additional_options.setter
-    def additional_options(self, value: Optional[Dict[str, str]]):
-        self.__additional_options = value
-
-    # tile_bounds
-    @property
-    def tile_bounds(self) -> Optional[MapLatitudeLongitudeBounds]:
-        return self.__tile_bounds
-
-    @tile_bounds.setter
-    def tile_bounds(self, value: Optional[MapLatitudeLongitudeBounds]):
-        self.__tile_bounds = value
-
-    # tile_size
-    @property
-    def tile_size(self) -> float:
-        return self._get_attr("tileSize", data_type="float", def_value=256.0)
-
-    @tile_size.setter
-    def tile_size(self, value: OptionalNumber):
-        assert value is None or value >= 0, "tile_size cannot be negative"
-        self._set_attr("tileSize", value)
-
-    # min_native_zoom
-    @property
-    def min_native_zoom(self) -> int:
-        return self._get_attr("minNativeZoom", data_type="int", def_value=0.0)
-
-    @min_native_zoom.setter
-    def min_native_zoom(self, value: Optional[int]):
-        assert value is None or value >= 0, "min_native_zoom cannot be negative"
-        self._set_attr("minNativeZoom", value)
-
-    # max_native_zoom
-    @property
-    def max_native_zoom(self) -> int:
-        return self._get_attr("maxNativeZoom", data_type="int", def_value=19)
-
-    @max_native_zoom.setter
-    def max_native_zoom(self, value: Optional[int]):
-        assert value is None or value >= 0, "max_native_zoom cannot be negative"
-        self._set_attr("maxNativeZoom", value)
-
-    # zoom_reverse
-    @property
-    def zoom_reverse(self) -> bool:
-        return self._get_attr("zoomReverse", data_type="bool", def_value=False)
-
-    @zoom_reverse.setter
-    def zoom_reverse(self, value: Optional[bool]):
-        self._set_attr("zoomReverse", value)
-
-    # zoom_offset
-    @property
-    def zoom_offset(self) -> float:
-        return self._get_attr("zoomOffset", data_type="float", def_value=0.0)
-
-    @zoom_offset.setter
-    def zoom_offset(self, value: OptionalNumber):
-        assert value is None or value >= 0, "zoom_offset cannot be negative"
-        self._set_attr("zoomOffset", value)
-
-    # keep_buffer
-    @property
-    def keep_buffer(self) -> int:
-        return self._get_attr("keepBuffer", data_type="int", def_value=2)
-
-    @keep_buffer.setter
-    def keep_buffer(self, value: Optional[int]):
-        self._set_attr("keepBuffer", value)
-
-    # pan_buffer
-    @property
-    def pan_buffer(self) -> int:
-        return self._get_attr("panBuffer", data_type="int", def_value=2)
-
-    @pan_buffer.setter
-    def pan_buffer(self, value: Optional[int]):
-        self._set_attr("panBuffer", value)
-
-    # enable_tms
-    @property
-    def enable_tms(self) -> bool:
-        return self._get_attr("enableTms", data_type="bool", def_value=False)
-
-    @enable_tms.setter
-    def enable_tms(self, value: Optional[bool]):
-        self._set_attr("enableTms", value)
-
-    # enable_retina_mode
-    @property
-    def enable_retina_mode(self) -> bool:
-        return self._get_attr("enableRetinaMode", data_type="bool", def_value=False)
-
-    @enable_retina_mode.setter
-    def enable_retina_mode(self, value: Optional[bool]):
-        self._set_attr("enableRetinaMode", value)
-
-    # max_zoom
-    @property
-    def max_zoom(self) -> float:
-        return self._get_attr("maxZoom", data_type="float", def_value=float("inf"))
-
-    @max_zoom.setter
-    def max_zoom(self, value: OptionalNumber):
-        assert value is None or value >= 0, "max_zoom cannot be negative"
-        self._set_attr("maxZoom", value)
-
-    # min_zoom
-    @property
-    def min_zoom(self) -> float:
-        return self._get_attr("minZoom", data_type="float", def_value=0.0)
-
-    @min_zoom.setter
-    def min_zoom(self, value: OptionalNumber):
-        assert value is None or value >= 0, "min_zoom cannot be negative"
-        self._set_attr("minZoom", value)
-
-    # error_image_src
-    @property
-    def error_image_src(self) -> Optional[str]:
-        return self._get_attr("errorImageSrc")
-
-    @error_image_src.setter
-    def error_image_src(self, value: Optional[str]):
-        self._set_attr("errorImageSrc", value)
-
-    # evict_error_tile_strategy
-    @property
-    def evict_error_tile_strategy(self) -> Optional[MapTileLayerEvictErrorTileStrategy]:
-        return self.__evict_error_tile_strategy
-
-    @evict_error_tile_strategy.setter
-    def evict_error_tile_strategy(
-        self, value: Optional[MapTileLayerEvictErrorTileStrategy]
-    ):
-        self.__evict_error_tile_strategy = value
-        self._set_enum_attr(
-            "evictErrorTileStrategy", value, MapTileLayerEvictErrorTileStrategy
+        assert self.tile_size >= 0, (
+            f"tile_size must be greater than or equal to 0, got {self.tile_size}"
         )
-
-    # on_image_error
-    @property
-    def on_image_error(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("imageError")
-
-    @on_image_error.setter
-    def on_image_error(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("imageError", handler)
+        assert self.min_native_zoom >= 0, (
+            f"min_native_zoom must be greater than or equal to 0, got {self.min_native_zoom}"
+        )
+        assert self.max_native_zoom >= 0, (
+            f"max_native_zoom must be greater than or equal to 0, got {self.max_native_zoom}"
+        )
+        assert self.zoom_offset >= 0, (
+            f"zoom_offset must be greater than or equal to 0, got {self.zoom_offset}"
+        )
+        assert self.max_zoom >= 0, (
+            f"max_zoom must be greater than or equal to 0, got {self.max_zoom}"
+        )
+        assert self.min_zoom >= 0, (
+            f"min_zoom must be greater than or equal to 0, got {self.min_zoom}"
+        )

@@ -1,37 +1,23 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-class SimpleAttributionControl extends StatefulWidget {
-  final Control? parent;
+class SimpleAttributionControl extends StatelessWidget {
   final Control control;
-  final FletControlBackend backend;
 
-  const SimpleAttributionControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.backend});
+  const SimpleAttributionControl({super.key, required this.control});
 
-  @override
-  State<SimpleAttributionControl> createState() =>
-      _SimpleAttributionControlState();
-}
-
-class _SimpleAttributionControlState extends State<SimpleAttributionControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("SimpleAttributionControl build: ${widget.control.id}");
+    debugPrint("SimpleAttributionControl build: ${control.id}");
+    var text = control.buildTextOrWidget("text");
 
     return SimpleAttributionWidget(
-      source: Text(widget.control.attrString("text", "Placeholder Text")!),
-      onTap: () {
-        widget.backend.triggerControlEvent(widget.control.id, "click");
-      },
-      backgroundColor: widget.control.attrColor("backgroundColor", context),
-      alignment:
-          parseAlignment(widget.control, "alignment", Alignment.bottomRight)!,
+      source: text is Text ? text : const Text("Placeholder Text"),
+      onTap: () => control.triggerEvent("click"),
+      backgroundColor: control.getColor(
+          "bgcolor", context, Theme.of(context).colorScheme.surface)!,
+      alignment: control.getAlignment("alignment", Alignment.bottomRight)!,
     );
   }
 }

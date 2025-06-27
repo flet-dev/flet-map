@@ -6,45 +6,33 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'utils/map.dart';
 
 class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
 
-  const MarkerLayerControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled});
+  const MarkerLayerControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("MarkerLayerControl build: ${control.id}");
+    var markers = control
+        .children("markers")
+        .where((c) => c.type == "Marker")
+        .map((marker) {
+      return AnimatedMarker(
+          point: parseLatLng(marker.get("coordinates"))!,
+          rotate: marker.getBool("rotate"),
+          height: marker.getDouble("height", 30.0)!,
+          width: marker.getDouble("width", 30.0)!,
+          alignment: marker.getAlignment("alignment"),
+          builder: (BuildContext context, Animation<double> animation) {
+            return marker.buildWidget("content") ??
+                const ErrorControl("content must be provided and visible");
+          });
+    }).toList();
 
-    return withControls(control.childIds, (context, markersView) {
-      debugPrint("MarkerLayerControlState build: ${control.id}");
-
-      var markers = markersView.controlViews
-          .where((c) => c.control.type == "map_marker" && c.control.isVisible)
-          .map((marker) {
-        return AnimatedMarker(
-            point: parseLatLng(marker.control, "coordinates")!,
-            rotate: marker.control.attrBool("rotate"),
-            height: marker.control.attrDouble("height", 30)!,
-            width: marker.control.attrDouble("width", 30)!,
-            alignment: parseAlignment(marker.control, "alignment"),
-            builder: (BuildContext context, Animation<double> animation) {
-              return createControl(
-                  control, marker.control.childIds.first, parentDisabled);
-            });
-      }).toList();
-
-      return AnimatedMarkerLayer(
-        markers: markers,
-        rotate: control.attrBool("rotate", false)!,
-        alignment: parseAlignment(control, "alignment", Alignment.center)!,
-      );
-    });
+    return AnimatedMarkerLayer(
+      markers: markers,
+      rotate: control.getBool("rotate", false)!,
+      alignment: control.getAlignment("alignment", Alignment.center)!,
+    );
   }
 }

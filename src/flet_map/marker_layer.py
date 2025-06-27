@@ -1,183 +1,97 @@
-from typing import Any, List, Optional
+from dataclasses import field
+from typing import List, Optional
 
-from flet.core.alignment import Alignment
-from flet.core.control import Control, OptionalNumber
-from flet_map.map import MapLatitudeLongitude
-from flet_map.map_layer import MapLayer
-from flet.core.ref import Ref
+import flet as ft
+
+from .map_layer import MapLayer
+from .types import MapLatitudeLongitude
+
+__all__ = ["Marker", "MarkerLayer"]
 
 
-class Marker(Control):
+@ft.control("Marker")
+class Marker(ft.Control):
     """
-    A marker displayed on the Map at the specified location through the MarkerLayer.
+    A marker displayed on the Map at the specified location through the [`MarkerLayer`][(p).].
 
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapmarker
+    Raises:
+        AssertionError: If the [`content`][(c).] is not visible, or if [`height`][(c).] or [`width`][(c).] are negative.
     """
 
-    def __init__(
-        self,
-        content: Control,
-        coordinates: MapLatitudeLongitude,
-        rotate: Optional[bool] = None,
-        height: OptionalNumber = None,
-        width: OptionalNumber = None,
-        alignment: Optional[Alignment] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
-        Control.__init__(
-            self,
-            ref=ref,
-            visible=visible,
-            data=data,
-        )
+    content: ft.Control
+    """
+    The content to be displayed at [`coordinates`][..].
+    
+    Note:
+        Must be provided and visible.
+    """
 
-        self.content = content
-        self.coordinates = coordinates
-        self.rotate = rotate
-        self.height = height
-        self.width = width
-        self.alignment = alignment
+    coordinates: MapLatitudeLongitude
+    """
+    The coordinates of the marker.
+    
+    This will be the center of the marker, if `alignment=ft.Alignment.center()`.
+    """
 
-    def _get_control_name(self):
-        return "map_marker"
+    rotate: Optional[bool] = None
+    """
+    Whether to counter rotate this marker to the map's rotation, to keep a fixed orientation.
+    So, when `True`, this marker will always appear upright and vertical from the user's perspective.
+    
+    Note: this is not used to apply a custom rotation in degrees to the marker.
+    
+    Defaults to the value of the parent [`MarkerLayer.rotate`][(p).].
+    """
 
-    def _get_children(self):
-        return [self.__content]
+    height: ft.Number = 30.0
+    """
+    The height of the [`content`][..] Control.
+    
+    Note:
+        Must be non-negative.
+    """
+
+    width: ft.Number = 30.0
+    """
+    The width of the [`content`][..] Control.
+    
+    Note:
+        Must be non-negative.
+    """
+
+    alignment: Optional[ft.Alignment] = None
+    """
+    Alignment of the marker relative to the normal center at [`coordinates`][..].
+    
+    Defaults to the value of the parent [`MarkerLayer.alignment`][(m).].
+    """
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("alignment", self.__alignment)
-        self._set_attr_json("coordinates", self.__coordinates)
-
-    # content
-    @property
-    def content(self) -> Optional[Alignment]:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Optional[Alignment]):
-        self.__content = value
-
-    # rotate
-    @property
-    def rotate(self) -> bool:
-        return self._get_attr("rotate", data_type="bool", def_value=False)
-
-    @rotate.setter
-    def rotate(self, value: Optional[bool]):
-        self._set_attr("rotate", value)
-
-    # height
-    @property
-    def height(self) -> float:
-        return self._get_attr("height", data_type="float", def_value=30.0)
-
-    @height.setter
-    def height(self, value: OptionalNumber):
-        assert value is None or value >= 0, "height cannot be negative"
-        self._set_attr("height", value)
-
-    # width
-    @property
-    def width(self) -> float:
-        return self._get_attr("width", data_type="float", def_value=30.0)
-
-    @width.setter
-    def width(self, value: OptionalNumber):
-        assert value is None or value >= 0, "width cannot be negative"
-        self._set_attr("width", value)
-
-    # alignment
-    @property
-    def alignment(self) -> Optional[Alignment]:
-        return self.__alignment
-
-    @alignment.setter
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
-
-    # coordinates
-    @property
-    def coordinates(self) -> MapLatitudeLongitude:
-        return self.__coordinates
-
-    @coordinates.setter
-    def coordinates(self, value: MapLatitudeLongitude):
-        self.__coordinates = value
+        assert self.content.visible, "content must be visible"
+        assert self.height >= 0, "height must be greater than or equal to 0"
+        assert self.width >= 0, "width must be greater than or equal to 0"
 
 
+@ft.control("MarkerLayer")
 class MarkerLayer(MapLayer):
     """
     A layer to display Markers.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/mapmarkerlayer
     """
 
-    def __init__(
-        self,
-        markers: List[Marker],
-        alignment: Optional[Alignment] = None,
-        rotate: Optional[bool] = None,
-        #
-        # MapLayer
-        #
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
-        MapLayer.__init__(
-            self,
-            ref=ref,
-            visible=visible,
-            data=data,
-        )
+    markers: List[Marker]
+    """
+    List of [`Marker`][(m).]s to display.
+    """
 
-        self.markers = markers
-        self.alignment = alignment
-        self.rotate = rotate
+    alignment: Optional[ft.Alignment] = field(
+        default_factory=lambda: ft.Alignment.center()
+    )
+    """
+    Alignment of each marker relative to its normal center at `Marker.coordinates`.
+    """
 
-    def _get_control_name(self):
-        return "map_marker_layer"
-
-    def _get_children(self):
-        return self.__markers
-
-    def before_update(self):
-        super().before_update()
-        self._set_attr_json("alignment", self.__alignment)
-
-    # alignment
-    @property
-    def alignment(self) -> Optional[Alignment]:
-        return self.__alignment
-
-    @alignment.setter
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
-
-    # markers
-    @property
-    def markers(self) -> List[Marker]:
-        return self.__markers
-
-    @markers.setter
-    def markers(self, value: List[Marker]):
-        self.__markers = value
-
-    # rotate
-    @property
-    def rotate(self) -> bool:
-        return self._get_attr("rotate", data_type="bool", def_value=False)
-
-    @rotate.setter
-    def rotate(self, value: Optional[bool]):
-        self._set_attr("rotate", value)
+    rotate: bool = False
+    """
+    Whether to counter-rotate `markers` to the map's rotation, to keep a fixed orientation.
+    """

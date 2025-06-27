@@ -2,24 +2,13 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:latlong2/latlong.dart';
 
 import 'utils/map.dart';
 
 class MapControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const MapControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  const MapControl({super.key, required this.control});
 
   @override
   State<MapControl> createState() => _MapControlState();
@@ -30,111 +19,110 @@ class _MapControlState extends State<MapControl>
   late final _animatedMapController = AnimatedMapController(vsync: this);
 
   @override
+  void initState() {
+    super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Map.$name($args)");
+    var defaultAnimationCurve =
+        widget.control.getCurve("animation_curve", Curves.fastOutSlowIn);
+    var defaultAnimationDuration = widget.control
+        .getDuration("animation_duration", const Duration(milliseconds: 500))!;
+    var animationCurve = parseCurve(args["curve"], defaultAnimationCurve);
+    var animationDuration =
+        parseDuration(args["duration"], defaultAnimationDuration);
+    var cancelPreviousAnimations = parseBool(args["cancel_ongoing_animations"]);
+    var zoom = parseDouble(args["zoom"]);
+    switch (name) {
+      case "rotate_from":
+        var degree = parseDouble(args["degree"]);
+        if (degree != null) {
+          await _animatedMapController.animatedRotateFrom(
+            degree,
+            curve: animationCurve,
+            duration: animationDuration,
+            cancelPreviousAnimations: cancelPreviousAnimations,
+          );
+        }
+        break;
+      case "reset_rotation":
+        await _animatedMapController.animatedRotateReset(
+          curve: animationCurve,
+          duration: animationDuration,
+          cancelPreviousAnimations: cancelPreviousAnimations,
+        );
+        break;
+      case "zoom_in":
+        await _animatedMapController.animatedZoomIn(
+          curve: animationCurve,
+          duration: animationDuration,
+          cancelPreviousAnimations: cancelPreviousAnimations,
+        );
+        break;
+      case "zoom_out":
+        await _animatedMapController.animatedZoomOut(
+          curve: animationCurve,
+          duration: animationDuration,
+          cancelPreviousAnimations: cancelPreviousAnimations,
+        );
+        break;
+      case "zoom_to":
+        if (zoom != null) {
+          await _animatedMapController.animatedZoomTo(
+            zoom,
+            curve: animationCurve,
+            duration: animationDuration,
+            cancelPreviousAnimations: cancelPreviousAnimations,
+          );
+        }
+        break;
+      case "move_to":
+        await _animatedMapController.animateTo(
+          zoom: zoom,
+          curve: animationCurve,
+          rotation: parseDouble(args["rotation"]),
+          duration: animationDuration,
+          dest: parseLatLng(args["destination"]),
+          offset: parseOffset(args["offset"], Offset.zero)!,
+          cancelPreviousAnimations: cancelPreviousAnimations,
+        );
+        break;
+      case "center_on":
+        var point = parseLatLng(args["point"]);
+        if (point != null) {
+          await _animatedMapController.centerOnPoint(
+            point,
+            zoom: zoom,
+            curve: animationCurve,
+            duration: animationDuration,
+            cancelPreviousAnimations: cancelPreviousAnimations,
+          );
+        }
+        break;
+      default:
+        throw Exception("Unknown Map method: $name");
+    }
+  }
+
+  @override
   void dispose() {
     _animatedMapController.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    List<String> acceptedChildrenTypes = [
-      "map_circle_layer",
-      "map_tile_layer",
-      "map_polygon_layer",
-      "map_polyline_layer",
-      "map_marker_layer",
-      "map_rich_attribution",
-      "map_simple_attribution"
-    ];
-    var ctrls = widget.children
-        .where((c) => c.isVisible && (acceptedChildrenTypes.contains(c.type)))
-        .toList();
-
-    Curve? defaultAnimationCurve =
-        parseCurve(widget.control.attrString("animationCurve"));
-    Duration? defaultAnimationDuration =
-        parseDuration(widget.control, "animationDuration");
-    var configuration = parseConfiguration(
-        widget.control, widget.backend, context, const MapOptions())!;
 
     Widget map = FlutterMap(
       mapController: _animatedMapController.mapController,
-      options: configuration,
-      children: ctrls
-          .map((c) => createControl(widget.control, c.id, disabled))
-          .toList(),
+      options: parseConfiguration(widget.control, context, const MapOptions())!,
+      children: widget.control.buildWidgets("layers"),
     );
 
-    () async {
-      widget.backend.subscribeMethods(widget.control.id,
-          (methodName, args) async {
-        switch (methodName) {
-          case "rotate_from":
-            var degree = parseDouble(args["degree"]);
-            if (degree != null) {
-              _animatedMapController.animatedRotateFrom(
-                degree,
-                curve: parseCurve(args["curve"], defaultAnimationCurve),
-              );
-            }
-          case "reset_rotation":
-            _animatedMapController.animatedRotateReset(
-                curve: parseCurve(args["curve"], defaultAnimationCurve),
-                duration: durationFromString(
-                    args["duration"], defaultAnimationDuration));
-          case "zoom_in":
-            _animatedMapController.animatedZoomIn(
-                curve: parseCurve(args["curve"], defaultAnimationCurve),
-                duration: durationFromString(
-                    args["duration"], defaultAnimationDuration));
-          case "zoom_out":
-            _animatedMapController.animatedZoomOut(
-                curve: parseCurve(args["curve"], defaultAnimationCurve),
-                duration: durationFromString(
-                    args["duration"], defaultAnimationDuration));
-          case "zoom_to":
-            var zoom = parseDouble(args["zoom"]);
-            if (zoom != null) {
-              _animatedMapController.animatedZoomTo(zoom,
-                  curve: parseCurve(args["curve"], defaultAnimationCurve),
-                  duration: durationFromString(
-                      args["duration"], defaultAnimationDuration));
-            }
-          case "move_to":
-            var zoom = parseDouble(args["zoom"]);
-            var lat = parseDouble(args["lat"]);
-            var long = parseDouble(args["long"]);
-            var ox = parseDouble(args["ox"]);
-            var oy = parseDouble(args["oy"]);
-            _animatedMapController.animateTo(
-              zoom: zoom,
-              curve: parseCurve(args["curve"], defaultAnimationCurve),
-              rotation: parseDouble(args["rot"]),
-              duration: durationFromString(
-                  args["duration"], defaultAnimationDuration),
-              dest: (lat != null && long != null) ? LatLng(lat, long) : null,
-              offset: (ox != null && oy != null) ? Offset(ox, oy) : Offset.zero,
-            );
-          case "center_on":
-            var zoom = parseDouble(args["zoom"]);
-            var lat = parseDouble(args["lat"]);
-            var long = parseDouble(args["long"]);
-            if (lat != null && long != null) {
-              _animatedMapController.centerOnPoint(
-                LatLng(lat, long),
-                zoom: zoom,
-                curve: parseCurve(args["curve"], defaultAnimationCurve),
-                duration: durationFromString(
-                    args["duration"], defaultAnimationDuration),
-              );
-            }
-        }
-        return null;
-      });
-    }();
-
-    return constrainedControl(context, map, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: map);
   }
 }

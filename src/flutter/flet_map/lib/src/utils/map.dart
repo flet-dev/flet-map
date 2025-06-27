@@ -1,280 +1,334 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
+LatLng? parseLatLng(dynamic value, [LatLng? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return latLngFromJson(j1, defValue);
-}
-
-LatLng? latLngFromJson(Map<String, dynamic>? j, [LatLng? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
   return LatLng(
-      parseDouble(j['latitude'], 0)!, parseDouble(j['longitude'], 0)!);
+      parseDouble(value['latitude'], 0)!, parseDouble(value['longitude'], 0)!);
 }
 
-LatLngBounds? parseLatLngBounds(Control control, String propName,
-    [LatLngBounds? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
-
-  final j1 = json.decode(v);
-  return latLngBoundsFromJson(j1, defValue);
-}
-
-LatLngBounds? latLngBoundsFromJson(Map<String, dynamic>? j,
-    [LatLngBounds? defValue]) {
-  if (j == null ||
-      j['corner_1'] == null ||
-      j['corner_2'] == null ||
-      latLngFromJson(j['corner_1']) == null ||
-      latLngFromJson(j['corner_2']) == null) {
-    return defValue;
+LatLngBounds? parseLatLngBounds(dynamic value, [LatLngBounds? defaultValue]) {
+  if (value == null ||
+      value['corner_1'] == null ||
+      value['corner_2'] == null ||
+      parseLatLng(value['corner_1']) == null ||
+      parseLatLng(value['corner_2']) == null) {
+    return defaultValue;
   }
   return LatLngBounds(
-      latLngFromJson(j['corner_1'])!, latLngFromJson(j['corner_2'])!);
+      parseLatLng(value['corner_1'])!, parseLatLng(value['corner_2'])!);
 }
 
-PatternFit? parsePatternFit(String? value,
-    [PatternFit? defValue = PatternFit.none]) {
-  if (value == null) {
-    return defValue;
-  }
+PatternFit? parsePatternFit(String? value, [PatternFit? defaultValue]) {
+  if (value == null) return defaultValue;
   return PatternFit.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+StrokePattern? parseStrokePattern(dynamic value,
+    [StrokePattern? defaultValue]) {
+  if (value == null) return defaultValue;
+  final type = value['_type'];
+  if (type == 'dotted') {
+    return StrokePattern.dotted(
+      spacingFactor: parseDouble(value['spacing_factor'], 1.5)!,
+      patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
+    );
+  } else if (type == 'solid') {
+    return const StrokePattern.solid();
+  } else if (type == 'dashed') {
+    var segments = value['segments'] ?? [];
+    return StrokePattern.dashed(
+      patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
+      segments: segments.map((e) => parseDouble(e)).nonNulls.toList(),
+    );
+  }
+  return defaultValue;
+}
+
+TileDisplay? parseTileDisplay(dynamic value, [TileDisplay? defaultValue]) {
+  if (value == null) return defaultValue;
+  final type = value['_type'];
+  if (type == 'instantaneous') {
+    return TileDisplay.instantaneous(
+      opacity: parseDouble(value['opacity'], 1.0)!,
+    );
+  } else if (type == 'fadein') {
+    return TileDisplay.fadeIn(
+      startOpacity: parseDouble(value['start_opacity'], 1.0)!,
+      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 1.0)!,
+      duration:
+          parseDuration(value['duration'], const Duration(milliseconds: 100))!,
+    );
+  }
+  return defaultValue;
+}
+
+InteractionOptions? parseInteractionOptions(dynamic value,
+    [InteractionOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return InteractionOptions(
+    enableMultiFingerGestureRace:
+        parseBool(value["enable_multi_finger_gesture_race"], false)!,
+    pinchMoveThreshold: parseDouble(
+      value["pinch_move_threshold"],
+    )!,
+    scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
+    pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
+    rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
+    flags: parseInt(value["flags"], InteractiveFlag.all)!,
+    rotationWinGestures:
+        parseInt(value["rotation_win_gestures"], MultiFingerGesture.rotate)!,
+    pinchMoveWinGestures: parseInt(value["pinch_move_win_gestures"],
+        MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
+    pinchZoomWinGestures: parseInt(value["pinch_zoom_win_gestures"],
+        MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
+    keyboardOptions: parseKeyboardOptions(
+        value["keyboard_configuration"], const KeyboardOptions())!,
+    cursorKeyboardRotationOptions: parseCursorKeyboardRotationOptions(
+        value["cursor_keyboard_rotation_configuration"],
+        const CursorKeyboardRotationOptions())!,
+  );
+}
+
+CameraFit? parseCameraFit(dynamic value, [CameraFit? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  final bounds = parseLatLngBounds(value["bounds"]);
+  final coordinates = (value["coordinates"] as List?)
+      ?.map((c) => parseLatLng(c))
+      .nonNulls
+      .toList();
+  if (bounds == null && coordinates == null) return defaultValue;
+
+  final forceIntegerZoomLevel =
+      parseBool(value["force_integer_zoom_level"], false)!;
+  final maxZoom = parseDouble(value["max_zoom"]);
+  final minZoom = parseDouble(value["min_zoom"], 0)!;
+  final padding = parsePadding(value["padding"], EdgeInsets.zero)!;
+  if (bounds != null) {
+    return CameraFit.insideBounds(
+      bounds: bounds,
+      forceIntegerZoomLevel: forceIntegerZoomLevel,
+      maxZoom: maxZoom,
+      minZoom: minZoom,
+      padding: padding,
+    );
+  } else {
+    return CameraFit.coordinates(
+      coordinates: coordinates!,
+      forceIntegerZoomLevel: forceIntegerZoomLevel,
+      maxZoom: maxZoom,
+      minZoom: minZoom,
+      padding: padding,
+    );
+  }
+}
+
+KeyboardOptions? parseKeyboardOptions(dynamic value,
+    [KeyboardOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return KeyboardOptions(
+      autofocus: parseBool(value["autofocus"], true)!,
+      animationCurveDuration: parseDuration(value["animation_curve_duration"],
+          const Duration(milliseconds: 450))!,
+      animationCurveCurve:
+          parseCurve(value["animation_curve_curve"], Curves.easeInOut)!,
+      enableArrowKeysPanning:
+          parseBool(value["enable_arrow_keys_panning"], true)!,
+      enableQERotating: parseBool(value["enable_qe_rotating"], true)!,
+      enableRFZooming: parseBool(value["enable_rf_zooming"], true)!,
+      enableWASDPanning: parseBool(value["enable_wasd_panning"], true)!,
+      leapMaxOfCurveComponent:
+          parseDouble(value["leap_max_of_curve_component"], 0.6)!,
+      // maxPanVelocity: ,
+      maxRotateVelocity: parseDouble(value["max_rotate_velocity"], 3)!,
+      maxZoomVelocity: parseDouble(value["max_zoom_velocity"], 0.03)!,
+      panLeapVelocityMultiplier:
+          parseDouble(value["pan_leap_velocity_multiplier"], 5)!,
+      rotateLeapVelocityMultiplier:
+          parseDouble(value["rotate_leap_velocity_multiplier"], 3)!,
+      zoomLeapVelocityMultiplier:
+          parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
+      performLeapTriggerDuration: parseDuration(value["perform_leap_trigger_duration"]),
+      animationCurveReverseDuration: parseDuration(value["animation_curve_reverse_duration"]));
+}
+
+CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
+    [CursorRotationBehaviour? defValue]) {
+  if (value == null) return defValue;
+  return CursorRotationBehaviour.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
 }
 
-StrokePattern? parseStrokePattern(Control control, String propName,
-    [StrokePattern? defValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defValue;
-  }
-
-  final j1 = json.decode(v);
-  return strokePatternFromJson(j1, defValue);
+CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
+    [CursorKeyboardRotationOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return CursorKeyboardRotationOptions(
+      setNorthOnClick: parseBool(value["set_north_on_click"], true)!,
+      behaviour: parseCursorRotationBehaviour(
+          value["behaviour"], CursorRotationBehaviour.offset)!,
+      isKeyTrigger: (LogicalKeyboardKey key) {
+        return (value["trigger_keys"] as List).contains(key);
+      });
 }
 
-StrokePattern? strokePatternFromJson(Map<String, dynamic>? j,
-    [StrokePattern? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
-  if (j['type'] == 'dotted') {
-    return StrokePattern.dotted(
-      spacingFactor: parseDouble(j['spacing_factor'], 1)!,
-      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
-    );
-  } else if (j['type'] == 'solid') {
-    return const StrokePattern.solid();
-  } else if (j['type'] == 'dash') {
-    var segments = j['segments'];
-    return StrokePattern.dashed(
-      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
-      segments: segments != null
-          ? (jsonDecode(segments) as List)
-              .map((e) => parseDouble(e))
-              .whereNotNull()
-              .toList()
-          : [],
-    );
-  }
-  return defValue;
-}
+// Crs? parseCrs(dynamic value, [Crs? defaultValue]) {
+//   if (value == null) return defaultValue;
+//   return Crs();
+// }
 
-InteractionOptions? parseInteractionOptions(Control control, String propName,
-    [InteractionOptions? defValue]) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return defValue;
-  }
-  final j1 = json.decode(v);
-  return interactionOptionsFromJSON(j1, defValue);
-}
+// MapCamera? parseMapCamera(dynamic value, [MapCamera? defaultValue]) {
+//   if (value == null) return defaultValue;
+//   return MapCamera(
+//     crs: Crs(),
+//     center: parseLatLng(value["center"])!,
+//     zoom: parseDouble(value["zoom"], 0)!,
+//     minZoom: parseDouble(value["min_zoom"], 0)!,
+//     maxZoom: parseDouble(value["max_zoom"], 0)!,
+//     rotation: parseDouble(value["rotation"], 0)!,
+//     bounds: parseLatLngBounds(value["bounds"]),
+//   );
+// }
 
-InteractionOptions? interactionOptionsFromJSON(dynamic j,
-    [InteractionOptions? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
-  return InteractionOptions(
-      enableMultiFingerGestureRace:
-          parseBool(j["enable_multi_finger_gesture_race"], false)!,
-      pinchMoveThreshold: parseDouble(j["pinch_move_threshold"], 40.0)!,
-      scrollWheelVelocity: parseDouble(j["scroll_wheel_velocity"], 0.005)!,
-      pinchZoomThreshold: parseDouble(j["pinch_zoom_threshold"], 0.5)!,
-      rotationThreshold: parseDouble(j["rotation_threshold"], 20.0)!,
-      flags: parseInt(j["flags"], InteractiveFlag.all)!,
-      rotationWinGestures:
-          parseInt(j["rotation_win_gestures"], MultiFingerGesture.rotate)!,
-      pinchMoveWinGestures: parseInt(j["pinch_move_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
-      pinchZoomWinGestures: parseInt(j["pinch_zoom_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
-}
-
-EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
-    [EvictErrorTileStrategy? defValue]) {
-  if (strategy == null) {
-    return defValue;
-  }
+EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? value,
+    [EvictErrorTileStrategy? defaultValue]) {
+  if (value == null) return defaultValue;
   return EvictErrorTileStrategy.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == strategy.toLowerCase()) ??
-      defValue;
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }
 
-MapOptions? parseConfiguration(
-    Control control, FletControlBackend backend, BuildContext context,
-    [MapOptions? defValue]) {
-  void triggerEvent(String name, dynamic eventData) {
-    var d = "";
-    if (eventData is String) {
-      d = eventData;
-    } else if (eventData is Map) {
-      d = json.encode(eventData);
-    }
+extension TapPositionExtension on TapPosition {
+  Map<String, dynamic> toMap() => {
+        "gx": global.dx,
+        "gy": global.dy,
+        "lx": relative?.dx,
+        "ly": relative?.dy,
+      };
+}
 
-    backend.triggerControlEvent(control.id, name, d);
-  }
+extension LatLngExtension on LatLng {
+  Map<String, dynamic> toMap() => {
+        "latitude": latitude,
+        "longitude": longitude,
+      };
+}
 
+extension LatLngBoundsExtension on LatLngBounds {
+  // TODO
+  // Map<String, dynamic> toMap() => {
+  //
+  //     };
+}
+
+extension MapCameraExtension on MapCamera {
+  Map<String, dynamic> toMap() => {
+        "center": center.toMap(),
+        "zoom": zoom,
+        "min_zoom": minZoom,
+        "max_zoom": maxZoom,
+        "rotation": rotation,
+      };
+}
+
+extension MapEventExtension on MapEvent {
+  Map<String, dynamic> toMap() => {
+        "source": source.name,
+        "camera": camera.toMap(),
+      };
+}
+
+MapOptions? parseConfiguration(Control control, BuildContext context,
+    [MapOptions? defaultValue]) {
   return MapOptions(
     initialCenter:
-        parseLatLng(control, "initialCenter", const LatLng(50.5, 30.51))!,
+        parseLatLng(control.get("initial_center"), const LatLng(50.5, 30.51))!,
     interactionOptions: parseInteractionOptions(
-        control, "interactionConfiguration", const InteractionOptions())!,
-    backgroundColor:
-        control.attrColor("bgColor", context, const Color(0x00000000))!,
-    initialRotation: control.attrDouble("initialRotation", 0.0)!,
-    initialZoom: control.attrDouble("initialZoom", 13.0)!,
-    keepAlive: control.attrBool("keepAlive", false)!,
-    maxZoom: control.attrDouble("maxZoom"),
-    minZoom: control.attrDouble("minZoom"),
-    onPointerHover: control.attrBool("onHover", false)!
+        control.get("interaction_configuration"), const InteractionOptions())!,
+    backgroundColor: control.getColor("bgcolor", context, Colors.grey[300])!,
+    initialRotation: control.getDouble("initial_rotation", 0.0)!,
+    initialZoom: control.getDouble("initial_zoom", 13.0)!,
+    keepAlive: control.getBool("keep_alive", false)!,
+    maxZoom: control.getDouble("max_zoom"),
+    minZoom: control.getDouble("min_zoom"),
+    initialCameraFit: parseCameraFit(control.get("initial_camera_fit")),
+    onPointerHover: control.getBool("on_hover", false)!
         ? (PointerHoverEvent e, LatLng latlng) {
-            triggerEvent("hover", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "lx": e.localPosition.dx,
-              "ly": e.localPosition.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("hover", {
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
-    onTap: control.attrBool("onTap", false)!
+    onTap: control.getBool("on_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("tap", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("tap", {
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
-    onLongPress: control.attrBool("onLongPress", false)!
+    onLongPress: control.getBool("on_long_press", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("long_press", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("long_press", {
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
-    onPositionChanged: control.attrBool("onPositionChange", false)!
+    onPositionChanged: control.getBool("on_position_change", false)!
         ? (MapCamera camera, bool hasGesture) {
-            triggerEvent("position_change", {
-              "lat": camera.center.latitude,
-              "long": camera.center.longitude,
-              "min_zoom": camera.minZoom,
-              "max_zoom": camera.maxZoom,
-              "rot": camera.rotation,
+            control.triggerEvent("position_change", {
+              "coordinates": camera.center.toMap(),
+              "has_gesture": hasGesture,
+              "camera": camera.toMap()
             });
           }
         : null,
-    onPointerDown: control.attrBool("onPointerDown", false)!
+    onPointerDown: control.getBool("on_pointer_down", false)!
         ? (PointerDownEvent e, LatLng latlng) {
-            triggerEvent("pointer_down", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("pointer_down", {
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
-    onPointerCancel: control.attrBool("onPointerCancel", false)!
+    onPointerCancel: control.getBool("on_pointer_cancel", false)!
         ? (PointerCancelEvent e, LatLng latlng) {
-            triggerEvent("pointer_cancel", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
+            control.triggerEvent("pointer_cancel", {
+              "coordinates": latlng.toMap(),
+              ...e.toMap(),
             });
           }
         : null,
-    onPointerUp: control.attrBool("onPointerUp", false)!
+    onPointerUp: control.getBool("on_pointer_up", false)!
         ? (PointerUpEvent e, LatLng latlng) {
-            triggerEvent("pointer_up", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": e.position.dx,
-              "gy": e.position.dy,
-              "kind": e.kind.name,
-            });
+            control.triggerEvent(
+                "pointer_up", {"coordinates": latlng.toMap(), ...e.toMap()});
           }
         : null,
-    onSecondaryTap: control.attrBool("onSecondaryTap", false)!
+    onSecondaryTap: control.getBool("on_secondary_tap", false)!
         ? (TapPosition pos, LatLng latlng) {
-            triggerEvent("secondary_tap", {
-              "lat": latlng.latitude,
-              "long": latlng.longitude,
-              "gx": pos.global.dx,
-              "gy": pos.global.dy,
-              "lx": pos.relative?.dx,
-              "ly": pos.relative?.dy,
+            control.triggerEvent("secondary_tap", {
+              "coordinates": latlng.toMap(),
+              ...pos.toMap(),
             });
           }
         : null,
-    onMapEvent: control.attrBool("onEvent", false)!
-        ? (MapEvent e) {
-            triggerEvent("event", {
-              "src": e.source.name,
-              "c_lat": e.camera.center.latitude,
-              "c_long": e.camera.center.longitude,
-              "zoom": e.camera.zoom,
-              "min_zoom": e.camera.minZoom,
-              "max_zoom": e.camera.maxZoom,
-              "rot": e.camera.rotation,
-            });
-          }
+    onMapEvent: control.getBool("on_event", false)!
+        ? (MapEvent e) => control.triggerEvent("event", e.toMap())
         : null,
-    onMapReady: control.attrBool("onInit", false)!
-        ? () {
-            debugPrint("Map ${control.id} init");
-            backend.triggerControlEvent(control.id, "init");
-          }
+    onMapReady: control.getBool("on_init", false)!
+        ? () => control.triggerEvent("init")
         : null,
   );
 }
