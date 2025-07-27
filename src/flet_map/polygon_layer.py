@@ -1,11 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
 from .map_layer import MapLayer
 from .types import MapLatitudeLongitude
 
-__all__ = ["PolygonMarker", "PolygonLayer"]
+__all__ = ["PolygonLayer", "PolygonMarker"]
 
 
 @ft.control("PolygonMarker")
@@ -14,7 +14,7 @@ class PolygonMarker(ft.Control):
     A marker for the [`PolygonLayer`][(p).].
     """
 
-    coordinates: List[MapLatitudeLongitude]
+    coordinates: list[MapLatitudeLongitude]
     """
     The points for the outline of this polygon.
     """
@@ -47,7 +47,7 @@ class PolygonMarker(ft.Control):
     border_stroke_width: ft.Number = 0.0
     """
     The width of the border outline.
-    
+
     Note:
         Must be non-negative.
     """
@@ -59,7 +59,7 @@ class PolygonMarker(ft.Control):
 
     rotate_label: bool = False
     """
-    Whether to rotate the label counter to the camera's rotation, 
+    Whether to rotate the label counter to the camera's rotation,
     to ensure it remains upright.
     """
 
@@ -75,9 +75,10 @@ class PolygonMarker(ft.Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.border_stroke_width >= 0
-        ), "border_stroke_width must be greater than or equal to 0"
+        assert self.border_stroke_width >= 0, (
+            f"border_stroke_width must be greater than or equal to 0, "
+            f"got {self.border_stroke_width}"
+        )
 
 
 @ft.control("PolygonLayer")
@@ -86,7 +87,7 @@ class PolygonLayer(MapLayer):
     A layer to display PolygonMarkers.
     """
 
-    polygons: List[PolygonMarker]
+    polygons: list[PolygonMarker]
     """
     A list of [`PolygonMarker`][(p).]s to display.
     """
@@ -108,14 +109,14 @@ class PolygonLayer(MapLayer):
 
     simplification_tolerance: ft.Number = 0.3
     """
-    
+
     """
 
     use_alternative_rendering: bool = False
     """
     Whether to use an alternative rendering pathway to draw polygons onto the
-    underlying `Canvas`, which can be more performant in 'some' circumstances. 
-    
+    underlying `Canvas`, which can be more performant in 'some' circumstances.
+
     This will not always improve performance, and there are other important
     considerations before enabling it. It is intended for use when prior
     profiling indicates more performance is required after other methods are

@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Union
+from typing import Optional, Union
 
 import flet as ft
 
@@ -17,19 +17,17 @@ class SimpleAttribution(MapLayer):
     text: Union[str, ft.Text]
     """
     The attribution message to be displayed.
-    
-    Value is of type `str` and `ft.Text`.
     """
 
-    alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.bottom_right())
+    alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.BOTTOM_RIGHT)
     """
     The alignment of this attribution on the map.
     """
 
     bgcolor: ft.ColorValue = ft.Colors.SURFACE
     """
-    The color of the box containing the `text`.
+    The color of the box containing the [`text`][..].
     """
 
-    on_click: ft.OptionalControlEventHandler["SimpleAttribution"] = None
+    on_click: Optional[ft.ControlEventHandler["SimpleAttribution"]] = None
     """Fired when this attribution is clicked/pressed."""

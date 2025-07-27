@@ -6,7 +6,7 @@ import flet as ft
 from .map_layer import MapLayer
 from .types import MapLatitudeLongitude, SolidStrokePattern, StrokePattern
 
-__all__ = ["PolylineMarker", "PolylineLayer"]
+__all__ = ["PolylineLayer", "PolylineMarker"]
 
 
 @ft.control("PolylineMarker")
@@ -43,7 +43,7 @@ class PolylineMarker(ft.Control):
     stroke_width: ft.Number = 1.0
     """
     The width of the stroke.
-    
+
     Note:
         Must be non-negative.
     """
@@ -51,7 +51,7 @@ class PolylineMarker(ft.Control):
     border_stroke_width: ft.Number = 0.0
     """
     The width of the stroke with of the line border.
-    
+
     Note:
         Must be non-negative.
     """
@@ -79,10 +79,13 @@ class PolylineMarker(ft.Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.border_stroke_width >= 0
-        ), "border_stroke_width must be greater than or equal to 0"
-        assert self.stroke_width >= 0, "stroke_width must be greater than or equal to 0"
+        assert self.border_stroke_width >= 0, (
+            f"border_stroke_width must be greater than or equal to 0, "
+            f"got {self.border_stroke_width}"
+        )
+        assert self.stroke_width >= 0, (
+            f"stroke_width must be greater than or equal to 0, got {self.stroke_width}"
+        )
 
 
 @ft.control("PolylineLayer")
@@ -93,7 +96,7 @@ class PolylineLayer(MapLayer):
 
     polylines: list[PolylineMarker]
     """
-    List of [`PolylineMarker`][(p).]s to be drawn. 
+    List of [`PolylineMarker`][(p).]s to be drawn.
     """
 
     culling_margin: ft.Number = 10.0
@@ -104,12 +107,12 @@ class PolylineLayer(MapLayer):
     min_hittable_radius: ft.Number = 10.0
     """
     The minimum radius of the hittable area around each polyline in logical pixels.
-    
+
     The entire visible area is always hittable, but if the visible area is
     smaller than this, then this will be the hittable area.
     """
 
     simplification_tolerance: ft.Number = 0.3
     """
-    
+
     """

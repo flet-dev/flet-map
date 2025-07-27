@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Dict, List, Optional
+from typing import Optional
 
 import flet as ft
 
@@ -20,17 +20,20 @@ class TileLayer(MapLayer):
     Displays square raster images in a continuous grid,
     sourced from the provided [`url_template`][(c).] and [`fallback_url`][(c).].
 
-    Typically the first layer to be added to a [`Map`][(p).], as it provides the tiles on which
+    Typically the first layer to be added to a [`Map`][(p).],
+    as it provides the tiles on which
     other layers are displayed.
 
     Raises:
         AssertionError: If one or more of the following is negative:
-            [`tile_size`][(c).], [`min_native_zoom`][(c).], [`max_native_zoom`][(c).], [`zoom_offset`][(c).], [`max_zoom`][(c).], [`min_zoom`][(c).]
+            [`tile_size`][(c).], [`min_native_zoom`][(c).],
+            [`max_native_zoom`][(c).], [`zoom_offset`][(c).],
+            [`max_zoom`][(c).], [`min_zoom`][(c).]
     """
 
     url_template: str
     """
-    The URL template is a string that contains placeholders, 
+    The URL template is a string that contains placeholders,
     which, when filled in, create a URL/URI to a specific tile.
     """
 
@@ -38,20 +41,21 @@ class TileLayer(MapLayer):
     """
     Fallback URL template, used if an error occurs when fetching tiles from
     the [`url_template`][..].
-    
+
     Note that specifying this (non-none) will result in tiles not being cached
     in memory. This is to avoid issues where the [`url_template`][..] is flaky, to
     prevent different tilesets being displayed at the same time.
-    
-    It is expected that this follows the same retina support behaviour as [`url_template`][..].
+
+    It is expected that this follows the same retina support behaviour
+    as [`url_template`][..].
     """
 
-    subdomains: List[str] = field(default_factory=lambda: ["a", "b", "c"])
+    subdomains: list[str] = field(default_factory=lambda: ["a", "b", "c"])
     """
     List of subdomains used in the URL template.
 
-    For example, if [`subdomains`][..] is set to `["a", "b", "c"]` and the 
-    `url_template` is `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`, 
+    For example, if [`subdomains`][..] is set to `["a", "b", "c"]` and the
+    `url_template` is `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`,
     the resulting tile URLs will be:
 
     - `"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"`
@@ -61,7 +65,7 @@ class TileLayer(MapLayer):
 
     tile_bounds: Optional[MapLatitudeLongitudeBounds] = None
     """
-    Defines the bounds of the map. 
+    Defines the bounds of the map.
     Only tiles that fall within these bounds will be loaded.
     """
 
@@ -69,7 +73,7 @@ class TileLayer(MapLayer):
     """
     The size in pixels of each tile image.
     Should be a positive power of 2.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -80,10 +84,10 @@ class TileLayer(MapLayer):
 
     Tiles from below this zoom level will not be displayed, instead tiles at
     this zoom level will be displayed and scaled.
-    
+
     This should usually be 0 (as default), as most tile sources will support
     zoom levels onwards from this.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -94,23 +98,24 @@ class TileLayer(MapLayer):
 
     Tiles from above this zoom level will not be displayed, instead tiles at
     this zoom level will be displayed and scaled.
-    
+
     Most tile servers support up to zoom level `19`, which is the default.
     Otherwise, this should be specified.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
 
     zoom_reverse: bool = False
     """
-    Whether the zoom number used in tile URLs will be reversed (`max_zoom - zoom` instead of `zoom`).
+    Whether the zoom number used in tile URLs will be reversed
+    (`max_zoom - zoom` instead of `zoom`).
     """
 
     zoom_offset: ft.Number = 0.0
     """
     The zoom number used in tile URLs will be offset with this value.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -137,14 +142,15 @@ class TileLayer(MapLayer):
     enable_retina_mode: bool = False
     """
     Whether to enable retina mode.
-    Retina mode improves the resolution of map tiles, particularly on high density displays.
+    Retina mode improves the resolution of map tiles, particularly on
+    high density displays.
     """
 
-    additional_options: Dict[str, str] = field(default_factory=dict)
+    additional_options: dict[str, str] = field(default_factory=dict)
     """
     Static information that should replace placeholders in the [`url_template`][..].
     Applying API keys, for example, is a good usecase of this parameter.
-    
+
     Example:
         ```python
         TileLayer(
@@ -162,12 +168,12 @@ class TileLayer(MapLayer):
     The maximum zoom level up to which this layer will be displayed (inclusive).
     The main usage for this property is to display a different `TileLayer`
     when zoomed far in.
-    
+
     Prefer [`max_native_zoom`][..] for setting the maximum zoom level supported by the
-    tile source. 
-    
+    tile source.
+
     Typically set to infinity so that there are tiles always displayed.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -176,7 +182,7 @@ class TileLayer(MapLayer):
     """
     The minimum zoom level at which this layer is displayed (inclusive).
     Typically `0.0`.
-    
+
     Note:
         Must be greater than or equal to `0.0`.
     """
@@ -184,21 +190,21 @@ class TileLayer(MapLayer):
     error_image_src: Optional[str] = None
     """
     The source of the tile image to show in place of the tile that failed to load.
-    
+
     See [`on_image_error`][..] property for details on the error.
     """
 
-    evict_error_tile_strategy: Optional[
-        TileLayerEvictErrorTileStrategy
-    ] = TileLayerEvictErrorTileStrategy.NONE
+    evict_error_tile_strategy: Optional[TileLayerEvictErrorTileStrategy] = (
+        TileLayerEvictErrorTileStrategy.NONE
+    )
     """
-    If a tile was loaded with error, 
+    If a tile was loaded with error,
     the tile provider will be asked to evict the image based on this strategy.
     """
 
     display_mode: TileDisplay = field(default_factory=lambda: FadeInTileDisplay())
     """
-    
+
     Defines how tiles are displayed on the map.
     """
 
@@ -207,11 +213,12 @@ class TileLayer(MapLayer):
     The package name of the user agent.
     """
 
-    on_image_error: ft.OptionalControlEventHandler["TileLayer"] = None
+    on_image_error: Optional[ft.ControlEventHandler["TileLayer"]] = None
     """
     Fires if an error occurs when fetching the tiles.
-    
-    Event handler argument `data` property contains information about the error.
+
+    Event handler argument [`data`][flet.Event.data] property contains
+    information about the error.
     """
 
     def before_update(self):
@@ -220,10 +227,12 @@ class TileLayer(MapLayer):
             f"tile_size must be greater than or equal to 0, got {self.tile_size}"
         )
         assert self.min_native_zoom >= 0, (
-            f"min_native_zoom must be greater than or equal to 0, got {self.min_native_zoom}"
+            f"min_native_zoom must be greater than or equal to 0, "
+            f"got {self.min_native_zoom}"
         )
         assert self.max_native_zoom >= 0, (
-            f"max_native_zoom must be greater than or equal to 0, got {self.max_native_zoom}"
+            f"max_native_zoom must be greater than or equal to 0, "
+            f"got {self.max_native_zoom}"
         )
         assert self.zoom_offset >= 0, (
             f"zoom_offset must be greater than or equal to 0, got {self.zoom_offset}"

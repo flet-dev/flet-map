@@ -1,17 +1,18 @@
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
 from .map_layer import MapLayer
 from .types import MapLatitudeLongitude
 
-__all__ = ["CircleMarker", "CircleLayer"]
+__all__ = ["CircleLayer", "CircleMarker"]
 
 
 @ft.control("CircleMarker")
 class CircleMarker(ft.Control):
     """
-    A circular marker displayed on the Map at the specified location through the [`CircleLayer`][(p).].
+    A circular marker displayed on the Map at the specified
+    location through the [`CircleLayer`][(p).].
 
     Raises:
         AssertionError: If the [`border_stroke_width`][(c).] is negative.
@@ -29,14 +30,16 @@ class CircleMarker(ft.Control):
     border_color: Optional[ft.ColorValue] = None
     """
     The color of the circle border line.
-    
-    Needs [`border_stroke_width`][..] to be greater than `0.0` in order to be visible.
+
+    Note:
+        [`border_stroke_width`][..] must to be greater than
+        `0.0` in order for this color to be visible.
     """
 
     border_stroke_width: ft.Number = 0.0
     """
-    The stroke width for the circle border. 
-    
+    The stroke width for the circle border.
+
     Note:
         Must be non-negative.
     """
@@ -48,9 +51,10 @@ class CircleMarker(ft.Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.border_stroke_width >= 0
-        ), "border_stroke_width must be greater than or equal to 0"
+        assert self.border_stroke_width >= 0, (
+            f"border_stroke_width must be greater than or equal to 0, "
+            f"got {self.border_stroke_width}"
+        )
 
 
 @ft.control("CircleLayer")
@@ -59,5 +63,5 @@ class CircleLayer(MapLayer):
     A layer to display [`CircleMarker`][(p).]s.
     """
 
-    circles: List[CircleMarker]
+    circles: list[CircleMarker]
     """A list of [`CircleMarker`][(p).]s to display."""
