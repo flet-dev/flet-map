@@ -755,7 +755,8 @@ class FadeInTileDisplay(TileDisplay):
 
     def __post_init__(self):
         assert 0.0 <= self.start_opacity <= 1.0, (
-            f"start_opacity must be between 0.0 and 1.0 inclusive, got {self.start_opacity}"
+            f"start_opacity must be between 0.0 and 1.0 inclusive, "
+            f"got {self.start_opacity}"
         )
         assert 0.0 <= self.reload_start_opacity <= 1.0, (
             f"reload_start_opacity must be between 0.0 and 1.0 inclusive, "
@@ -803,8 +804,8 @@ class KeyboardConfiguration:
         default_factory=lambda: ft.Duration(milliseconds=600)
     )
     """
-    Duration of the curved (reverse `ft.Curve.EASE_IN`) portion of the animation
-    occuring after a key up event.
+    Duration of the curved (reverse [`Curve.EASE_IN`][flet.Curve.EASE_IN])
+    portion of the animation occuring after a key up event.
 
     Set to `None` to use [`animation_curve_duration`][..].
     """
@@ -939,7 +940,7 @@ class KeyboardConfiguration:
         Disable keyboard control of the map.
 
         Info:
-            `CursorKeyboardRotationConfiguration` may still be active,
+            [`CursorKeyboardRotationConfiguration`][(p).] may still be active,
             and is not disabled if this is disabled.
         """
         return KeyboardConfiguration(
