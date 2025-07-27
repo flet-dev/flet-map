@@ -1,3 +1,3 @@
 ::: flet_map.types.AttributionAlignment
-options:
-separate_signature: false
+    options:
+        separate_signature: false
