@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
@@ -17,11 +17,11 @@ class RichAttribution(MapLayer):
     (displayed in a popup controlled by an icon button adjacent to the images).
     """
 
-    attributions: List[SourceAttribution]
+    attributions: list[SourceAttribution]
     """
     List of attributions to display.
-    
-    [`TextSourceAttribution`][(p).]s are shown in a popup box, 
+
+    [`TextSourceAttribution`][(p).]s are shown in a popup box,
     unlike [`ImageSourceAttribution`][(p).], which are visible permanently.
     """
 
@@ -44,10 +44,12 @@ class RichAttribution(MapLayer):
         default_factory=lambda: ft.Duration()
     )
     """
-    The popup box will be open by default and be hidden this long after the map is initialised.
-    
+    The popup box will be open by default and be hidden this
+    long after the map is initialised.
+
     This is useful with certain sources/tile servers that make immediate
-    attribution mandatory and are not attributed with a permanently visible [`ImageSourceAttribution`][(p).].
+    attribution mandatory and are not attributed with a permanently
+    visible [`ImageSourceAttribution`][(p).].
     """
 
     permanent_height: ft.Number = 24.0
@@ -58,6 +60,7 @@ class RichAttribution(MapLayer):
 
     show_flutter_map_attribution: bool = True
     """
-    Whether to add an additional attribution logo and text for [`flutter-map`](https://docs.fleaflet.dev/),
+    Whether to add an additional attribution logo and text
+    for [`flutter-map`](https://docs.fleaflet.dev/),
     on which 'flet-map' package is based for map-renderings.
     """

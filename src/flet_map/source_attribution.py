@@ -6,7 +6,7 @@ import flet as ft
 __all__ = ["ImageSourceAttribution", "SourceAttribution", "TextSourceAttribution"]
 
 
-@dataclass(kw_only=True)
+@dataclass
 class SourceAttribution(ft.BaseControl):
     """
     Abstract class for source attribution controls:
@@ -19,8 +19,10 @@ class SourceAttribution(ft.BaseControl):
 @ft.control("ImageSourceAttribution")
 class ImageSourceAttribution(SourceAttribution):
     """
-    An image attribution permanently displayed adjacent to the open/close icon of a [`RichAttribution`][(p).] control.
-    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).] list.
+    An image attribution permanently displayed adjacent to the
+    open/close icon of a [`RichAttribution`][(p).] control.
+    For it to be displayed, it should be part of a
+    [`RichAttribution.attributions`][(p).] list.
 
     Raises:
         AssertionError: If the [`image`][(c).] is not visible.
@@ -29,7 +31,7 @@ class ImageSourceAttribution(SourceAttribution):
     image: ft.Image
     """
     The `Image` to be displayed.
-    
+
     Note:
         Must be provided and visible.
     """
@@ -37,13 +39,14 @@ class ImageSourceAttribution(SourceAttribution):
     height: ft.Number = 24.0
     """
     The height of the image.
-    Should be the same as [`RichAttribution.permanent_height`][(p).], otherwise layout issues may occur.
+    Should be the same as [`RichAttribution.permanent_height`][(p).],
+    otherwise layout issues may occur.
     """
 
     tooltip: Optional[str] = None
     """Tooltip text to be displayed when the image is hovered over."""
 
-    on_click: ft.OptionalControlEventHandler["ImageSourceAttribution"] = None
+    on_click: Optional[ft.ControlEventHandler["ImageSourceAttribution"]] = None
     """Fired when this attribution is clicked/pressed."""
 
     def before_update(self):
@@ -55,7 +58,8 @@ class ImageSourceAttribution(SourceAttribution):
 class TextSourceAttribution(SourceAttribution):
     """
     A text source attribution displayed on the Map.
-    For it to be displayed, it should be part of a [`RichAttribution.attributions`][(p).] list.
+    For it to be displayed, it should be part of a
+    [`RichAttribution.attributions`][(p).] list.
     """
 
     text: str
@@ -69,5 +73,5 @@ class TextSourceAttribution(SourceAttribution):
     Whether to add the '©' character to the start of [`text`][..] automatically.
     """
 
-    on_click: ft.OptionalControlEventHandler["TextSourceAttribution"] = None
+    on_click: Optional[ft.ControlEventHandler["TextSourceAttribution"]] = None
     """Fired when this attribution is clicked/pressed."""

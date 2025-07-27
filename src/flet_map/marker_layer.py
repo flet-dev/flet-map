@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 import flet as ft
 
@@ -12,16 +12,18 @@ __all__ = ["Marker", "MarkerLayer"]
 @ft.control("Marker")
 class Marker(ft.Control):
     """
-    A marker displayed on the Map at the specified location through the [`MarkerLayer`][(p).].
+    A marker displayed on the Map at the specified location
+    through the [`MarkerLayer`][(p).].
 
     Raises:
-        AssertionError: If the [`content`][(c).] is not visible, or if [`height`][(c).] or [`width`][(c).] are negative.
+        AssertionError: If the [`content`][(c).] is not visible, or
+            if [`height`][(c).] or [`width`][(c).] are negative.
     """
 
     content: ft.Control
     """
     The content to be displayed at [`coordinates`][..].
-    
+
     Note:
         Must be provided and visible.
     """
@@ -29,24 +31,29 @@ class Marker(ft.Control):
     coordinates: MapLatitudeLongitude
     """
     The coordinates of the marker.
-    
-    This will be the center of the marker, if `alignment=ft.Alignment.center()`.
+
+    This will be the center of the marker,
+    if [`alignment`][..] is [`flet.Alignment.CENTER`][.
     """
 
     rotate: Optional[bool] = None
     """
-    Whether to counter rotate this marker to the map's rotation, to keep a fixed orientation.
-    So, when `True`, this marker will always appear upright and vertical from the user's perspective.
-    
-    Note: this is not used to apply a custom rotation in degrees to the marker.
-    
-    Defaults to the value of the parent [`MarkerLayer.rotate`][(p).].
+    Whether to counter rotate this marker to the map's rotation,
+    to keep a fixed orientation.
+    So, when `True`, this marker will always appear upright and
+    vertical from the user's perspective.
+
+    If `None`, defaults to the value of the parent [`MarkerLayer.rotate`][(p).].
+
+    Note:
+        This is not used to apply a custom rotation in degrees to this marker.
+
     """
 
     height: ft.Number = 30.0
     """
     The height of the [`content`][..] Control.
-    
+
     Note:
         Must be non-negative.
     """
@@ -54,7 +61,7 @@ class Marker(ft.Control):
     width: ft.Number = 30.0
     """
     The width of the [`content`][..] Control.
-    
+
     Note:
         Must be non-negative.
     """
@@ -62,7 +69,7 @@ class Marker(ft.Control):
     alignment: Optional[ft.Alignment] = None
     """
     Alignment of the marker relative to the normal center at [`coordinates`][..].
-    
+
     Defaults to the value of the parent [`MarkerLayer.alignment`][(m).].
     """
 
@@ -79,19 +86,21 @@ class MarkerLayer(MapLayer):
     A layer to display Markers.
     """
 
-    markers: List[Marker]
+    markers: list[Marker]
     """
-    List of [`Marker`][(m).]s to display.
+    A list of [`Marker`][(m).]s to display.
     """
 
     alignment: Optional[ft.Alignment] = field(
-        default_factory=lambda: ft.Alignment.center()
+        default_factory=lambda: ft.Alignment.CENTER
     )
     """
-    Alignment of each marker relative to its normal center at `Marker.coordinates`.
+    The alignment of each marker relative to its normal center at
+    [`Marker.coordinates`][(m).].
     """
 
     rotate: bool = False
     """
-    Whether to counter-rotate `markers` to the map's rotation, to keep a fixed orientation.
+    Whether to counter-rotate `markers` to the map's rotation,
+    to keep a fixed orientation.
     """
