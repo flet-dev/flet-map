@@ -76,7 +76,8 @@ class PolygonMarker(ft.Control):
     def before_update(self):
         super().before_update()
         assert self.border_stroke_width >= 0, (
-            "border_stroke_width must be greater than or equal to 0"
+            f"border_stroke_width must be greater than or equal to 0, "
+            f"got {self.border_stroke_width}"
         )
 
 

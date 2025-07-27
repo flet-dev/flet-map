@@ -70,14 +70,18 @@ class Marker(ft.Control):
     """
     Alignment of the marker relative to the normal center at [`coordinates`][..].
 
-    Defaults to the value of the parent [`MarkerLayer.alignment`][(m).].
+    Defaults to the value of the parent [`MarkerLayer.alignment`][(p).].
     """
 
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
-        assert self.height >= 0, "height must be greater than or equal to 0"
-        assert self.width >= 0, "width must be greater than or equal to 0"
+        assert self.height >= 0, (
+            f"height must be greater than or equal to 0, got {self.height}"
+        )
+        assert self.width >= 0, (
+            f"width must be greater than or equal to 0, got {self.width}"
+        )
 
 
 @ft.control("MarkerLayer")

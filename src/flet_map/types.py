@@ -194,7 +194,9 @@ class DashedStrokePattern(StrokePattern):
     """
 
     def __post_init__(self):
-        assert len(self.segments) >= 2, "segments must contain at least two items"
+        assert len(self.segments) >= 2, (
+            f"segments must contain at least two items, got {len(self.segments)}"
+        )
         assert len(self.segments) % 2 == 0, "segments must have an even length"
         self._type = "dashed"
 
@@ -717,7 +719,7 @@ class InstantaneousTileDisplay(TileDisplay):
 
     def __post_init__(self):
         assert 0.0 <= self.opacity <= 1.0, (
-            "start_opacity must be between 0.0 and 1.0 (inclusive)"
+            f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
         )
         self._type = "instantaneous"
 
@@ -745,10 +747,11 @@ class FadeInTileDisplay(TileDisplay):
 
     def __post_init__(self):
         assert 0.0 <= self.start_opacity <= 1.0, (
-            "start_opacity must be between 0.0 and 1.0 (inclusive)"
+            f"start_opacity must be between 0.0 and 1.0 inclusive, got {self.start_opacity}"
         )
         assert 0.0 <= self.reload_start_opacity <= 1.0, (
-            "reload_start_opacity must be between 0.0 and 1.0 (inclusive)"
+            f"reload_start_opacity must be between 0.0 and 1.0 inclusive, "
+            f"got {self.reload_start_opacity}"
         )
         self._type = "fadein"
 

@@ -451,7 +451,9 @@ class Map(ft.ConstrainedControl):
         Raises:
             AssertionError: If `zoom` is not `None` and is negative.
         """
-        assert zoom is None or zoom >= 0, "zoom must be greater than or equal to zero"
+        assert zoom is None or zoom >= 0, (
+            f"zoom must be greater than or equal to zero, got {zoom}"
+        )
         await self._invoke_method_async(
             method_name="move_to",
             arguments={
