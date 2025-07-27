@@ -131,9 +131,13 @@ validation:
   unrecognized_links: warn
   anchors: warn
 
+# Watch
 watch:
   - docs
-  - src
+  - src/flet_map
+  - CHANGELOG.md
+  - LICENSE
+  - README.md
 
 # Plugins
 plugins:
@@ -170,6 +174,7 @@ plugins:
             preload_modules: [ flet ]
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
+              - "!get_event_field_type"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
