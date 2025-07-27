@@ -266,8 +266,8 @@ class InteractionFlag(IntFlag):
     Flags to enable/disable certain interaction events on the map.
 
     Example:
-        - `InteractionFlag.ALL` to enable all events
-        - `InteractionFlag.NONE` to disable all events
+        - [`InteractionFlag.ALL`][(p).] to enable all events
+        - [`InteractionFlag.NONE`][(p).] to disable all events
     """
 
     NONE = 0
@@ -314,7 +314,7 @@ class InteractionFlag(IntFlag):
         """
         Returns:
             `True` if `left_flags` has at least one member
-            in `right_flags` (intersection).
+                in `right_flags` (intersection).
         """
         return left_flags & right_flags != 0
 
@@ -323,9 +323,9 @@ class InteractionFlag(IntFlag):
         """
         Returns:
             `True` if any multi-finger gesture flags
-            ([`MultiFingerGesture.PINCH_MOVE`][(p).],
-            [`MultiFingerGesture.PINCH_ZOOM`][(p).],
-            [`MultiFingerGesture.ROTATE`][(p).]) are enabled.
+                ([`MultiFingerGesture.PINCH_MOVE`][(p).],
+                [`MultiFingerGesture.PINCH_ZOOM`][(p).],
+                [`MultiFingerGesture.ROTATE`][(p).]) are enabled.
         """
         return InteractionFlag.has_flag(
             flags,
@@ -340,7 +340,8 @@ class InteractionFlag(IntFlag):
     def has_drag(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`DRAG`][..] interactive flag is enabled.
+            `True` if the [`DRAG`][flet_map.InteractionFlag.DRAG] interaction
+                flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DRAG)
 
@@ -348,7 +349,8 @@ class InteractionFlag(IntFlag):
     def has_fling_animation(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`FLING_ANIMATION`][..] interactive flag is enabled.
+            `True` if the [`FLING_ANIMATION`][flet_map.InteractionFlag.FLING_ANIMATION]
+                interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.FLING_ANIMATION)
 
@@ -356,7 +358,8 @@ class InteractionFlag(IntFlag):
     def has_pinch_move(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`PINCH_MOVE`][..] interactive flag is enabled.
+            `True` if the [`PINCH_MOVE`][flet_map.InteractionFlag.PINCH_MOVE]
+                interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.PINCH_MOVE)
 
@@ -364,7 +367,8 @@ class InteractionFlag(IntFlag):
     def has_fling_pinch_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`PINCH_ZOOM`][..] interactive flag is enabled.
+            `True` if the [`PINCH_ZOOM`][flet_map.InteractionFlag.PINCH_ZOOM]
+                interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.PINCH_ZOOM)
 
@@ -372,7 +376,9 @@ class InteractionFlag(IntFlag):
     def has_double_tap_drag_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`DOUBLE_TAP_DRAG_ZOOM`][..] interactive flag is enabled.
+            `True` if the
+                [`DOUBLE_TAP_DRAG_ZOOM`][flet_map.InteractionFlag.DOUBLE_TAP_DRAG_ZOOM]
+                interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DOUBLE_TAP_DRAG_ZOOM)
 
@@ -380,7 +386,8 @@ class InteractionFlag(IntFlag):
     def has_double_tap_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`DOUBLE_TAP_ZOOM`][..] interactive flag is enabled.
+            `True` if the [`DOUBLE_TAP_ZOOM`][flet_map.InteractionFlag.DOUBLE_TAP_ZOOM]
+                interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DOUBLE_TAP_ZOOM)
 
@@ -396,7 +403,7 @@ class InteractionFlag(IntFlag):
     def has_scroll_wheel_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`SCROLL_WHEEL_ZOOM`][..] interactive flag is enabled.
+            `True` if the [`SCROLL_WHEEL_ZOOM`][..] interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.SCROLL_WHEEL_ZOOM)
 
@@ -429,7 +436,8 @@ class InteractionConfiguration:
     If `True`, then [`rotation_threshold`][..] and [`pinch_zoom_threshold`][..]
     and [`pinch_move_threshold`][..] will race.
     If multiple gestures win at the same time, then precedence:
-    [`pinch_zoom_win_gestures`][..] > [`rotation_win_gestures`][..] > [`pinch_move_win_gestures`][..]
+    [`pinch_zoom_win_gestures`][..] > [`rotation_win_gestures`][..] >
+    [`pinch_move_win_gestures`][..]
     """
 
     pinch_move_threshold: ft.Number = 40.0
@@ -480,8 +488,8 @@ class InteractionConfiguration:
 
     rotation_win_gestures: MultiFingerGesture = MultiFingerGesture.ROTATE
     """
-    When [`rotation_threshold`[..] wins over [`pinch_zoom_threshold`[..] and
-    [`pinch_move_threshold`[..] then `rotation_win_gestures` gestures will be used.
+    When [`rotation_threshold`][..] wins over [`pinch_zoom_threshold`][..] and
+    [`pinch_move_threshold`][..] then `rotation_win_gestures` gestures will be used.
     """
 
     pinch_move_win_gestures: MultiFingerGesture = (
@@ -785,7 +793,8 @@ class KeyboardConfiguration:
         default_factory=lambda: ft.Duration(milliseconds=450)
     )
     """
-    Duration of the curved (`ft.Curve.EASE_IN`) portion of the animation occuring
+    Duration of the curved ([`Curve.EASE_IN`][flet.Curve.EASE_IN])
+    portion of the animation occuring
     after a key down event (and after a key up event if
     [`animation_curve_reverse_duration`][..] is `None`)
     """
@@ -860,7 +869,7 @@ class KeyboardConfiguration:
 
     Must be greater than 0 and less than or equal to 1.
     To disable leaping, or change the maximum length of the key press
-    that will trigger a leap, see [`perform_leap_trigger_duration`[..].
+    that will trigger a leap, see [`perform_leap_trigger_duration`][..].
     """
 
     max_rotate_velocity: ft.Number = 3
@@ -884,9 +893,9 @@ class KeyboardConfiguration:
     The amount to scale the panning offset velocity by during a leap animation.
 
     The larger the number, the larger the movement during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`[..].
+    To change the duration of a leap, see [`leap_max_of_curve_component`][..].
 
-    This may cause the pan velocity to exceed [`max_pan_velocity`[..].
+    This may cause the pan velocity to exceed [`max_pan_velocity`][..].
     """
 
     rotate_leap_velocity_multiplier: ft.Number = 3
@@ -894,9 +903,9 @@ class KeyboardConfiguration:
     The amount to scale the rotation velocity by during a leap animation
 
     The larger the number, the larger the rotation difference during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`[..].
+    To change the duration of a leap, see [`leap_max_of_curve_component`][..].
 
-    This may cause the pan velocity to exceed [`max_rotate_velocity`[..].
+    This may cause the pan velocity to exceed [`max_rotate_velocity`][..].
     """
 
     zoom_leap_velocity_multiplier: ft.Number = 3
@@ -904,9 +913,9 @@ class KeyboardConfiguration:
     The amount to scale the zooming velocity by during a leap animation.
 
     The larger the number, the larger the zoom difference during a leap. To
-    change the duration of a leap, see [`leap_max_of_curve_component`[..].
+    change the duration of a leap, see [`leap_max_of_curve_component`][..].
 
-    This may cause the pan velocity to exceed [`max_zoom_velocity`[..].
+    This may cause the pan velocity to exceed [`max_zoom_velocity`][..].
     """
 
     perform_leap_trigger_duration: Optional[ft.DurationValue] = field(
@@ -916,8 +925,10 @@ class KeyboardConfiguration:
     Maximum duration between the key down and key up events of an animation
     which will trigger a 'leap'.
 
-    To customize the leap itself, see the [`leap_max_of_curve_component`[..] &
-    `[*leap_velocity_multiplier`[..] properties.
+    To customize the leap itself, see the [`leap_max_of_curve_component`][..] &
+    `*leap_velocity_multiplier` ([`zoom_leap_velocity_multiplier`][..],
+    [`pan_leap_velocity_multiplier`][..] and [`rotate_leap_velocity_multiplier`][..])
+    properties.
 
     Set to `None` to disable leaping.
     """
