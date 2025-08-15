@@ -65,7 +65,7 @@ def main(page: ft.Page):
                 ),
                 ftm.SimpleAttribution(
                     text="Flet",
-                    alignment=ft.Alignment.top_right(),
+                    alignment=ft.Alignment.TOP_RIGHT,
                     on_click=lambda e: print("Clicked SimpleAttribution"),
                 ),
                 ftm.MarkerLayer(
