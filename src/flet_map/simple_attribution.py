@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 import flet as ft
 
-from .map_layer import MapLayer
+from flet_map.map_layer import MapLayer
 
 __all__ = ["SimpleAttribution"]
 

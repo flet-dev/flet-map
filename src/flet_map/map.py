@@ -3,8 +3,8 @@ from typing import Optional
 
 import flet as ft
 
-from .map_layer import MapLayer
-from .types import (
+from flet_map.map_layer import MapLayer
+from flet_map.types import (
     CameraFit,
     InteractionConfiguration,
     MapEvent,
@@ -297,7 +297,7 @@ class Map(ft.ConstrainedControl):
         rotation: Optional[ft.Number] = None,
         animation_curve: Optional[ft.AnimationCurve] = None,
         animation_duration: Optional[ft.DurationValue] = None,
-        offset: ft.OffsetValue = ft.Offset(0, 0),
+        offset: ft.OffsetValue = (0, 0),
         cancel_ongoing_animations: bool = False,
     ) -> None:
         """

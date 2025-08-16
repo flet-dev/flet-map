@@ -1,17 +1,17 @@
-from .circle_layer import CircleLayer, CircleMarker
-from .map import Map
-from .marker_layer import Marker, MarkerLayer
-from .polygon_layer import PolygonLayer, PolygonMarker
-from .polyline_layer import PolylineLayer, PolylineMarker
-from .rich_attribution import RichAttribution
-from .simple_attribution import SimpleAttribution
-from .source_attribution import (
+from flet_map.circle_layer import CircleLayer, CircleMarker
+from flet_map.map import Map
+from flet_map.marker_layer import Marker, MarkerLayer
+from flet_map.polygon_layer import PolygonLayer, PolygonMarker
+from flet_map.polyline_layer import PolylineLayer, PolylineMarker
+from flet_map.rich_attribution import RichAttribution
+from flet_map.simple_attribution import SimpleAttribution
+from flet_map.source_attribution import (
     ImageSourceAttribution,
     SourceAttribution,
     TextSourceAttribution,
 )
-from .tile_layer import TileLayer
-from .types import (
+from flet_map.tile_layer import TileLayer
+from flet_map.types import (
     AttributionAlignment,
     Camera,
     CameraFit,
