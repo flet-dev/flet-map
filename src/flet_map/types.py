@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 import flet as ft
 
 if TYPE_CHECKING:
-    from .map import Map  # noqa
+    from flet_map.map import Map  # noqa
 
 __all__ = [
     "AttributionAlignment",

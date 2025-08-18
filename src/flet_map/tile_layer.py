@@ -3,8 +3,8 @@ from typing import Optional
 
 import flet as ft
 
-from .map_layer import MapLayer
-from .types import (
+from flet_map.map_layer import MapLayer
+from flet_map.types import (
     FadeInTileDisplay,
     MapLatitudeLongitudeBounds,
     TileDisplay,
@@ -122,7 +122,8 @@ class TileLayer(MapLayer):
 
     keep_buffer: int = 2
     """
-    When panning the map, keep this many rows and columns of tiles before unloading them.
+    When panning the map, keep this many rows and columns of
+    tiles before unloading them.
     """
 
     pan_buffer: int = 1

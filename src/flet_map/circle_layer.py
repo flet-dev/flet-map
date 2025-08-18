@@ -2,8 +2,8 @@ from typing import Optional
 
 import flet as ft
 
-from .map_layer import MapLayer
-from .types import MapLatitudeLongitude
+from flet_map.map_layer import MapLayer
+from flet_map.types import MapLatitudeLongitude
 
 __all__ = ["CircleLayer", "CircleMarker"]
 

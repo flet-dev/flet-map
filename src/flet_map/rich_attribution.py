@@ -3,9 +3,9 @@ from typing import Optional
 
 import flet as ft
 
-from .map_layer import MapLayer
-from .source_attribution import SourceAttribution
-from .types import AttributionAlignment
+from flet_map.map_layer import MapLayer
+from flet_map.source_attribution import SourceAttribution
+from flet_map.types import AttributionAlignment
 
 __all__ = ["RichAttribution"]
 

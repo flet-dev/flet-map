@@ -44,9 +44,6 @@ To install the `flet-map` package and add it to your project dependencies:
     poetry add flet-map
     ```
 
+### Examples
 
-## Example
-
-```python title="main.py"
---8<-- "examples/map_example/src/main.py"
-```
+See [these](map.md#examples).
