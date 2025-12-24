@@ -1,3 +1,7 @@
+# THIS PROJECT HAS BEEN ARCHIVED
+
+`flet-map` is now part of the main [Flet repository](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-map).
+
 # flet-map
 
 [![pypi](https://img.shields.io/pypi/v/flet-map.svg)](https://pypi.python.org/pypi/flet-map)
